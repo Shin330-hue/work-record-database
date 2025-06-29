@@ -1,0 +1,366 @@
+{
+    "mainCategories": [
+      {
+        "id": "surface_quality",
+        "label": "加工面が汚い",
+        "icon": "😟",
+        "description": "表面仕上がり不良",
+        "priority": 1
+      },
+      {
+        "id": "tool_life", 
+        "label": "工具がすぐダメになる",
+        "icon": "🔨",
+        "description": "工具寿命が短い",
+        "priority": 2
+      },
+      {
+        "id": "dimensional_accuracy",
+        "label": "寸法が合わない", 
+        "icon": "📏",
+        "description": "精度不良",
+        "priority": 3
+      },
+      {
+        "id": "machining_sounds",
+        "label": "変な音がする",
+        "icon": "🔊", 
+        "description": "異音・振動",
+        "priority": 4
+      }
+    ],
+    "otherCategory": {
+      "id": "others",
+      "label": "その他",
+      "icon": "📋",
+      "description": "上記以外の問題"
+    },
+    "problems": [
+      {
+        "id": "surface_quality",
+        "label": "加工面が汚い",
+        "icon": "😟",
+        "description": "表面仕上がり不良",
+        "category": "surface_quality",
+        "children": [
+          {
+            "id": "rough_surface",
+            "label": "ザラザラしている",
+            "icon": "🏜️",
+            "description": "表面が粗い",
+            "children": [
+              {
+                "id": "feed_marks",
+                "label": "送りマークが目立つ",
+                "icon": "〰️",
+                "advice": {
+                  "title": "送りマーク改善策",
+                  "text": "送り速度の調整と工具選定により送りマークを改善できます。",
+                  "icon": "💡",
+                  "image": "surface_bad.jpg",
+                  "video": "surface_bad.mp4",
+                  "items": [
+                    {
+                      "title": "送り速度の調整",
+                      "description": "送り速度を下げて、0.1～0.2mm/rev程度に調整。仕上げ加工では0.05mm/rev以下を推奨。"
+                    },
+                    {
+                      "title": "工具の選定", 
+                      "description": "ノーズR（刃先R）の大きい工具に変更。一般的にR0.8以上を使用すると改善。"
+                    },
+                    {
+                      "title": "切削条件の最適化",
+                      "description": "切削速度を上げて（推奨：100-150m/min）、送りを下げるバランスを見つける。"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "chatter_marks",
+                "label": "ビビリ痕がある", 
+                "icon": "〽️",
+                "advice": {
+                  "title": "ビビリ振動対策",
+                  "text": "回転数調整と工具保持の改善でビビリ振動を抑制します。",
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "回転数の変更",
+                      "description": "主軸回転数を10-20%増減させて共振を避ける。安定限界線図を参考に。"
+                    },
+                    {
+                      "title": "工具保持の改善", 
+                      "description": "工具突き出し長を最小限に。目安は直径の3-4倍以内。"
+                    },
+                    {
+                      "title": "ワーク固定の強化",
+                      "description": "クランプ力を増強し、支持点を増やす。薄物は特に注意。"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "tear_out",
+                "label": "むしれている",
+                "icon": "🦷", 
+                "advice": {
+                  "title": "むしれ対策",
+                  "text": "工具の状態確認と切削条件の見直しでむしれを防止します。",
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "切れ刃の確認",
+                      "description": "工具の摩耗・チッピングを確認。新品または再研磨品に交換。"
+                    },
+                    {
+                      "title": "切削油剤の見直し",
+                      "description": "潤滑性の高い切削油に変更。エマルジョン濃度を5-10%に調整。"
+                    },
+                    {
+                      "title": "切削速度の調整",
+                      "description": "低速すぎる場合は構成刃先の原因に。適正速度（鋼:80-120m/min）へ。"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "glossy_surface",
+            "label": "テカテカしている",
+            "icon": "✨",
+            "description": "異常な光沢",
+            "children": [
+              {
+                "id": "built_up_edge",
+                "label": "構成刃先ができている",
+                "icon": "🔺",
+                "advice": {
+                  "title": "構成刃先の防止策", 
+                  "text": "切削速度の向上とコーティング工具で構成刃先を防止します。",
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "切削速度を上げる",
+                      "description": "構成刃先が発生しにくい高速域へ。鋼材なら120m/min以上を推奨。"
+                    },
+                    {
+                      "title": "コーティング工具の使用",
+                      "description": "TiAlNやTiCNコーティング工具で付着を防止。"
+                    },
+                    {
+                      "title": "切削油の改善",
+                      "description": "極圧添加剤入りの切削油を使用。ミスト供給も効果的。"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "burning",
+                "label": "焼けている",
+                "icon": "🔥",
+                "advice": {
+                  "title": "焼け対策",
+                  "text": "切削熱の低減と工具の改善で焼けを防止します。", 
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "切削熱の低減",
+                      "description": "切削速度を下げ、切削油量を増やす。高圧クーラント（1MPa以上）推奨。"
+                    },
+                    {
+                      "title": "切れ味の改善",
+                      "description": "鋭利な刃先形状の工具を使用。すくい角を大きく（10-15°）。"
+                    },
+                    {
+                      "title": "切込み量の調整", 
+                      "description": "一回の切込みを浅く、パス回数を増やして熱集中を避ける。"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "burr_issues",
+            "label": "バリが出る",
+            "icon": "🌵",
+            "description": "エッジ処理不良",
+            "children": [
+              {
+                "id": "exit_burr",
+                "label": "出口バリ",
+                "icon": "➡️", 
+                "advice": {
+                  "title": "出口バリ対策",
+                  "text": "工具経路の工夫と切削条件の最適化で出口バリを抑制します。",
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "工具経路の工夫",
+                      "description": "切削方向を変更し、ワーク内側から外側へ向かう経路に。"
+                    },
+                    {
+                      "title": "切削条件の最適化",
+                      "description": "切削速度を上げ、送りを下げる。切れ味重視の条件へ。"
+                    },
+                    {
+                      "title": "バックアップ材の使用",
+                      "description": "出口側に当て板を配置。薄板加工では特に効果的。"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "entrance_burr",
+                "label": "入口バリ",
+                "icon": "⬅️",
+                "advice": {
+                  "title": "入口バリ対策",
+                  "text": "工具進入方法の改善で入口バリを防止します。",
+                  "icon": "💡", 
+                  "items": [
+                    {
+                      "title": "工具進入角度",
+                      "description": "アプローチ角度を45°程度に設定。垂直進入を避ける。"
+                    },
+                    {
+                      "title": "予備穴加工",
+                      "description": "パイロット穴やガイド穴を事前に加工。"
+                    },
+                    {
+                      "title": "工具の選定",
+                      "description": "切れ刃の鋭い新品工具を使用。ネガティブランドは避ける。"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tool_life",
+        "label": "工具がすぐダメになる",
+        "icon": "🔨",
+        "description": "工具寿命が短い",
+        "category": "tool_life",
+        "children": [
+          {
+            "id": "wear_issues",
+            "label": "摩耗が早い",
+            "icon": "⏳",
+            "description": "異常摩耗",
+            "children": [
+              {
+                "id": "abrasive_wear",
+                "label": "すり減りが激しい",
+                "icon": "🪨",
+                "advice": {
+                  "title": "摩耗対策",
+                  "text": "工具材種の見直しと切削条件の最適化で摩耗を抑制します。",
+                  "icon": "💡",
+                  "image": "tool_broken.jpg",
+                  "video": "tool_broken.mp4",
+                  "items": [
+                    {
+                      "title": "工具材種の見直し",
+                      "description": "耐摩耗性の高い超硬種（P10-P20）やCBN工具への変更を検討。"
+                    },
+                    {
+                      "title": "切削条件の最適化",
+                      "description": "切削速度を下げる（20-30%減）。被削材に適した条件表を参照。"
+                    },
+                    {
+                      "title": "コーティングの活用",
+                      "description": "AlCrNやTiAlN等の耐熱・耐摩耗コーティング工具を選定。"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "thermal_wear",
+                "label": "熱による摩耗",
+                "icon": "🔥",
+                "advice": {
+                  "title": "熱摩耗対策",
+                  "text": "切削温度の管理と耐熱工具の選定で熱摩耗を防止します。",
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "クーラント効果の向上",
+                      "description": "内部給油やミスト供給で工具温度を下げる。供給圧力0.5MPa以上推奨。"
+                    },
+                    {
+                      "title": "耐熱コーティング工具",
+                      "description": "AlCrN、TiAlN等の耐熱性コーティングを選定。耐酸化性に優れる。"
+                    },
+                    {
+                      "title": "断続切削の活用",
+                      "description": "熱蓄積を避けるため、可能な限り断続切削を採用。"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "chipping_issues", 
+            "label": "欠けやすい",
+            "icon": "💔",
+            "description": "チッピング",
+            "children": [
+              {
+                "id": "impact_chipping",
+                "label": "衝撃で欠ける",
+                "icon": "💥",
+                "advice": {
+                  "title": "チッピング防止",
+                  "text": "靭性の高い工具選定と切込み方法の改善でチッピングを防止します。",
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "靭性の高い材種選定",
+                      "description": "耐欠損性重視の超硬種（M20-M30）に変更。サーメットは避ける。"
+                    },
+                    {
+                      "title": "切込み時の工夫",
+                      "description": "切込み速度を落とし、徐々に切込む。プランジ加工を避ける。"
+                    },
+                    {
+                      "title": "刃先処理",
+                      "description": "ホーニング処理やチャンファ付き刃先で強度向上。"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "thermal_shock",
+                "label": "熱衝撃で欠ける",
+                "icon": "⚡",
+                "advice": {
+                  "title": "熱衝撃対策",
+                  "text": "温度変化の緩和と適切な工具材質で熱衝撃を防止します。",
+                  "icon": "💡",
+                  "items": [
+                    {
+                      "title": "予熱の実施",
+                      "description": "加工開始前に軽切削で工具温度を徐々に上げる。"
+                    },
+                    {
+                      "title": "安定した切削油供給",
+                      "description": "断続的でない連続供給で温度変化を最小限に。"
+                    },
+                    {
+                      "title": "靭性重視の材種",
+                      "description": "熱衝撃に強い材種（WC-Co系）を選定。"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
