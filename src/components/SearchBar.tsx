@@ -170,43 +170,45 @@ export default function SearchBar({ searchIndex, onSearch, onDrawingSelect, plac
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={handleFocus}
           placeholder={placeholder || t('searchPlaceholder')}
-          className="search-input w-full px-4 py-3 text-lg border-2 border-gray-600 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-200"
+          className="search-input w-full px-4 py-4 text-lg border-2 border-emerald-500/30 rounded-2xl bg-white/10 backdrop-blur-md text-white placeholder-emerald-200/60 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/20 transition-all duration-300 shadow-lg"
         />
         
         {/* 検索アイコン */}
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-          🔍
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-emerald-300">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
       </div>
 
       {/* 検索候補 */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="search-suggestions absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-600 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
+        <div className="search-suggestions absolute top-full left-0 right-0 mt-3 bg-white/10 backdrop-blur-md border border-emerald-500/30 rounded-2xl shadow-2xl z-50 max-h-96 overflow-y-auto">
           {suggestions.map((suggestion, index) => (
             <button
               key={index}
-              className="w-full px-4 py-3 text-left hover:bg-gray-700 border-b border-gray-600 last:border-b-0 transition-colors duration-150"
+              className="w-full px-6 py-4 text-left hover:bg-emerald-500/20 border-b border-emerald-500/20 last:border-b-0 transition-all duration-200 group"
               onClick={() => handleDrawingSelect(suggestion.drawingNumber)}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-mono text-yellow-400 text-lg">
+                  <div className="font-mono text-emerald-300 text-lg group-hover:text-emerald-200 transition-colors">
                     {suggestion.drawingNumber}
                   </div>
-                  <div className="text-white text-sm">
+                  <div className="text-white text-sm font-medium">
                     {suggestion.title}
                   </div>
-                  <div className="text-gray-400 text-xs">
+                  <div className="text-emerald-200/70 text-xs">
                     {suggestion.companyName} - {suggestion.productName}
                   </div>
+                  <div className="text-emerald-200/60 text-xs mt-1">
+                    {suggestion.difficulty} • {suggestion.estimatedTime}
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-gray-400 text-xs">
-                    {suggestion.difficulty}
-                  </div>
-                  <div className="text-gray-400 text-xs">
-                    {suggestion.estimatedTime}
-                  </div>
+                <div className="text-emerald-300/50 group-hover:text-emerald-200 transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
               </div>
             </button>
@@ -216,23 +218,28 @@ export default function SearchBar({ searchIndex, onSearch, onDrawingSelect, plac
 
       {/* 検索履歴 */}
       {showHistory && searchHistory.length > 0 && (
-        <div className="search-history absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-600 rounded-lg shadow-xl z-50">
-          <div className="flex items-center justify-between px-4 py-2 border-b border-gray-600">
-            <span className="text-gray-400 text-sm">{t('recentSearches')}</span>
+        <div className="search-history absolute top-full left-0 right-0 mt-3 bg-white/10 backdrop-blur-md border border-emerald-500/30 rounded-2xl shadow-2xl z-50">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-emerald-500/20">
+            <span className="text-emerald-200 text-sm font-medium">検索履歴</span>
             <button
               onClick={clearHistory}
-              className="text-red-400 hover:text-red-300 text-sm"
+              className="text-emerald-300/70 hover:text-emerald-200 text-sm transition-colors"
             >
-              {t('clearSearch')}
+              クリア
             </button>
           </div>
           {searchHistory.map((historyItem, index) => (
             <button
               key={index}
-              className="w-full px-4 py-2 text-left hover:bg-gray-700 border-b border-gray-600 last:border-b-0 transition-colors duration-150"
+              className="w-full px-6 py-3 text-left hover:bg-emerald-500/20 border-b border-emerald-500/20 last:border-b-0 transition-all duration-200 text-emerald-100 hover:text-emerald-50"
               onClick={() => handleHistorySelect(historyItem)}
             >
-              <div className="font-mono text-yellow-400">{historyItem}</div>
+              <div className="flex items-center gap-3">
+                <svg className="w-4 h-4 text-emerald-300/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {historyItem}
+              </div>
             </button>
           ))}
         </div>

@@ -88,64 +88,57 @@ export default function Home() {
   // 会社選択画面
   const renderCompanySelection = () => (
     <>
-      <h1 className="text-3xl font-bold mb-8 text-center">{t('title')}</h1>
-      
+      <h1 className="text-4xl font-bold mb-8 text-center text-emerald-100 bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">{t('title')}</h1>
       {/* 検索バー */}
       {searchIndex && (
-        <div className="mb-8">
+        <div className="search-bar-container w-full max-w-[600px]">
           <SearchBar
             searchIndex={searchIndex}
             onSearch={handleSearch}
             onDrawingSelect={handleSearchDrawingSelect}
+            placeholder={t('searchPlaceholder')}
           />
         </div>
       )}
-
       {/* 検索結果表示 */}
       {showSearchResults && searchResults.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">{t('searchResults')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h2 className="text-xl font-semibold mb-4 text-emerald-100">{t('searchResults')}</h2>
+          <div className="selection-grid">
             {searchResults.map((result, index) => (
               <button
                 key={index}
-                className="bg-white bg-opacity-5 rounded-lg p-4 border border-white/10 hover:bg-opacity-10 transition-all text-left"
+                className="selection-card !items-start !text-left"
                 onClick={() => handleSearchDrawingSelect(result.drawingNumber)}
               >
-                <div className="font-mono text-yellow-400 text-lg mb-1">
-                  {result.drawingNumber}
-                </div>
-                <div className="text-white text-sm mb-1">
-                  {result.title}
-                </div>
-                <div className="text-gray-400 text-xs">
-                  {result.companyName} - {result.productName}
-                </div>
-                <div className="text-gray-400 text-xs mt-1">
-                  {result.difficulty} • {result.estimatedTime}
-                </div>
+                <div className="icon" style={{fontSize:'1.6rem',marginBottom:8}}>🔍</div>
+                <div className="title" style={{fontSize:'1.1rem'}}>{result.drawingNumber}</div>
+                <div className="desc" style={{marginBottom:4}}>{result.title}</div>
+                <div className="desc" style={{fontSize:'0.95rem',color:'#8ff'}}>{result.companyName} - {result.productName}</div>
+                <div className="desc" style={{fontSize:'0.92rem',color:'#bff'}}>{result.difficulty}・{result.estimatedTime}</div>
               </button>
             ))}
           </div>
         </div>
       )}
-
-      <h2 className="text-2xl font-bold mb-8 text-center">{t('selectCompany')}</h2>
+      <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{t('selectCompany')}</h2>
       {loading && (
-        <div className="text-center text-lg text-gray-400 py-20">{t('loading')}</div>
+        <div className="text-center text-lg text-emerald-200 py-20">{t('loading')}</div>
       )}
       {error && (
         <div className="text-center text-red-400 py-20">{error}</div>
       )}
       {!loading && !error && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div className="selection-grid">
           {companies.map((company) => (
             <button
               key={company.id}
-              className="bg-white bg-opacity-5 rounded-xl p-8 shadow hover:shadow-lg transition border border-white/10 text-center w-full focus:outline-none"
+              className="selection-card"
               onClick={() => setSelectedCompany(company)}
             >
-              <div className="text-xl font-semibold">{company.name}</div>
+              <div className="icon">🏢</div>
+              <div className="title">{company.name}</div>
+              <div className="desc">{company.description}</div>
             </button>
           ))}
         </div>
@@ -157,20 +150,22 @@ export default function Home() {
   const renderProductSelection = () => (
     <>
       <button
-        className="mb-6 px-4 py-2 bg-white bg-opacity-10 rounded hover:bg-opacity-20 text-sm text-gray-200"
+        className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
         onClick={() => setSelectedCompany(null)}
       >
         ← {t('backToCompanies')}
       </button>
-      <h2 className="text-2xl font-bold mb-8 text-center">{selectedCompany?.name} の部品を選択</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedCompany?.name} の部品を選択</h2>
+      <div className="selection-grid">
         {selectedCompany?.products.map((product) => (
           <button
             key={product.id}
-            className="bg-white bg-opacity-5 rounded-xl p-8 shadow border border-white/10 text-center w-full focus:outline-none"
+            className="selection-card"
             onClick={() => setSelectedProduct(product)}
           >
-            <div className="text-lg font-semibold">{product.name}</div>
+            <div className="icon">🧩</div>
+            <div className="title">{product.name}</div>
+            <div className="desc">{product.description}</div>
           </button>
         ))}
       </div>
@@ -181,20 +176,21 @@ export default function Home() {
   const renderDrawingSelection = () => (
     <>
       <button
-        className="mb-6 px-4 py-2 bg-white bg-opacity-10 rounded hover:bg-opacity-20 text-sm text-gray-200"
+        className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
         onClick={() => setSelectedProduct(null)}
       >
         ← {selectedCompany?.name} の部品一覧に戻る
       </button>
-      <h2 className="text-2xl font-bold mb-8 text-center">{selectedProduct?.name} の図番を選択</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedProduct?.name} の図番を選択</h2>
+      <div className="selection-grid">
         {selectedProduct?.drawings.map((drawingNumber) => (
           <button
             key={drawingNumber}
-            className="bg-white bg-opacity-5 rounded-xl p-8 shadow border border-white/10 text-center w-full focus:outline-none"
+            className="selection-card"
             onClick={() => setSelectedDrawing(drawingNumber)}
           >
-            <div className="text-lg font-semibold">{drawingNumber}</div>
+            <div className="icon">📄</div>
+            <div className="title">{drawingNumber}</div>
           </button>
         ))}
       </div>
@@ -239,7 +235,7 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white relative">
+    <main className="min-h-screen bg-gradient-to-br from-emerald-900 via-green-900 to-teal-900 text-white relative">
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
       </div>

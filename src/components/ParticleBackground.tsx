@@ -30,30 +30,37 @@ const ParticleBackground = () => {
               enable: false,
             },
             onHover: {
-              enable: false,
+              enable: true,
+              mode: "repulse",
             },
             resize: true,
+          },
+          modes: {
+            repulse: {
+              distance: 100,
+              duration: 0.4,
+            },
           },
         },
         particles: {
           color: {
-            value: ["#ffffff", "#a0a0ff", "#8080ff", "#6060ff"],
+            value: ["#4ade80", "#22c55e", "#16a34a", "#15803d", "#166534"],
           },
           links: {
             enable: true,
-            color: "#8080ff",
+            color: "#22c55e",
             distance: 150,
-            opacity: 0.2,
+            opacity: 0.3,
             width: 1,
           },
           move: {
-            direction: "top",
+            direction: "none",
             enable: true,
             outModes: {
-              default: "out",
+              default: "bounce",
             },
-            random: true,
-            speed: { min: 0.5, max: 2 },
+            random: false,
+            speed: { min: 0.8, max: 2.5 },
             straight: false,
           },
           number: {
@@ -61,21 +68,21 @@ const ParticleBackground = () => {
               enable: true,
               area: 800,
             },
-            value: 80,
+            value: 60,
           },
           opacity: {
-            value: { min: 0.1, max: 0.5 },
+            value: { min: 0.2, max: 0.6 },
             animation: {
               enable: true,
-              speed: 1,
+              speed: 1.5,
               minimumValue: 0.1,
             },
           },
           shape: {
-            type: ["circle", "triangle"],
+            type: ["circle", "triangle", "star"],
           },
           size: {
-            value: { min: 1, max: 3 },
+            value: { min: 1, max: 4 },
             animation: {
               enable: true,
               speed: 2,
@@ -84,8 +91,8 @@ const ParticleBackground = () => {
           },
           twinkle: {
             enable: true,
-            color: "#ffffff",
-            frequency: 0.05,
+            color: "#4ade80",
+            frequency: 0.08,
             opacity: 1,
           },
         },
