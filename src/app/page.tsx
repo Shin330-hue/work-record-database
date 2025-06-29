@@ -70,11 +70,19 @@ export default function Home() {
     setSelectedDrawing(drawingNumber)
     setSelectedCompany(null)
     setSelectedProduct(null)
+    setShowSearchResults(false)
   }
 
   // 関連図番クリック時の処理
   const handleRelatedDrawingClick = (drawingNumber: string) => {
     setSelectedDrawing(drawingNumber)
+  }
+
+  // 検索結果に戻る処理
+  const handleBackToSearch = () => {
+    setSelectedDrawing(null)
+    setWorkInstruction(null)
+    setShowSearchResults(true)
   }
 
   // 会社選択画面
@@ -205,7 +213,7 @@ export default function Home() {
       {workInstruction && (
         <WorkInstructionResults 
           instruction={workInstruction}
-          onBack={() => setSelectedDrawing(null)}
+          onBack={showSearchResults ? handleBackToSearch : () => setSelectedDrawing(null)}
           onRelatedDrawingClick={handleRelatedDrawingClick}
         />
       )}
@@ -213,13 +221,20 @@ export default function Home() {
   )
 
   let content
-  if (!selectedCompany) {
+  if (selectedDrawing && workInstruction) {
+    // 詳細手順が表示されている場合
+    content = renderWorkInstruction()
+  } else if (!selectedCompany) {
+    // 会社選択画面
     content = renderCompanySelection()
   } else if (!selectedProduct) {
+    // 部品選択画面
     content = renderProductSelection()
   } else if (!selectedDrawing) {
+    // 図番選択画面
     content = renderDrawingSelection()
   } else {
+    // 詳細手順読み込み中
     content = renderWorkInstruction()
   }
 
