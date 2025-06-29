@@ -1,5 +1,6 @@
 {
-  "name": "metal-advisor",
+  "name": "work-record-database",
+  "description": "案件記録データベース - 作業手順・図番検索システム",
   "version": "0.1.0",
   "private": true,
   "scripts": {

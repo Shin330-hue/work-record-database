@@ -1,0 +1,268 @@
+{
+  "metadata": {
+    "drawingNumber": "CS2024001456789",
+    "title": "遠心ポンプケーシング",
+    "companyId": "mizutani-tekko",
+    "productId": "casing-parts",
+    "version": "2.1",
+    "createdDate": "2024-01-20",
+    "updatedDate": "2024-12-10",
+    "author": "水谷部長",
+    "difficulty": "上級",
+    "estimatedTime": "360分",
+    "machineType": "マシニングセンタ, ターニングセンタ, ラジアルボール盤",
+    "toolsRequired": ["φ25エンドミル", "φ16エンドミル", "φ10エンドミル", "旋盤用チップ", "φ12ドリル", "φ8ドリル", "M10タップ", "M8タップ"]
+  },
+  "overview": {
+    "description": "遠心ポンプの心臓部となるケーシング部品の製作を行います。FC250鋳物材から始まり、マシニングセンタで外形とフランジ面の加工、ターニングセンタで内径の精密加工、最後にラジアルボール盤で取付穴とボルト穴の仕上げ加工を実施します。流体の流れに関わる重要部品のため、寸法精度・表面粗さ・同軸度に特に注意が必要です。",
+    "warnings": [
+      "鋳物材のため内部応力に注意し、段階的な除去加工を心がけてください",
+      "内径と外径の同軸度が性能に直結するため、基準の設定と管理を徹底してください",
+      "シール面の表面粗さは漏れに直結するため、仕上げ精度を厳守してください",
+      "重量物のため、ワーク取り扱い時の安全確保を最優先してください"
+    ],
+    "preparationTime": "60分",
+    "processingTime": "300分"
+  },
+  "workSteps": [
+    {
+      "stepNumber": 1,
+      "title": "マシニングセンタでの外形・フランジ面加工",
+      "description": "FC250鋳物からケーシングの外形形状とフランジ面を精密に加工します",
+      "detailedInstructions": [
+        "鋳物材の外観検査（巣・クラック・寸法確認）、重量約25kgを確認",
+        "マシニングセンタの4軸テーブルに専用治具でワークを固定",
+        "ダイヤルゲージによる振れ確認（0.05mm以下）、基準面の出し精度確認", 
+        "φ25エンドミルで外径荒加工（切り込み2mm、送り400mm/min、回転数600rpm）",
+        "φ16エンドミルで外径仕上げ加工（切り込み0.3mm、送り250mm/min、回転数1000rpm）",
+        "φ10エンドミルでフランジ面仕上げ加工（切り込み0.2mm、送り200mm/min、回転数1200rpm）",
+        "外径・フランジ面の寸法測定（外径φ280±0.05mm、フランジ面平面度0.02mm）"
+      ],
+      "images": ["step01-casting-inspection.jpg", "step01-machining-setup.jpg", "step01-flange-machining.jpg"],
+      "videos": ["step01-machining-overview.mp4"],
+      "timeRequired": "120分",
+      "cuttingConditions": {
+        "roughing": {
+          "tool": "φ25 3枚刃エンドミル（超硬）",
+          "spindleSpeed": "600rpm",
+          "feedRate": "400mm/min",
+          "depthOfCut": "2.0mm",
+          "stepOver": "15.0mm",
+          "coolant": "水溶性切削油（8%）"
+        },
+        "finishing": {
+          "tool": "φ16 4枚刃エンドミル（TiAlNコーティング）",
+          "spindleSpeed": "1000rpm",
+          "feedRate": "250mm/min",
+          "depthOfCut": "0.3mm",
+          "stepOver": "10.0mm",
+          "coolant": "水溶性切削油（8%）"
+        }
+      },
+      "qualityCheck": {
+        "checkPoints": ["外径寸法（φ280±0.05mm）", "フランジ面平面度（0.02mm以下）", "表面粗さ（Ra1.6以下）", "真円度（0.01mm以下）"],
+        "inspectionTools": ["マイクロメータ", "平面度測定機", "表面粗さ計", "真円度測定機"]
+      },
+      "notes": [
+        "鋳物の硬質部に注意し、工具摩耗状況を常に確認",
+        "重切削のためクランプ状態を定期的にチェック",
+        "フランジ面は後工程のシール性能に影響するため特に慎重に加工"
+      ],
+      "warningLevel": "important"
+    },
+    {
+      "stepNumber": 2,
+      "title": "ターニングセンタでの内径加工",
+      "description": "ケーシング内部の流路形状と軸受け部の精密加工を行います",
+      "detailedInstructions": [
+        "ターニングセンタのチャックに外径基準でワークをセット",
+        "内径測定用ダイヤルゲージで芯出し確認（振れ0.02mm以下）",
+        "荒加工用チップで内径荒加工（切り込み1.5mm、送り0.3mm/rev、回転数400rpm）",
+        "中仕上げ用チップで内径中仕上げ（切り込み0.5mm、送り0.15mm/rev、回転数600rpm）",
+        "仕上げ用チップで内径仕上げ加工（切り込み0.1mm、送り0.08mm/rev、回転数800rpm）",
+        "軸受け部の段付き加工（深さ15mm、幅20mm、寸法精度±0.02mm）",
+        "内径寸法・真円度・表面粗さの測定確認"
+      ],
+      "images": ["step02-turning-setup.jpg", "step02-internal-machining.jpg", "step02-bearing-seat.jpg"],
+      "videos": ["step02-internal-turning.mp4"],
+      "timeRequired": "90分",
+      "cuttingConditions": {
+        "roughing": {
+          "tool": "CNMG120408 超硬チップ",
+          "spindleSpeed": "400rpm",
+          "feedRate": "0.3mm/rev",
+          "depthOfCut": "1.5mm",
+          "coolant": "水溶性切削油（8%）"
+        },
+        "finishing": {
+          "tool": "CNMG120404 超硬チップ（CVDコーティング）",
+          "spindleSpeed": "800rpm", 
+          "feedRate": "0.08mm/rev",
+          "depthOfCut": "0.1mm",
+          "coolant": "水溶性切削油（8%）"
+        }
+      },
+      "qualityCheck": {
+        "checkPoints": ["内径寸法（φ200±0.03mm）", "真円度（0.008mm以下）", "表面粗さ（Ra0.8以下）", "軸受け部寸法（±0.02mm）"],
+        "inspectionTools": ["内径マイクロメータ", "真円度測定機", "表面粗さ計", "ノギス"]
+      },
+      "notes": [
+        "内径加工は外径との同軸度が最重要、基準設定を慎重に行う",
+        "軸受け部は回転体の精度に直結するため、寸法管理を徹底",
+        "切削抵抗によるワーク変形に注意、適切なクランプ力を維持"
+      ],
+      "warningLevel": "critical"
+    },
+    {
+      "stepNumber": 3,
+      "title": "マシニングセンタでの流路・リブ加工",
+      "description": "流体通路とリブの精密加工を行います",
+      "detailedInstructions": [
+        "加工済みワークをマシニングセンタに再セット、内径基準で芯出し",
+        "φ16エンドミルで流路荒加工（螺旋状通路、切り込み1mm、送り300mm/min）",
+        "φ10エンドミルで流路仕上げ加工（送り150mm/min、回転数1500rpm）",
+        "φ10エンドミルでリブ部加工（8本のリブ、厚さ8mm、高さ25mm）",
+        "流路寸法・リブ寸法の測定確認",
+        "内部の切り屑除去とエアブローによる清掃"
+      ],
+      "images": ["step03-channel-machining.jpg", "step03-rib-cutting.jpg"],
+      "videos": [],
+      "timeRequired": "75分",
+      "cuttingConditions": {
+        "channel_machining": {
+          "tool": "φ16 2枚刃エンドミル（超硬）",
+          "spindleSpeed": "1200rpm",
+          "feedRate": "300mm/min",
+          "depthOfCut": "1.0mm",
+          "coolant": "大量給油"
+        },
+        "rib_machining": {
+          "tool": "φ10 4枚刃エンドミル（TiCNコーティング）",
+          "spindleSpeed": "1500rpm",
+          "feedRate": "150mm/min",
+          "depthOfCut": "0.5mm",
+          "coolant": "大量給油"
+        }
+      },
+      "qualityCheck": {
+        "checkPoints": ["流路幅（12±0.1mm）", "リブ厚さ（8±0.05mm）", "リブ高さ（25±0.1mm）", "内面表面粗さ（Ra3.2以下）"],
+        "inspectionTools": ["ノギス", "ハイトゲージ", "表面粗さ計", "内視鏡"]
+      },
+      "notes": [
+        "流路の滑らかさは流体性能に直結、工具痕を最小限に",
+        "リブ加工時の振動に注意、必要に応じて支持具を使用",
+        "内部加工のため切り屑排出を確実に行う"
+      ],
+      "warningLevel": "important"
+    },
+    {
+      "stepNumber": 4,
+      "title": "ラジアルボール盤での取付穴・最終仕上げ",
+      "description": "フランジ部の取付穴とボルト穴の精密加工および最終検査を実施します",
+      "detailedInstructions": [
+        "ラジアルボール盤の定盤に完成ワークを設置、水平出し確認",
+        "フランジ部の穴位置をケガキ、ポンチングで穴位置マーキング（16箇所）",
+        "φ12ドリルで取付穴下穴加工（8箇所、貫通穴、回転数500rpm）",
+        "φ8ドリルでボルト穴下穴加工（8箇所、深さ40mm、回転数700rpm）",
+        "M10タップで取付穴ねじ加工（8箇所、回転数120rpm）",
+        "M8タップでボルト穴ねじ加工（8箇所、回転数150rpm）",
+        "全寸法の最終測定、水圧テスト準備のための清掃・検査"
+      ],
+      "images": ["step04-hole-marking.jpg", "step04-drilling.jpg", "step04-final-inspection.jpg"],
+      "videos": ["step04-final-process.mp4"],
+      "timeRequired": "75分",
+      "cuttingConditions": {
+        "drilling_12mm": {
+          "tool": "φ12 ハイスドリル（TiNコーティング）",
+          "spindleSpeed": "500rpm",
+          "feedRate": "0.18mm/rev",
+          "coolant": "切削油（ストレート油）"
+        },
+        "tapping_M10": {
+          "tool": "M10×1.5 ハイスタップ（TiCNコーティング）",
+          "spindleSpeed": "120rpm",
+          "feedRate": "180mm/min（自動送り）",
+          "coolant": "タッピング油"
+        }
+      },
+      "qualityCheck": {
+        "checkPoints": [
+          "外径寸法（φ280±0.05mm）",
+          "内径寸法（φ200±0.03mm）",
+          "同軸度（0.02mm以下）",
+          "フランジ面平面度（0.02mm以下）",
+          "取付穴位置度（±0.05mm）",
+          "ねじ精度（M10×1.5-6H、M8×1.25-6H）",
+          "表面粗さ（Ra1.6以下）"
+        ],
+        "inspectionTools": ["三次元測定機", "ねじゲージ", "表面粗さ計", "水圧テスト装置"]
+      },
+      "notes": [
+        "取付穴の位置精度はポンプ性能に直結、測定を確実に実施",
+        "ねじ穴の深さ・精度は組み立て時の締結力に影響",
+        "最終的な水圧テストで漏れがないことを確認（テスト圧力1.5MPa）"
+      ],
+      "warningLevel": "critical"
+    }
+  ],
+  "relatedDrawings": [
+    {
+      "drawingNumber": "IM2024001234567",
+      "relation": "組み立て相手部品",
+      "description": "対応インペラ"
+    },
+    {
+      "drawingNumber": "CS2024002567890",
+      "relation": "類似ケーシング",
+      "description": "同シリーズ大型ケーシング"
+    }
+  ],
+  "troubleshooting": [
+    {
+      "problem": "同軸度不良",
+      "cause": "基準設定不適切または機械精度不足",
+      "solution": "基準面の再確認、機械精度チェック、治具精度確認"
+    },
+    {
+      "problem": "内面表面粗さ不良",
+      "cause": "工具摩耗または切削条件不適切",
+      "solution": "工具交換、切削条件見直し、クーラント流量増加"
+    },
+    {
+      "problem": "水圧テスト時の漏れ",
+      "cause": "シール面精度不良または穴位置ずれ",
+      "solution": "シール面再加工、穴位置確認、Oリング溝精度確認"
+    },
+    {
+      "problem": "鋳物巣による不良",
+      "cause": "鋳造時の問題",
+      "solution": "材料交換、鋳物業者との品質確認、検査基準見直し"
+    }
+  ],
+  "revisionHistory": [
+    {
+      "version": "1.0",
+      "date": "2024-01-20",
+      "author": "水谷部長",
+      "changes": "初版作成"
+    },
+    {
+      "version": "1.5",
+      "date": "2024-06-15",
+      "author": "鈴木主任",
+      "changes": "流路加工条件最適化、表面粗さ基準強化"
+    },
+    {
+      "version": "2.0",
+      "date": "2024-09-30",
+      "author": "田村技師",
+      "changes": "水圧テスト手順追加、同軸度管理強化"
+    },
+    {
+      "version": "2.1",
+      "date": "2024-12-10",
+      "author": "水谷部長",
+      "changes": "鋳物検査基準追加、トラブルシューティング拡充"
+    }
+  ]
+}

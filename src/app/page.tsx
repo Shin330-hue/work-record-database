@@ -1,288 +1,226 @@
-// src/app/page.tsx - TranslationProviderを削除
+// src/app/page.tsx - 会社・部品カードの表示をシンプルに
 'use client'
-import { useState, useEffect } from 'react'
-import { loadAdviceData, AdviceData, AdviceNode } from '@/lib/dataLoader'
-import { buildDiagnosisContext, DiagnosisContext, Advice } from '@/lib/contextBuilder'
+import { useEffect, useState } from 'react'
+import { loadCompanies, loadSearchIndex, loadWorkInstruction, Company, Product, WorkInstruction, SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
 import { useTranslation } from '@/hooks/useTranslation'
 import LanguageSelector from '@/components/LanguageSelector'
-import TroubleshootingResults from '@/components/TroubleshootingResults'
-import Image from "next/image";
-import Link from "next/link";
-import ParticleBackground from "@/components/ParticleBackground";
+import ParticleBackground from '@/components/ParticleBackground'
+import WorkInstructionResults from '@/components/WorkInstructionResults'
+import SearchBar from '@/components/SearchBar'
 
-interface CategoryOption {
-  id: string
-  label: string
-  icon: string
-  description: string
-}
-
-function TroubleshootingContent() {
+export default function Home() {
   const { t } = useTranslation()
-  const [data, setData] = useState<AdviceData | null>(null)
-  const [currentStep, setCurrentStep] = useState(0)
-  const [selectionPath, setSelectionPath] = useState<string[]>([])
-  const [currentAdvice, setCurrentAdvice] = useState<Advice | null>(null)
-  const [diagnosisContext, setDiagnosisContext] = useState<DiagnosisContext | null>(null)
+  const [companies, setCompanies] = useState<Company[]>([])
+  const [searchIndex, setSearchIndex] = useState<SearchIndex | null>(null)
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selectedDrawing, setSelectedDrawing] = useState<string | null>(null)
+  const [workInstruction, setWorkInstruction] = useState<WorkInstruction | null>(null)
+  const [searchResults, setSearchResults] = useState<DrawingSearchItem[]>([])
+  const [showSearchResults, setShowSearchResults] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [instructionLoading, setInstructionLoading] = useState(false)
+  const [instructionError, setInstructionError] = useState<string | null>(null)
 
   useEffect(() => {
-    loadAdviceData().then(setData)
+    // 会社データと検索インデックスを並行して読み込み
+    Promise.all([
+      loadCompanies(),
+      loadSearchIndex()
+    ])
+      .then(([companiesData, searchIndexData]) => {
+        setCompanies(companiesData)
+        setSearchIndex(searchIndexData)
+        setLoading(false)
+      })
+      .catch((e) => {
+        setError('データの読み込みに失敗しました')
+        setLoading(false)
+      })
   }, [])
 
-  // 🔥 安全な翻訳対応の表示関数
-  const getDisplayText = (node: AdviceNode | null, field: 'label' | 'description') => {
-    if (!node) return ''
-    if (field === 'label') {
-      return t(node.label)
+  // 図番選択時に作業手順データをロード
+  useEffect(() => {
+    if (selectedDrawing) {
+      setInstructionLoading(true)
+      setInstructionError(null)
+      setWorkInstruction(null)
+      setShowSearchResults(false)
+      loadWorkInstruction(selectedDrawing)
+        .then((data) => {
+          setWorkInstruction(data)
+          setInstructionLoading(false)
+        })
+        .catch(() => {
+          setInstructionError('作業手順データの読み込みに失敗しました')
+          setInstructionLoading(false)
+        })
     }
-    if (field === 'description') {
-      return t(node.description || '')
-    }
-    return node[field] || ''
+  }, [selectedDrawing])
+
+  // 検索結果の処理
+  const handleSearch = (results: DrawingSearchItem[]) => {
+    setSearchResults(results)
+    setShowSearchResults(results.length > 0)
   }
 
-  // 🔥 カテゴリ表示の修正（安全性向上）
-  const getCategoryDisplayText = (category: any, field: 'label' | 'description') => {
-    if (!category) return ''
-    if (field === 'label') {
-      return t(category.label)
-    }
-    if (field === 'description') {
-      return t(category.description)
-    }
-    return category[field] || ''
+  // 検索結果から図番選択
+  const handleSearchDrawingSelect = (drawingNumber: string) => {
+    setSelectedDrawing(drawingNumber)
+    setSelectedCompany(null)
+    setSelectedProduct(null)
   }
 
-  const getCurrentOptions = (): (CategoryOption | AdviceNode)[] => {
-    if (!data) return []
-    
-    if (currentStep === 0) {
-      return [...data.mainCategories, data.otherCategory]
-    }
-    
-    // 🔥 現在のカテゴリに属する問題を取得
-    if (currentStep === 1) {
-      const selectedCategory = selectionPath[0]
-      return data.problems.filter(p => p.category === selectedCategory)
-    }
-    
-    // 🔥 現在のノードの子要素を取得（安全性向上）
-    const currentNode = getCurrentNode()
-    return currentNode?.children || []
+  // 関連図番クリック時の処理
+  const handleRelatedDrawingClick = (drawingNumber: string) => {
+    setSelectedDrawing(drawingNumber)
   }
 
-  const getCurrentNode = (): AdviceNode | null => {
-    if (!data || selectionPath.length === 0) return null
-    
-    return findNodeByPath(data.problems, selectionPath.slice(1)) // 🔥 カテゴリを除く
-  }
-
-  const findNodeByPath = (nodes: AdviceNode[], path: string[]): AdviceNode | null => {
-    if (path.length === 0) return null
-    
-    for (const node of nodes) {
-      if (node.id === path[0]) {
-        if (path.length === 1) {
-          return node
-        }
-        if (node.children) {
-          return findNodeByPath(node.children, path.slice(1))
-        }
-      }
-    }
-    return null
-  }
-
-  const handleOptionSelect = (option: CategoryOption | AdviceNode) => {
-    if (!data) return
-
-    const newPath = [...selectionPath, option.id]
-    setSelectionPath(newPath)
-
-    if (currentStep === 0) {
-      // カテゴリ選択
-      setCurrentStep(1)
-    } else if (currentStep === 1) {
-      // 問題選択
-      const selectedProblem = data.problems.find(p => p.id === option.id)
-      if (selectedProblem?.children && selectedProblem.children.length > 0) {
-        setCurrentStep(2)
-      } else if (selectedProblem?.advice) {
-        // 直接アドバイスがある場合
-        const context = buildDiagnosisContext(newPath)
-        setDiagnosisContext(context)
-        setCurrentAdvice(selectedProblem.advice)
-      }
-    } else {
-      // 詳細選択
-      const currentNode = getCurrentNode()
-      const selectedChild = currentNode?.children?.find(child => child.id === option.id)
+  // 会社選択画面
+  const renderCompanySelection = () => (
+    <>
+      <h1 className="text-3xl font-bold mb-8 text-center">{t('title')}</h1>
       
-      if (selectedChild?.advice) {
-        const context = buildDiagnosisContext(newPath)
-        setDiagnosisContext(context)
-        setCurrentAdvice(selectedChild.advice)
-      } else if (selectedChild?.children && selectedChild.children.length > 0) {
-        setCurrentStep(currentStep + 1)
-      }
-    }
-  }
+      {/* 検索バー */}
+      {searchIndex && (
+        <div className="mb-8">
+          <SearchBar
+            searchIndex={searchIndex}
+            onSearch={handleSearch}
+            onDrawingSelect={handleSearchDrawingSelect}
+          />
+        </div>
+      )}
 
-  const handleGoBack = () => {
-    if (currentStep > 0) {
-      setSelectionPath(selectionPath.slice(0, -1))
-      setCurrentStep(currentStep - 1)
-    }
-  }
+      {/* 検索結果表示 */}
+      {showSearchResults && searchResults.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">{t('searchResults')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {searchResults.map((result, index) => (
+              <button
+                key={index}
+                className="bg-white bg-opacity-5 rounded-lg p-4 border border-white/10 hover:bg-opacity-10 transition-all text-left"
+                onClick={() => handleSearchDrawingSelect(result.drawingNumber)}
+              >
+                <div className="font-mono text-yellow-400 text-lg mb-1">
+                  {result.drawingNumber}
+                </div>
+                <div className="text-white text-sm mb-1">
+                  {result.title}
+                </div>
+                <div className="text-gray-400 text-xs">
+                  {result.companyName} - {result.productName}
+                </div>
+                <div className="text-gray-400 text-xs mt-1">
+                  {result.difficulty} • {result.estimatedTime}
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-  const handleRestart = () => {
-    setCurrentStep(0)
-    setSelectionPath([])
-    setCurrentAdvice(null)
-    setDiagnosisContext(null)
-  }
-
-  if (!data) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '200px',
-        fontSize: '18px'
-      }}>
-        読み込み中...
-      </div>
-    )
-  }
-
-  const renderContent = () => {
-    if (currentAdvice && diagnosisContext) {
-      return (
-        <TroubleshootingResults
-          advice={currentAdvice}
-          context={diagnosisContext}
-          onRestart={handleRestart}
-        />
-      )
-    }
-
-    // 🔥 タイトル表示の安全性向上
-    const getTitle = () => {
-      if (currentStep === 0) {
-        return t('whatProblem')
-      } else if (currentStep === 1) {
-        const categoryId = selectionPath[0]
-        return getCategoryDisplayText({ id: categoryId }, 'label') || '問題を選択'
-      } else {
-        const currentNode = getCurrentNode()
-        return getDisplayText(currentNode, 'label') || '詳細を選択'
-      }
-    }
-
-    return (
-      <div style={{ textAlign: 'center', maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ 
-          fontSize: '32px', 
-          marginBottom: '10px', 
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          fontWeight: 'bold'
-        }}>
-          {getTitle()}
-        </h1>
-
-        {currentStep === 0 && (
-          <p style={{ fontSize: '16px', color: '#a0a0a0', marginBottom: '40px' }}>
-            {t('selectProblem')}
-          </p>
-        )}
-
-        {currentStep > 0 && (
-          <button
-            onClick={handleGoBack}
-            style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              marginBottom: '30px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              margin: '0 auto 30px auto'
-            }}
-          >
-            ← {t('back')}
-          </button>
-        )}
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '20px',
-          padding: '0 20px'
-        }}>
-          {getCurrentOptions().map((option) => (
-            <div
-              key={option.id}
-              onClick={() => handleOptionSelect(option)}
-              style={{
-                background: 'rgba(30, 30, 50, 0.8)',
-                border: '2px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '15px',
-                padding: '25px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.5)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.15)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = 'none'
-              }}
+      <h2 className="text-2xl font-bold mb-8 text-center">{t('selectCompany')}</h2>
+      {loading && (
+        <div className="text-center text-lg text-gray-400 py-20">{t('loading')}</div>
+      )}
+      {error && (
+        <div className="text-center text-red-400 py-20">{error}</div>
+      )}
+      {!loading && !error && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {companies.map((company) => (
+            <button
+              key={company.id}
+              className="bg-white bg-opacity-5 rounded-xl p-8 shadow hover:shadow-lg transition border border-white/10 text-center w-full focus:outline-none"
+              onClick={() => setSelectedCompany(company)}
             >
-              <div style={{ fontSize: '48px', marginBottom: '15px' }}>
-                {option.icon}
-              </div>
-              <h3 style={{ 
-                fontSize: '20px', 
-                fontWeight: '600', 
-                margin: '0 0 10px 0',
-                color: 'white'
-              }}>
-                {currentStep === 0 
-                  ? getCategoryDisplayText(option, 'label')
-                  : getDisplayText(option as AdviceNode, 'label')
-                }
-              </h3>
-              <p style={{ 
-                fontSize: '14px', 
-                color: '#a0a0a0', 
-                margin: 0,
-                lineHeight: '1.4'
-              }}>
-                {currentStep === 0 
-                  ? getCategoryDisplayText(option, 'description')
-                  : getDisplayText(option as AdviceNode, 'description')
-                }
-              </p>
-            </div>
+              <div className="text-xl font-semibold">{company.name}</div>
+            </button>
           ))}
         </div>
+      )}
+    </>
+  )
+
+  // 部品選択画面
+  const renderProductSelection = () => (
+    <>
+      <button
+        className="mb-6 px-4 py-2 bg-white bg-opacity-10 rounded hover:bg-opacity-20 text-sm text-gray-200"
+        onClick={() => setSelectedCompany(null)}
+      >
+        ← {t('backToCompanies')}
+      </button>
+      <h2 className="text-2xl font-bold mb-8 text-center">{selectedCompany?.name} の部品を選択</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {selectedCompany?.products.map((product) => (
+          <button
+            key={product.id}
+            className="bg-white bg-opacity-5 rounded-xl p-8 shadow border border-white/10 text-center w-full focus:outline-none"
+            onClick={() => setSelectedProduct(product)}
+          >
+            <div className="text-lg font-semibold">{product.name}</div>
+          </button>
+        ))}
       </div>
-    )
+    </>
+  )
+
+  // 図番選択画面
+  const renderDrawingSelection = () => (
+    <>
+      <button
+        className="mb-6 px-4 py-2 bg-white bg-opacity-10 rounded hover:bg-opacity-20 text-sm text-gray-200"
+        onClick={() => setSelectedProduct(null)}
+      >
+        ← {selectedCompany?.name} の部品一覧に戻る
+      </button>
+      <h2 className="text-2xl font-bold mb-8 text-center">{selectedProduct?.name} の図番を選択</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {selectedProduct?.drawings.map((drawingNumber) => (
+          <button
+            key={drawingNumber}
+            className="bg-white bg-opacity-5 rounded-xl p-8 shadow border border-white/10 text-center w-full focus:outline-none"
+            onClick={() => setSelectedDrawing(drawingNumber)}
+          >
+            <div className="text-lg font-semibold">{drawingNumber}</div>
+          </button>
+        ))}
+      </div>
+    </>
+  )
+
+  // 作業手順（詳細表示）画面
+  const renderWorkInstruction = () => (
+    <>
+      {instructionLoading && (
+        <div className="text-center text-lg text-gray-400 py-20">{t('loading')}</div>
+      )}
+      {instructionError && (
+        <div className="text-center text-red-400 py-20">{instructionError}</div>
+      )}
+      {workInstruction && (
+        <WorkInstructionResults 
+          instruction={workInstruction}
+          onBack={() => setSelectedDrawing(null)}
+          onRelatedDrawingClick={handleRelatedDrawingClick}
+        />
+      )}
+    </>
+  )
+
+  let content
+  if (!selectedCompany) {
+    content = renderCompanySelection()
+  } else if (!selectedProduct) {
+    content = renderProductSelection()
+  } else if (!selectedDrawing) {
+    content = renderDrawingSelection()
+  } else {
+    content = renderWorkInstruction()
   }
 
   return (
@@ -292,13 +230,8 @@ function TroubleshootingContent() {
       </div>
       <div className="container mx-auto px-4 py-16 relative z-10">
         <LanguageSelector />
-        {renderContent()}
+        {content}
       </div>
     </main>
   )
-}
-
-// 🔥 ここでTranslationProviderを削除（layout.tsxで行う）
-export default function Home() {
-  return <TroubleshootingContent />
 }

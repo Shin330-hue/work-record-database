@@ -7,8 +7,8 @@ import { TranslationProvider } from '@/hooks/useTranslation'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '金属加工トラブルシューター',
-  description: '金属加工の問題を診断し、最適な解決策を提案するAIシステム',
+  title: '案件記録データベース',
+  description: '案件の作業手順・図番を検索できるデータベースシステム',
 }
 
 export default function RootLayout({
