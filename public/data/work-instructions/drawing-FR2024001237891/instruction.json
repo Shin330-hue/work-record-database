@@ -190,6 +190,10 @@
       "solution": "切削条件見直し、工具交換、切削油見直し"
     }
   ],
+  "mediaFolders": {
+    "images": "step_01",
+    "videos": "step_01"
+  },
   "revisionHistory": [
     {
       "version": "1.0",

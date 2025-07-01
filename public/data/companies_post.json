@@ -1,0 +1,159 @@
+{
+  "companies": [
+    {
+      "id": "chuo-tekko",
+      "name": "有限会社サンプル製作所",
+      "shortName": "サンプル製作所",
+      "description": "フレーム・ブラケット・ベース部品の精密加工専門",
+      "priority": 1,
+      "products": [
+        {
+          "id": "frame-parts",
+          "name": "フレーム部品",
+          "category": "フレーム",
+          "description": "機械装置用フレーム構造部品",
+          "drawingCount": 8,
+          "drawings": ["FR2024001237891", "FR2024002138492", "FR2024003239573", "FR2024004340674", "FR2024005441775", "FR2024006542876", "FR2024007643977", "FR2024008745078"]
+        },
+        {
+          "id": "bracket-parts",
+          "name": "ブラケット部品",
+          "category": "ブラケット", 
+          "description": "取付用ブラケット・支持金具",
+          "drawingCount": 6,
+          "drawings": ["BR2024001345671", "BR2024002446772", "BR2024003547873", "BR2024004648974", "BR2024005750075", "BR2024006851176"]
+        },
+        {
+          "id": "base-parts",
+          "name": "ベース部品",
+          "category": "ベース",
+          "description": "機械設備用ベース・土台部品",
+          "drawingCount": 4,
+          "drawings": ["BS2024001789123", "BS2024002890234", "BS2024003991345", "BS2024004092456"]
+        }
+      ]
+    },
+    {
+      "id": "mizutani-tekko",
+      "name": "デモ鉄工株式会社",
+      "shortName": "デモ鉄工",
+      "description": "ケーシング・インペラの高精度加工",
+      "priority": 2,
+      "products": [
+        {
+          "id": "casing-parts",
+          "name": "ケーシング部品",
+          "category": "ケーシング",
+          "description": "ポンプ・ファン用ケーシング",
+          "drawingCount": 7,
+          "drawings": ["CS2024001456789", "CS2024002567890", "CS2024003678901", "CS2024004789012", "CS2024005890123", "CS2024006901234", "CS2024007012345"]
+        },
+        {
+          "id": "impeller-parts",
+          "name": "インペラ部品", 
+          "category": "インペラ",
+          "description": "遠心ポンプ・ファン用インペラ",
+          "drawingCount": 5,
+          "drawings": ["IM2024001234567", "IM2024002345678", "IM2024003456789", "IM2024004567890", "IM2024005678901"]
+        }
+      ]
+    },
+    {
+      "id": "kowa-engineering",
+      "name": "株式会社テスト精密工業",
+      "shortName": "テスト精密工業", 
+      "description": "精密フレーム・ブラケット・ベースの専門加工",
+      "priority": 3,
+      "products": [
+        {
+          "id": "precision-frame",
+          "name": "精密フレーム",
+          "category": "フレーム",
+          "description": "高精度機械用フレーム部品",
+          "drawingCount": 6,
+          "drawings": ["PF2024001987654", "PF2024002876543", "PF2024003765432", "PF2024004654321", "PF2024005543210", "PF2024006432109"]
+        },
+        {
+          "id": "precision-bracket",
+          "name": "精密ブラケット",
+          "category": "ブラケット",
+          "description": "精密機器用取付ブラケット",
+          "drawingCount": 5,
+          "drawings": ["PB2024001135791", "PB2024002246802", "PB2024003357913", "PB2024004468024", "PB2024005579135"]
+        },
+        {
+          "id": "precision-base",
+          "name": "精密ベース",
+          "category": "ベース", 
+          "description": "測定機器・工作機械用ベース",
+          "drawingCount": 3,
+          "drawings": ["PZ2024001369258", "PZ2024002470369", "PZ2024003581470"]
+        }
+      ]
+    },
+    {
+      "id": "tosho-gijutsu",
+      "name": "山田製作所株式会社",
+      "shortName": "山田製作所",
+      "description": "産業機械用フレーム・ブラケット・ベースの製造",
+      "priority": 4,
+      "products": [
+        {
+          "id": "industrial-frame",
+          "name": "産業用フレーム",
+          "category": "フレーム",
+          "description": "産業機械・設備用大型フレーム",
+          "drawingCount": 7,
+          "drawings": ["IF2024001753951", "IF2024002864062", "IF2024003975173", "IF2024004086284", "IF2024005197395", "IF2024006208406", "IF2024007319517"]
+        },
+        {
+          "id": "heavy-bracket",
+          "name": "重機用ブラケット",
+          "category": "ブラケット",
+          "description": "重機・建機用高強度ブラケット", 
+          "drawingCount": 4,
+          "drawings": ["HB2024001842753", "HB2024002953864", "HB2024003064975", "HB2024004176086"]
+        },
+        {
+          "id": "industrial-base",
+          "name": "産業用ベース",
+          "category": "ベース",
+          "description": "産業設備用大型ベース・架台",
+          "drawingCount": 5,
+          "drawings": ["IB2024001591827", "IB2024002602938", "IB2024003714049", "IB2024004825150", "IB2024005936261"]
+        }
+      ]
+    },
+    {
+      "id": "yamazaki-mazak",
+      "name": "スーパー精密工業株式会社",
+      "shortName": "スーパー精密工業",
+      "description": "工作機械用リテーナー・インペラの超精密加工",
+      "priority": 5,
+      "products": [
+        {
+          "id": "retainer-parts",
+          "name": "リテーナー部品",
+          "category": "リテーナー", 
+          "description": "工作機械主軸用リテーナー・保持具",
+          "drawingCount": 6,
+          "drawings": ["RT2024001428365", "RT2024002539476", "RT2024003640587", "RT2024004751698", "RT2024005862709", "RT2024006973810"]
+        },
+        {
+          "id": "precision-impeller",
+          "name": "精密インペラ",
+          "category": "インペラ",
+          "description": "工作機械冷却系統用高精度インペラ", 
+          "drawingCount": 4,
+          "drawings": ["PI2024001617293", "PI2024002728304", "PI2024003839415", "PI2024004940526"]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "totalCompanies": 5,
+    "totalProducts": 12,
+    "totalDrawings": 65,
+    "lastUpdated": "2024-12-30T00:00:00Z"
+  }
+}

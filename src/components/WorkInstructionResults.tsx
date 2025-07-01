@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { WorkInstruction } from '@/lib/dataLoader'
 import { useTranslation } from '@/hooks/useTranslation'
+import WorkStep from './WorkStep'
 
 interface WorkInstructionResultsProps {
   instruction: WorkInstruction
@@ -8,30 +9,94 @@ interface WorkInstructionResultsProps {
   onRelatedDrawingClick: (drawingNumber: string) => void
 }
 
+interface FileList {
+  images: string[]
+  videos: string[]
+  pdfs: string[]
+}
+
 export default function WorkInstructionResults({ instruction, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'troubleshooting'>('steps')
+  const [fileList, setFileList] = useState<FileList>({ images: [], videos: [], pdfs: [] })
 
-  // PDFファイル名推定（metadata.drawingNumberから）
-  const pdfFile = instruction.metadata.drawingNumber
-    ? `/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdf/` +
-      (instruction.metadata.drawingNumber === 'CS2024001456789'
-        ? 'DOC250507-20250507150631.pdf'
-        : instruction.metadata.drawingNumber === 'FR2024001237891'
-        ? '0A149002911_TK版.pdf'
-        : instruction.metadata.drawingNumber === 'RT2024001428365'
-        ? 'JD14-A0209_ホッパリング.pdf'
-        : '')
-    : ''
+  // overview用のファイル状態
+  const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[] }>({ pdfs: [], images: [], videos: [] })
 
-  // 実際のファイル名にマッピングする関数
-  const getActualFileName = (drawingNumber: string, fileType: 'image' | 'video') => {
-    const mapping = {
-      'CS2024001456789': { image: 'sample3.jpg', video: 'sample3.mp4' },
-      'RT2024001428365': { image: 'sample2.jpg', video: 'sample2.mp4' },
-      'FR2024001237891': { image: 'sample1.jpg', video: 'sample1.mp4' }
+  // フォルダ内ファイル一覧を取得する関数
+  const getFilesFromFolder = async (drawingNumber: string, folderType: 'images' | 'videos' | 'pdfs', subFolder?: string) => {
+    try {
+      const params = new URLSearchParams({
+        drawingNumber,
+        folderType,
+        ...(subFolder && { subFolder })
+      })
+      
+      const response = await fetch(`/api/files?${params}`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      return data.files || []
+    } catch (error) {
+      console.error(`Error loading files from ${folderType}:`, error)
+      return []
     }
-    return mapping[drawingNumber as keyof typeof mapping]?.[fileType] || ''
+  }
+
+  // overviewファイルの初期化
+  useEffect(() => {
+    const loadOverviewFiles = async () => {
+      const drawingNumber = instruction.metadata.drawingNumber
+      const [pdfs, images, videos] = await Promise.all([
+        getFilesFromFolder(drawingNumber, 'pdfs', 'overview'),
+        getFilesFromFolder(drawingNumber, 'images', 'overview'),
+        getFilesFromFolder(drawingNumber, 'videos', 'overview')
+      ])
+      setOverviewFiles({ pdfs, images, videos })
+    }
+    
+    loadOverviewFiles()
+  }, [instruction])
+
+  // ファイル一覧を初期化
+  useEffect(() => {
+    const loadFiles = async () => {
+      const drawingNumber = instruction.metadata.drawingNumber
+      const mediaFolders = (instruction as any).mediaFolders || { images: 'overview', videos: 'overview' }
+      
+      const [images, videos, pdfs] = await Promise.all([
+        getFilesFromFolder(drawingNumber, 'images', mediaFolders.images),
+        getFilesFromFolder(drawingNumber, 'videos', mediaFolders.videos),
+        getFilesFromFolder(drawingNumber, 'pdfs')
+      ])
+      
+      setFileList({ images, videos, pdfs })
+    }
+    
+    loadFiles()
+  }, [instruction])
+
+  // ステップごとのファイル一覧を取得する関数
+  const getStepFiles = async (stepNumber: number) => {
+    const drawingNumber = instruction.metadata.drawingNumber
+    const stepFolder = `step_0${stepNumber}`
+    
+    const [stepImages, stepVideos] = await Promise.all([
+      getFilesFromFolder(drawingNumber, 'images', stepFolder),
+      getFilesFromFolder(drawingNumber, 'videos', stepFolder)
+    ])
+    
+    return { images: stepImages, videos: stepVideos }
+  }
+
+  // PDFファイルパスを生成
+  const getPdfFiles = () => {
+    return fileList.pdfs.map(pdf => ({
+      name: pdf,
+      path: `/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdf/${pdf}`
+    }))
   }
 
   return (
@@ -55,19 +120,69 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
               <span>{t('toolsRequired')}: {instruction.metadata.toolsRequired?.join(', ')}</span>
             </div>
           </div>
-          {/* PDF図面表示 */}
-          {pdfFile && (
-            <div className="min-w-[200px]">
-              <a href={pdfFile} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md text-[#E60023] rounded-lg border border-[#E60023]/50 font-bold">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                PDF図面を開く
-              </a>
+        </div>
+      </div>
+
+      {/* overviewメディア群 */}
+      {(overviewFiles.pdfs.length > 0 || overviewFiles.images.length > 0 || overviewFiles.videos.length > 0) && (
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mb-8">
+          <h2 className="text-2xl font-bold text-emerald-100 mb-4">概要メディア</h2>
+          {/* PDF */}
+          {overviewFiles.pdfs.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-emerald-200 mb-3">PDF</h3>
+              <div className="space-y-2">
+                {overviewFiles.pdfs.map((pdf, i) => (
+                  <a
+                    key={`overview-pdf-${i}`}
+                    href={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdfs/overview/${encodeURIComponent(pdf)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md text-[#E60023] rounded-lg border border-[#E60023]/50 font-bold hover:bg-white/20 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    {pdf}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Images */}
+          {overviewFiles.images.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-emerald-200 mb-3">画像</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {overviewFiles.images.map((image, i) => (
+                  <div key={`overview-img-${i}`} className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
+                    <img
+                      src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
+                      alt={`概要 - ${image}`}
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Videos */}
+          {overviewFiles.videos.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-emerald-200 mb-3">動画</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {overviewFiles.videos.map((video, i) => (
+                  <div key={`overview-vid-${i}`} className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
+                    <video controls className="w-full h-48 object-cover">
+                      <source src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/overview/${video}`} type="video/mp4" />
+                    </video>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
-      </div>
+      )}
 
       {/* 概要 */}
       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mb-8">
@@ -128,121 +243,12 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
         {activeTab === 'steps' && (
           <div>
             {instruction.workSteps.map((step, idx) => (
-              <div key={idx} className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 shadow-lg">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="text-lg font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-lg">{t('step')} {step.stepNumber}</div>
-                  <div className="text-xl font-semibold text-white">{step.title}</div>
-                  <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">{t('timeRequired')}: {step.timeRequired}</span>
-                  <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">{t(step.warningLevel)}</span>
-                </div>
-                <div className="text-white mb-4 text-lg">{step.description}</div>
-                {/* 詳細手順 */}
-                {step.detailedInstructions && step.detailedInstructions.length > 0 && (
-                  <div className="bg-emerald-500/10 rounded-xl p-6 mb-4 border border-emerald-500/20">
-                    <h4 className="text-lg font-semibold text-emerald-200 mb-3">詳細手順</h4>
-                    <ul className="list-decimal pl-6 text-emerald-100 space-y-2">
-                      {step.detailedInstructions.map((inst, i) => (
-                        <li key={i}>{inst}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {/* 画像・動画 */}
-                {(step.images && step.images.length > 0) || (step.videos && step.videos.length > 0) ? (
-                  <div className="media-gallery mt-6">
-                    <h4 className="text-lg font-semibold text-emerald-200 mb-4">{t('media')}</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {step.images && step.images.map((img, i) => (
-                        <div key={i} className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
-                          <div className="p-3 text-xs text-emerald-200 bg-emerald-500/20">
-                            {img}
-                          </div>
-                          <img
-                            src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/${getActualFileName(instruction.metadata.drawingNumber, 'image')}`}
-                            alt={`ステップ${step.stepNumber} - ${img}`}
-                            className="w-full h-48 object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = '/file.svg'
-                              e.currentTarget.alt = '画像が見つかりません'
-                            }}
-                          />
-                        </div>
-                      ))}
-                      {step.videos && step.videos.map((vid, i) => (
-                        <div key={i} className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
-                          <div className="p-3 text-xs text-emerald-200 bg-emerald-500/20">
-                            {vid}
-                          </div>
-                          <video 
-                            controls 
-                            className="w-full h-48 object-cover"
-                            preload="metadata"
-                          >
-                            <source 
-                              src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/${getActualFileName(instruction.metadata.drawingNumber, 'video')}`} 
-                              type="video/mp4"
-                            />
-                            <p className="p-4 text-center text-emerald-200">
-                              動画を再生できません。ブラウザが動画形式をサポートしていないか、ファイルが見つかりません。
-                            </p>
-                          </video>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-                {/* 切削条件 */}
-                {step.cuttingConditions && (
-                  <div className="cutting-conditions mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
-                    <h4 className="text-lg font-semibold text-emerald-200 mb-4">{t('cuttingConditions')}</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {Object.entries(step.cuttingConditions).map(([key, condition]) => (
-                        <div key={key} className="bg-black/40 rounded-xl p-4 border border-emerald-500/30">
-                          <div className="font-semibold text-emerald-300 mb-3 capitalize">
-                            {key.replace(/_/g, ' ')}
-                          </div>
-                          {typeof condition === 'object' && condition !== null ? (
-                            <div className="space-y-2 text-sm">
-                              {Object.entries(condition).map(([prop, value]) => (
-                                <div key={prop} className="flex justify-between">
-                                  <span className="text-emerald-200">{t(prop) || prop}:</span>
-                                  <span className="text-white font-medium">{String(value)}</span>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="text-white font-medium">{String(condition)}</div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {/* 品質確認 */}
-                {step.qualityCheck && (
-                  <div className="quality-check mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
-                    <h4 className="text-lg font-semibold text-emerald-200 mb-4">{t('qualityCheck')}</h4>
-                    <div className="text-emerald-100 text-sm space-y-2">
-                      <div><span className="font-medium">{t('checkPoints')}:</span> {step.qualityCheck.checkPoints?.join(', ')}</div>
-                      <div><span className="font-medium">{t('inspectionTools')}:</span> {step.qualityCheck.inspectionTools?.join(', ')}</div>
-                    </div>
-                  </div>
-                )}
-                {/* 備考 */}
-                {step.notes && step.notes.length > 0 && (
-                  <div className="mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
-                    <h4 className="text-lg font-semibold text-emerald-200 mb-4">{t('notes')}</h4>
-                    <div className="space-y-3">
-                      {step.notes.map((note, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                          <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
-                          <p className="text-emerald-100 text-sm">{note}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <WorkStep 
+                key={idx} 
+                step={step} 
+                instruction={instruction}
+                getStepFiles={getStepFiles}
+              />
             ))}
           </div>
         )}
