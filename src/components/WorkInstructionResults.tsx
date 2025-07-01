@@ -129,21 +129,26 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           <h2 className="text-2xl font-bold text-emerald-100 mb-4">概要メディア</h2>
           {/* PDF */}
           {overviewFiles.pdfs.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-emerald-200 mb-3">PDF</h3>
-              <div className="space-y-2">
+            <div className="mb-6 bg-white rounded-xl p-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">PDF</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {overviewFiles.pdfs.map((pdf, i) => (
                   <a
                     key={`overview-pdf-${i}`}
                     href={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdfs/overview/${encodeURIComponent(pdf)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md text-[#E60023] rounded-lg border border-[#E60023]/50 font-bold hover:bg-white/20 transition-colors"
+                    className="group flex items-center gap-3 px-4 py-3 bg-red-500/10 backdrop-blur-md text-red-400 rounded-xl border border-red-500/30 transition-all duration-200 min-w-0 max-w-xs"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    {pdf}
+                    <div className="flex-shrink-0">
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-medium truncate">{pdf}</div>
+                      <div className="text-xs text-red-400/70">PDF文書</div>
+                    </div>
                   </a>
                 ))}
               </div>
@@ -153,13 +158,14 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           {overviewFiles.images.length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-emerald-200 mb-3">画像</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {overviewFiles.images.map((image, i) => (
-                  <div key={`overview-img-${i}`} className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
+                  <div key={`overview-img-${i}`}
+                    className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
                     <img
                       src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
                       alt={`概要 - ${image}`}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-full object-cover"
                     />
                   </div>
                 ))}
@@ -170,10 +176,11 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           {overviewFiles.videos.length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-emerald-200 mb-3">動画</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {overviewFiles.videos.map((video, i) => (
-                  <div key={`overview-vid-${i}`} className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
-                    <video controls className="w-full h-48 object-cover">
+                  <div key={`overview-vid-${i}`}
+                    className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
+                    <video controls className="w-full h-full object-cover">
                       <source src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/overview/${video}`} type="video/mp4" />
                     </video>
                   </div>

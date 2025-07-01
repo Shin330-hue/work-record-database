@@ -762,3 +762,10 @@ body::before {
     left: 10px;
   }
 }
+
+/* PDFリンク専用：訪問済みリンクの色をピンクに */
+a[href$=".pdf"]:visited {
+  color: #fb7185 !important;      /* ピンク色 */
+  background: #ffe4e6 !important; /* 薄いピンク背景（必要なら） */
+  border-color: #f9a8d4 !important; /* 薄いピンク枠（必要なら） */
+}
