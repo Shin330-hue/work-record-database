@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readdir } from 'fs/promises'
+import { readdir, stat } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+
+const getDataRootPath = (): string => {
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
+  }
+  if (process.env.USE_NAS === 'true') {
+    return process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
+  }
+  return process.env.DEV_DATA_ROOT_PATH || join(process.cwd(), 'public', 'data_test')
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,9 +27,21 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // パブリックフォルダ内のパスを構築
-    const basePath = join(process.cwd(), 'public', 'data', 'work-instructions', `drawing-${drawingNumber}`, folderType)
+    // データルートパスを取得
+    const dataRoot = getDataRootPath()
+    const basePath = join(dataRoot, 'work-instructions', `drawing-${drawingNumber}`, folderType)
     const folderPath = subFolder ? join(basePath, subFolder) : basePath
+
+    // デバッグ用ログ
+    if (process.env.DEBUG_DATA_LOADING === 'true') {
+      console.log('🔍 files API パス情報:', {
+        dataRoot: dataRoot,
+        basePath: basePath,
+        folderPath: folderPath,
+        USE_NAS: process.env.USE_NAS,
+        DEV_DATA_ROOT_PATH: process.env.DEV_DATA_ROOT_PATH
+      })
+    }
 
     // フォルダが存在するかチェック
     if (!existsSync(folderPath)) {

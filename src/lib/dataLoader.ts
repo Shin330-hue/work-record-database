@@ -1,5 +1,79 @@
 // src/lib/dataLoader.ts - 案件記録データベース用に完全書き換え
 
+// 環境に応じたデータパス取得
+const getDataPath = (): string => {
+  // デバッグ用ログ
+  if (process.env.DEBUG_DATA_LOADING === 'true') {
+    console.log('🔍 getDataPath 呼び出し:', {
+      NODE_ENV: process.env.NODE_ENV,
+      USE_NAS: process.env.USE_NAS,
+      DATA_ROOT_PATH: process.env.DATA_ROOT_PATH,
+      DEV_DATA_ROOT_PATH: process.env.DEV_DATA_ROOT_PATH
+    })
+  }
+
+  // 本番環境（社内ノートPC）
+  if (process.env.NODE_ENV === 'production') {
+    const path = process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
+    if (process.env.DEBUG_DATA_LOADING === 'true') {
+      console.log('🏭 本番環境パス:', path)
+    }
+    return path
+  }
+  
+  // NAS使用開発環境
+  if (process.env.USE_NAS === 'true') {
+    const path = process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
+    if (process.env.DEBUG_DATA_LOADING === 'true') {
+      console.log('💾 NAS使用パス:', path)
+    }
+    return path
+  }
+  
+  // ローカル開発環境（DEV_DATA_ROOT_PATHを使用）
+  const path = process.env.DEV_DATA_ROOT_PATH || './public/data_test'
+  if (process.env.DEBUG_DATA_LOADING === 'true') {
+    console.log('🖥️ ローカル開発パス:', path)
+  }
+  return path
+}
+
+// Next.js の静的ファイル配信を活用
+const setupStaticFiles = async () => {
+  // サーバーサイドのみ実行
+  if (typeof window !== 'undefined') return;
+
+  // 動的importでfsとpathを取得
+  const { promises: fs } = await import('fs');
+  const path = (await import('path')).default;
+
+  const dataPath = getDataPath();
+  const publicDataPath = path.join(process.cwd(), 'public', 'data');
+
+  // Windows環境では手動でシンボリックリンクを作成してください
+  // 以下の自動削除・symlink作成処理はコメントアウトします
+  /*
+  if (process.env.NODE_ENV === 'production' || process.env.USE_NAS === 'true') {
+    try {
+      if (require('fs').existsSync(publicDataPath)) {
+        await fs.rm(publicDataPath, { recursive: true, force: true });
+      }
+      await fs.symlink(dataPath, publicDataPath);
+      console.log(`✅ シンボリックリンク作成: ${publicDataPath} → ${dataPath}`);
+    } catch (error) {
+      console.error('⚠️ シンボリックリンク作成失敗:', error);
+      await fs.cp(dataPath, publicDataPath, { recursive: true });
+      console.log(`✅ データコピー完了: ${dataPath} → ${publicDataPath}`);
+    }
+  }
+  */
+}
+
+// アプリケーション起動時にセットアップ実行
+if (typeof window === 'undefined') {
+  setupStaticFiles()
+}
+
 // 会社マスターデータ
 export interface Company {
   id: string
@@ -141,57 +215,89 @@ export interface WorkInstruction {
   revisionHistory: RevisionHistory[]
 }
 
+// フロントエンド用のデータパス取得
+const getFrontendDataPath = (): string => {
+  if (typeof window === 'undefined') return '';
+  if (process.env.USE_NAS === 'true') {
+    return '/data';
+  }
+  return '/data_test';
+}
+
 // データ読み込み関数
 export const loadCompanies = async (): Promise<Company[]> => {
   try {
-    const response = await fetch('/data/companies.json')
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+    if (process.env.DEBUG_DATA_LOADING === 'true') {
+      console.log('🔍 会社データ読み込み情報:', {
+        isServerSide: typeof window === 'undefined',
+        dataPath: getDataPath(),
+        useNAS: process.env.USE_NAS,
+        nodeEnv: process.env.NODE_ENV
+      })
     }
-    const data = await response.json()
-    return data.companies || []
+    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
+    const response = await fetch(`${dataPath}/companies.json`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data.companies || [];
   } catch (error) {
-    console.error('会社データの読み込みに失敗:', error)
-    return []
+    console.error('会社データの読み込みに失敗:', error);
+    return [];
   }
 }
 
 export const loadSearchIndex = async (): Promise<SearchIndex> => {
   try {
-    const response = await fetch('/data/search-index.json')
+    if (process.env.DEBUG_DATA_LOADING === 'true') {
+      console.log('🔍 検索インデックス読み込み情報:', {
+        isServerSide: typeof window === 'undefined',
+        dataPath: getDataPath(),
+        useNAS: process.env.USE_NAS,
+        nodeEnv: process.env.NODE_ENV
+      })
+    }
+    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
+    const response = await fetch(`${dataPath}/search-index.json`);
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json()
-    return data
+    return await response.json();
   } catch (error) {
-    console.error('検索インデックスの読み込みに失敗:', error)
-    return { 
-      drawings: [], 
-      metadata: { 
-        totalDrawings: 0, 
-        lastIndexed: new Date().toISOString(), 
-        version: '1.0' 
-      } 
-    }
+    console.error('検索インデックスの読み込みに失敗:', error);
+    return {
+      drawings: [],
+      metadata: {
+        totalDrawings: 0,
+        lastIndexed: new Date().toISOString(),
+        version: '1.0'
+      }
+    };
   }
 }
 
 export const loadWorkInstruction = async (drawingNumber: string): Promise<WorkInstruction | null> => {
   try {
-    // 図番をファイル名安全な形式に変換
-    const safeDrawingNumber = drawingNumber.replace(/[^a-zA-Z0-9-]/g, '-')
-    const response = await fetch(`/data/work-instructions/drawing-${safeDrawingNumber}/instruction.json`)
-    
-    if (!response.ok) {
-      throw new Error(`図番 ${drawingNumber} の作業手順が見つかりません`)
+    if (process.env.DEBUG_DATA_LOADING === 'true') {
+      console.log('🔍 作業手順読み込み情報:', {
+        drawingNumber,
+        isServerSide: typeof window === 'undefined',
+        dataPath: getDataPath(),
+        useNAS: process.env.USE_NAS,
+        nodeEnv: process.env.NODE_ENV
+      })
     }
-    
-    const data = await response.json()
-    return data
+    const safeDrawingNumber = drawingNumber.replace(/[^a-zA-Z0-9-]/g, '-');
+    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
+    const response = await fetch(`${dataPath}/work-instructions/drawing-${safeDrawingNumber}/instruction.json`);
+    if (!response.ok) {
+      throw new Error(`図番 ${drawingNumber} の作業手順が見つかりません`);
+    }
+    return await response.json();
   } catch (error) {
-    console.error(`作業手順の読み込みに失敗 (${drawingNumber}):`, error)
-    return null
+    console.error(`作業手順の読み込みに失敗 (${drawingNumber}):`, error);
+    return null;
   }
 }
 

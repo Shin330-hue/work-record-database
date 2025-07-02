@@ -199,6 +199,26 @@
       "warningLevel": "critical"
     }
   ],
+  "mediaFolders": {
+    "images": {
+      "overview": "overview",
+      "step_01": "step_01",
+      "step_02": "step_02",
+      "step_03": "step_03"
+    },
+    "videos": {
+      "overview": "overview",
+      "step_01": "step_01",
+      "step_02": "step_02",
+      "step_03": "step_03"
+    },
+    "pdfs": {
+      "overview": "overview",
+      "step_01": "step_01",
+      "step_02": "step_02",
+      "step_03": "step_03"
+    }
+  },
   "relatedDrawings": [
     {
       "drawingNumber": "RT2024002539476",

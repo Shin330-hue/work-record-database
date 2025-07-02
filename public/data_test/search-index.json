@@ -55,42 +55,6 @@
       "machineType": "マシニングセンタ, ラジアルボール盤"
     },
     {
-      "drawingNumber": "CS2024001456789",
-      "productName": "ケーシング部品",
-      "companyName": "水谷鉄工株式会社",
-      "companyId": "mizutani-tekko",
-      "productId": "casing-parts", 
-      "title": "遠心ポンプケーシング",
-      "category": "ケーシング",
-      "keywords": ["ケーシング", "ポンプ", "遠心", "マシニング", "ターニング", "ラジアルボール盤"],
-      "folderPath": "drawing-CS2024001456789",
-      "hasImages": true,
-      "hasVideos": true,
-      "hasDrawing": true,
-      "stepCount": 4,
-      "difficulty": "上級",
-      "estimatedTime": "360分",
-      "machineType": "マシニングセンタ, ターニングセンタ, ラジアルボール盤"
-    },
-    {
-      "drawingNumber": "IM2024001234567",
-      "productName": "インペラ部品",
-      "companyName": "水谷鉄工株式会社",
-      "companyId": "mizutani-tekko",
-      "productId": "impeller-parts",
-      "title": "遠心ファン用インペラ",
-      "category": "インペラ", 
-      "keywords": ["インペラ", "ファン", "遠心", "羽根", "マシニング", "ターニング", "ラジアルボール盤"],
-      "folderPath": "drawing-IM2024001234567",
-      "hasImages": true,
-      "hasVideos": false,
-      "hasDrawing": true,
-      "stepCount": 4,
-      "difficulty": "上級",
-      "estimatedTime": "420分",
-      "machineType": "マシニングセンタ, ターニングセンタ, ラジアルボール盤"
-    },
-    {
       "drawingNumber": "RT2024001428365",
       "productName": "リテーナー部品",
       "companyName": "ヤマザキマザック株式会社",
@@ -128,8 +92,8 @@
     }
   ],
   "metadata": {
-    "totalDrawings": 36,
-    "indexedDrawings": 7,
+    "totalDrawings": 28,
+    "indexedDrawings": 5,
     "lastIndexed": "2024-12-30T00:00:00Z",
     "version": "1.0"
   }
