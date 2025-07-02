@@ -218,7 +218,17 @@ export interface WorkInstruction {
 // フロントエンド用のデータパス取得
 const getFrontendDataPath = (): string => {
   if (typeof window === 'undefined') return '';
-  if (process.env.USE_NAS === 'true') {
+  
+  // デバッグ用ログ
+  if (process.env.DEBUG_DATA_LOADING === 'true') {
+    console.log('🔍 getFrontendDataPath 呼び出し:', {
+      NEXT_PUBLIC_USE_NAS: process.env.NEXT_PUBLIC_USE_NAS,
+      NODE_ENV: process.env.NODE_ENV,
+      isWindow: typeof window !== 'undefined'
+    });
+  }
+  
+  if (process.env.NEXT_PUBLIC_USE_NAS === 'true') {
     return '/data';
   }
   return '/data_test';
