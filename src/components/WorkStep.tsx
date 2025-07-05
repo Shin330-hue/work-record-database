@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { WorkInstruction, WorkStep as WorkStepType, getFrontendDataPath } from '@/lib/dataLoader'
 import { useTranslation } from '@/hooks/useTranslation'
 
@@ -65,14 +66,12 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                 <div className="p-3 text-xs text-emerald-200 bg-emerald-500/20">
                   {image}
                 </div>
-                <img
+                <Image
                   src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/step_0${step.stepNumber}/${image}`}
                   alt={`ステップ${step.stepNumber} - ${image}`}
+                  width={300}
+                  height={192}
                   className="w-full h-48 object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = '/file.svg'
-                    e.currentTarget.alt = '画像が見つかりません'
-                  }}
                 />
               </div>
             ))}

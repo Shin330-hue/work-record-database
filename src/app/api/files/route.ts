@@ -1,16 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readdir, stat } from 'fs/promises'
+import { readdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 
 const getDataRootPath = (): string => {
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
-  }
+  // USE_NASの設定を最優先
   if (process.env.USE_NAS === 'true') {
     return process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
   }
-  return process.env.DEV_DATA_ROOT_PATH || join(process.cwd(), 'public', 'data_test')
+  
+  // 開発用データパスを優先
+  if (process.env.DEV_DATA_ROOT_PATH) {
+    return process.env.DEV_DATA_ROOT_PATH
+  }
+  
+  // 本番環境のデフォルト
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
+  }
+  
+  // 開発環境のデフォルト
+  return join(process.cwd(), 'public', 'data_test')
 }
 
 export async function GET(request: NextRequest) {

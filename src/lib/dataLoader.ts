@@ -43,18 +43,16 @@ const setupStaticFiles = async () => {
   // サーバーサイドのみ実行
   if (typeof window !== 'undefined') return;
 
-  // 動的importでfsとpathを取得
-  const { promises: fs } = await import('fs');
-  const path = (await import('path')).default;
-
-  const dataPath = getDataPath();
-  const publicDataPath = path.join(process.cwd(), 'public', 'data');
-
   // Windows環境では手動でシンボリックリンクを作成してください
   // 以下の自動削除・symlink作成処理はコメントアウトします
   /*
   if (process.env.NODE_ENV === 'production' || process.env.USE_NAS === 'true') {
     try {
+      const { promises: fs } = await import('fs');
+      const path = (await import('path')).default;
+      const dataPath = getDataPath();
+      const publicDataPath = path.join(process.cwd(), 'public', 'data');
+      
       if (require('fs').existsSync(publicDataPath)) {
         await fs.rm(publicDataPath, { recursive: true, force: true });
       }

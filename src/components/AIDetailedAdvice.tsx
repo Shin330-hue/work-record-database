@@ -8,7 +8,7 @@ interface Props {
   basicAdvice: Advice
 }
 
-export default function AIDetailedAdvice({ context, basicAdvice }: Props) {
+export default function AIDetailedAdvice({ }: Props) {
   const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const [aiAdvice, setAiAdvice] = useState<string>('')
@@ -23,7 +23,7 @@ export default function AIDetailedAdvice({ context, basicAdvice }: Props) {
       // 今は仮の応答を返す
       await new Promise(resolve => setTimeout(resolve, 2000))
       setAiAdvice('AI分析結果：切削条件を最適化することで、この問題を効果的に解決できます。')
-    } catch (err) {
+    } catch {
       setError(t('aiError'))
     } finally {
       setIsLoading(false)

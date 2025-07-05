@@ -34,7 +34,7 @@ export default function Home() {
         setSearchIndex(searchIndexData)
         setLoading(false)
       })
-      .catch((e) => {
+      .catch(() => {
         setError('データの読み込みに失敗しました')
         setLoading(false)
       })

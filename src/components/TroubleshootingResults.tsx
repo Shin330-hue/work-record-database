@@ -1,5 +1,6 @@
 // src/components/TroubleshootingResults.tsx - パス修正版
 'use client'
+import Image from 'next/image'
 import { DiagnosisContext, Advice } from '@/lib/contextBuilder'
 import { useTranslation } from '@/hooks/useTranslation'
 import AIDetailedAdvice from './AIDetailedAdvice'
@@ -87,36 +88,16 @@ export default function TroubleshootingResults({ advice, context, onRestart }: T
             display: 'inline-block',
             boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
           }}>
-            <img 
-              src={`/media/${localizedAdvice.image}`} // 🔥 /media/に修正
+            <Image 
+              src={`/media/${localizedAdvice.image}`}
               alt={localizedAdvice.title}
+              width={400}
+              height={300}
               style={{
                 maxWidth: '100%',
                 height: 'auto',
                 display: 'block',
                 maxHeight: '400px'
-              }}
-              onError={(e) => {
-                console.log('画像読み込みエラー:', localizedAdvice.image) // 🔥 デバッグ用
-                const target = e.target as HTMLImageElement
-                target.style.display = 'none'
-                const parent = target.parentElement
-                if (parent) {
-                  parent.innerHTML = `
-                    <div style="
-                      padding: 40px; 
-                      background: rgba(255,255,255,0.05); 
-                      border: 2px dashed rgba(255,255,255,0.2);
-                      color: #888;
-                      border-radius: 10px;
-                    ">
-                      📷 探している画像: ${localizedAdvice.image}<br>
-                      🔍 実際のパス: /media/${localizedAdvice.image}<br>
-                      📁 利用可能なファイル: surface_bad.jpg, tool_broken.jpg<br>
-                      <small style="color: #666;">画像ファイルが見つかりません</small>
-                    </div>
-                  `
-                }
               }}
             />
           </div>

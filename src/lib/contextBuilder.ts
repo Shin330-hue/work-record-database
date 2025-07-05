@@ -29,7 +29,7 @@ export function buildDiagnosisContext(selectionPath: string[]): DiagnosisContext
 }
 
 // 🔥 簡潔性重視のプロンプト
-export function generateConcisePrompt(context: DiagnosisContext, basicAdvice: any): string {
+export function generateConcisePrompt(context: DiagnosisContext): string {
   return `
 金属加工エキスパートとして、以下の問題に対する解決策を提供してください。
 

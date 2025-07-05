@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { WorkInstruction } from '@/lib/dataLoader'
 import { useTranslation } from '@/hooks/useTranslation'
 import WorkStep from './WorkStep'
@@ -10,17 +11,9 @@ interface WorkInstructionResultsProps {
   onRelatedDrawingClick: (drawingNumber: string) => void
 }
 
-interface FileList {
-  images: string[]
-  videos: string[]
-  pdfs: string[]
-}
-
 export default function WorkInstructionResults({ instruction, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'troubleshooting'>('steps')
-  const [fileList, setFileList] = useState<FileList>({ images: [], videos: [], pdfs: [] })
-
   // overview用のファイル状態
   const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[] }>({ pdfs: [], images: [], videos: [] })
 
@@ -63,23 +56,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
     loadOverviewFiles()
   }, [instruction])
 
-  // ファイル一覧を初期化
-  useEffect(() => {
-    const loadFiles = async () => {
-      const drawingNumber = instruction.metadata.drawingNumber
-      const mediaFolders = (instruction as any).mediaFolders || { images: 'overview', videos: 'overview' }
-      
-      const [images, videos, pdfs] = await Promise.all([
-        getFilesFromFolder(drawingNumber, 'images', mediaFolders.images),
-        getFilesFromFolder(drawingNumber, 'videos', mediaFolders.videos),
-        getFilesFromFolder(drawingNumber, 'pdfs')
-      ])
-      
-      setFileList({ images, videos, pdfs })
-    }
-    
-    loadFiles()
-  }, [instruction])
+
 
   // ステップごとのファイル一覧を取得する関数
   const getStepFiles = async (stepNumber: number) => {
@@ -94,13 +71,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
     return { images: stepImages, videos: stepVideos }
   }
 
-  // PDFファイルパスを生成
-  const getPdfFiles = () => {
-    return fileList.pdfs.map(pdf => ({
-      name: pdf,
-      path: `${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdf/${pdf}`
-    }))
-  }
+
 
   return (
     <div className="work-instruction-container">
@@ -165,9 +136,11 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
                 {overviewFiles.images.map((image, i) => (
                   <div key={`overview-img-${i}`}
                     className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
-                    <img
+                    <Image
                       src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
                       alt={`概要 - ${image}`}
+                      width={300}
+                      height={200}
                       className="w-full h-full object-cover"
                     />
                   </div>
