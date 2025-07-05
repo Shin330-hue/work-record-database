@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { WorkInstruction, WorkStep as WorkStepType } from '@/lib/dataLoader'
+import { WorkInstruction, WorkStep as WorkStepType, getFrontendDataPath } from '@/lib/dataLoader'
 import { useTranslation } from '@/hooks/useTranslation'
 
 interface WorkStepProps {
@@ -28,6 +28,8 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
 
     loadStepFiles()
   }, [step.stepNumber, getStepFiles])
+
+  const dataRoot = getFrontendDataPath();
 
   return (
     <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 shadow-lg">
@@ -64,7 +66,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                   {image}
                 </div>
                 <img
-                  src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/step_0${step.stepNumber}/${image}`}
+                  src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/step_0${step.stepNumber}/${image}`}
                   alt={`ステップ${step.stepNumber} - ${image}`}
                   className="w-full h-48 object-cover"
                   onError={(e) => {
@@ -86,7 +88,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                   preload="metadata"
                 >
                   <source 
-                    src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/step_0${step.stepNumber}/${video}`}
+                    src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/step_0${step.stepNumber}/${video}`}
                     type="video/mp4"
                   />
                   <p className="p-4 text-center text-emerald-200">

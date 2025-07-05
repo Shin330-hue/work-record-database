@@ -216,21 +216,23 @@ export interface WorkInstruction {
 }
 
 // フロントエンド用のデータパス取得
-const getFrontendDataPath = (): string => {
+export const getFrontendDataPath = (): string => {
   if (typeof window === 'undefined') return '';
   
-  // デバッグ用ログ
-  if (process.env.DEBUG_DATA_LOADING === 'true') {
-    console.log('🔍 getFrontendDataPath 呼び出し:', {
-      NEXT_PUBLIC_USE_NAS: process.env.NEXT_PUBLIC_USE_NAS,
-      NODE_ENV: process.env.NODE_ENV,
-      isWindow: typeof window !== 'undefined'
-    });
-  }
+  // デバッグログを常に出力
+  console.log('🔍 getFrontendDataPath 詳細:', {
+    NEXT_PUBLIC_USE_NAS: process.env.NEXT_PUBLIC_USE_NAS,
+    NEXT_PUBLIC_USE_NAS_type: typeof process.env.NEXT_PUBLIC_USE_NAS,
+    NEXT_PUBLIC_USE_NAS_strict: process.env.NEXT_PUBLIC_USE_NAS === 'true',
+    NODE_ENV: process.env.NODE_ENV,
+    isWindow: typeof window !== 'undefined'
+  });
   
   if (process.env.NEXT_PUBLIC_USE_NAS === 'true') {
+    console.log('💾 NAS使用パスを返します: /data');
     return '/data';
   }
+  console.log('🖥️ ローカルパスを返します: /data_test');
   return '/data_test';
 }
 

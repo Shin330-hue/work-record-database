@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { WorkInstruction } from '@/lib/dataLoader'
 import { useTranslation } from '@/hooks/useTranslation'
 import WorkStep from './WorkStep'
+import { getFrontendDataPath } from '../lib/dataLoader';
 
 interface WorkInstructionResultsProps {
   instruction: WorkInstruction
@@ -22,6 +23,8 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
 
   // overview用のファイル状態
   const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[] }>({ pdfs: [], images: [], videos: [] })
+
+  const dataRoot = getFrontendDataPath();
 
   // フォルダ内ファイル一覧を取得する関数
   const getFilesFromFolder = async (drawingNumber: string, folderType: 'images' | 'videos' | 'pdfs', subFolder?: string) => {
@@ -95,7 +98,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
   const getPdfFiles = () => {
     return fileList.pdfs.map(pdf => ({
       name: pdf,
-      path: `/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdf/${pdf}`
+      path: `${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdf/${pdf}`
     }))
   }
 
@@ -135,7 +138,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
                 {overviewFiles.pdfs.map((pdf, i) => (
                   <a
                     key={`overview-pdf-${i}`}
-                    href={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdfs/overview/${encodeURIComponent(pdf)}`}
+                    href={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdfs/overview/${encodeURIComponent(pdf)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center gap-3 px-4 py-3 bg-red-500/10 backdrop-blur-md text-red-400 rounded-xl border border-red-500/30 transition-all duration-200 min-w-0 max-w-xs"
@@ -163,7 +166,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
                   <div key={`overview-img-${i}`}
                     className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
                     <img
-                      src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
+                      src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
                       alt={`概要 - ${image}`}
                       className="w-full h-full object-cover"
                     />
@@ -181,7 +184,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
                   <div key={`overview-vid-${i}`}
                     className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
                     <video controls className="w-full h-full object-cover">
-                      <source src={`/data/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/overview/${video}`} type="video/mp4" />
+                      <source src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/overview/${video}`} type="video/mp4" />
                     </video>
                   </div>
                 ))}
