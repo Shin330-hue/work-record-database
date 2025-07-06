@@ -119,7 +119,6 @@ export interface DrawingSearchItem {
   hasVideos: boolean
   hasDrawing: boolean
   stepCount: number
-  difficulty: string
   estimatedTime: string
   machineType: string
 }
@@ -130,11 +129,9 @@ export interface InstructionMetadata {
   title: string
   companyId: string
   productId: string
-  version: string
   createdDate: string
   updatedDate: string
   author: string
-  difficulty: string
   estimatedTime: string
   machineType: string
   toolsRequired: string[]
@@ -197,7 +194,6 @@ export interface TroubleshootingItem {
 
 // 改訂履歴
 export interface RevisionHistory {
-  version: string
   date: string
   author: string
   changes: string

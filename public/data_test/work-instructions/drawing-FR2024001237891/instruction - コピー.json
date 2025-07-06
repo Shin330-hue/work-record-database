@@ -4,9 +4,11 @@
     "title": "機械装置用メインフレーム",
     "companyId": "chuo-tekko",
     "productId": "frame-parts",
+    "version": "1.3",
     "createdDate": "2024-02-15",
     "updatedDate": "2024-11-20",
     "author": "田中工場長",
+    "difficulty": "中級",
     "estimatedTime": "180分",
     "machineType": "マシニングセンタ, ラジアルボール盤",
     "toolsRequired": ["φ20エンドミル", "φ12エンドミル", "φ8ドリル", "φ6ドリル", "M8タップ", "M6タップ"]
@@ -194,21 +196,25 @@
   },
   "revisionHistory": [
     {
+      "version": "1.0",
       "date": "2024-02-15",
       "author": "田中工場長",
       "changes": "初版作成"
     },
     {
+      "version": "1.1",
       "date": "2024-05-10",
       "author": "佐藤主任",
       "changes": "切削条件を最適化、穴あけ精度向上"
     },
     {
+      "version": "1.2",
       "date": "2024-08-25",
       "author": "山田技師",
       "changes": "品質チェック項目追加、トラブルシューティング強化"
     },
     {
+      "version": "1.3",
       "date": "2024-11-20",
       "author": "田中工場長",
       "changes": "タップ加工条件見直し、最終検査手順改良"
