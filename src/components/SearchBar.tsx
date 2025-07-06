@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
 import { SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
-import { useTranslation } from '@/hooks/useTranslation'
 
 interface SearchBarProps {
   searchIndex: SearchIndex
@@ -11,7 +10,6 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ searchIndex, onSearch, onDrawingSelect, placeholder }: SearchBarProps) {
-  const { t } = useTranslation()
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<DrawingSearchItem[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -169,7 +167,7 @@ export default function SearchBar({ searchIndex, onSearch, onDrawingSelect, plac
           value={query}
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={handleFocus}
-          placeholder={placeholder || t('searchPlaceholder')}
+          placeholder={placeholder || '図番を入力してください（例: ABC-001）'}
           className="search-input w-full px-4 py-4 text-lg border-2 border-emerald-500/30 rounded-2xl bg-white/10 backdrop-blur-md text-white placeholder-emerald-200/60 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/20 transition-all duration-300 shadow-lg"
         />
         
@@ -202,7 +200,7 @@ export default function SearchBar({ searchIndex, onSearch, onDrawingSelect, plac
                     {suggestion.companyName} - {suggestion.productName}
                   </div>
                   <div className="text-emerald-200/60 text-xs mt-1">
-                    {suggestion.difficulty} • {suggestion.estimatedTime}
+                    {suggestion.estimatedTime}
                   </div>
                 </div>
                 <div className="text-emerald-300/50 group-hover:text-emerald-200 transition-colors">
@@ -249,7 +247,7 @@ export default function SearchBar({ searchIndex, onSearch, onDrawingSelect, plac
       {showSuggestions && query.length > 0 && suggestions.length === 0 && (
         <div className="search-no-results absolute top-full left-0 right-0 mt-2 bg-gray-800 border border-gray-600 rounded-lg shadow-xl z-50 p-4">
           <div className="text-gray-400 text-center">
-            {t('noResults')}
+            該当する図番が見つかりません
           </div>
         </div>
       )}

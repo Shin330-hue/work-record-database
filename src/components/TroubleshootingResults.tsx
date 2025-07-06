@@ -2,7 +2,6 @@
 'use client'
 import Image from 'next/image'
 import { DiagnosisContext, Advice } from '@/lib/contextBuilder'
-import { useTranslation } from '@/hooks/useTranslation'
 import AIDetailedAdvice from './AIDetailedAdvice'
 
 interface TroubleshootingResultsProps {
@@ -11,20 +10,96 @@ interface TroubleshootingResultsProps {
   onRestart: () => void
 }
 
-export default function TroubleshootingResults({ advice, context, onRestart }: TroubleshootingResultsProps) {
-  const { t } = useTranslation()
+// アドバイスタイトルの翻訳関数
+const getAdviceTitle = (problemId: string): string => {
+  switch (problemId) {
+    case 'surface-feedmark': return '送りマーク改善策'
+    case 'surface-chatter': return 'ビビリ振動対策'
+    case 'surface-tearout': return 'むしれ対策'
+    case 'surface-buildup': return '構成刃先の防止策'
+    case 'surface-burnish': return '焼け対策'
+    case 'surface-burr-exit': return '出口バリ対策'
+    case 'surface-burr-entrance': return '入口バリ対策'
+    case 'sound-resonance': return '共振対策'
+    case 'sound-chipjam': return '切粉詰まり解消'
+    case 'tool-abrasive': return '摩耗対策'
+    case 'tool-impact': return 'チッピング防止'
+    case 'surface-rough': return '送りマーク改善策'
+    case 'surface-shiny': return '光沢異常の対策'
+    case 'surface-burr': return 'バリ除去対策'
+    case 'tool-wear-fast': return '工具摩耗対策'
+    case 'dimension-unstable': return '寸法安定化対策'
+    case 'material-difficult': return '難削材加工対策'
+    case 'vibration-machine': return '振動対策'
+    case 'noise-cutting': return '異音対策'
+    default: return 'トラブルシューティング'
+  }
+}
 
+// アドバイステキストの翻訳関数
+const getAdviceText = (problemId: string): string => {
+  switch (problemId) {
+    case 'surface-feedmark': return '送り速度の調整と工具選定により送りマークを改善できます。'
+    case 'surface-chatter': return '回転数調整と工具保持の改善でビビリ振動を抑制します。'
+    case 'surface-tearout': return '工具の状態確認と切削条件の見直しでむしれを防止します。'
+    case 'surface-buildup': return '切削速度の向上とコーティング工具で構成刃先を防止します。'
+    case 'surface-burnish': return '切削熱の低減と工具の改善で焼けを防止します。'
+    case 'surface-burr-exit': return '工具経路の工夫と切削条件の最適化で出口バリを抑制します。'
+    case 'surface-burr-entrance': return '工具進入方法の改善で入口バリを防止します。'
+    case 'sound-resonance': return '回転数調整と防振対策で共振を抑制します。'
+    case 'sound-chipjam': return '切粉排出の改善で異常音を解消します。'
+    case 'tool-abrasive': return '工具材種の見直しと切削条件の最適化で摩耗を抑制します。'
+    case 'tool-impact': return '靭性の高い工具選定と切込み方法の改善でチッピングを防止します。'
+    case 'surface-rough': return '送り速度の調整と工具選定により送りマークを改善できます。'
+    case 'surface-shiny': return '工具摩耗による圧延効果が原因です。工具交換で解決します。'
+    case 'surface-burr': return '適切な工具角度と送り条件でバリの発生を抑制できます。'
+    case 'tool-wear-fast': return '切削条件の最適化により工具寿命を延ばせます。'
+    case 'dimension-unstable': return '機械剛性と工具保持の改善により寸法精度を向上できます。'
+    case 'material-difficult': return '適切な工具選定と切削条件により難削材も効率的に加工できます。'
+    case 'vibration-machine': return '適切な切削条件と工具選定により振動を抑制できます。'
+    case 'noise-cutting': return '切削条件の見直しにより異音を改善できます。'
+    default: return '問題の詳細を確認して適切な対策を実施してください。'
+  }
+}
+
+// 問題タイトルの翻訳関数
+const getProblemTitle = (problemId: string): string => {
+  switch (problemId) {
+    case 'surface-feedmark-item1': return '送り速度の調整'
+    case 'surface-feedmark-item2': return '工具の選定'
+    case 'surface-feedmark-item3': return '切削条件の最適化'
+    case 'surface-chatter-item1': return '回転数の変更'
+    case 'surface-chatter-item2': return '工具保持の改善'
+    case 'surface-chatter-item3': return 'ワーク固定の強化'
+    default: return '対策項目'
+  }
+}
+
+// 問題説明の翻訳関数
+const getProblemDescription = (problemId: string): string => {
+  switch (problemId) {
+    case 'surface-feedmark-item1': return '送り速度を下げて、0.1～0.2mm/rev程度に調整。仕上げ加工では0.05mm/rev以下を推奨。'
+    case 'surface-feedmark-item2': return 'ノーズR（刃先R）の大きい工具に変更。一般的にR0.8以上を使用すると改善。'
+    case 'surface-feedmark-item3': return '切削速度を上げて（推奨：100-150m/min）、送りを下げるバランスを見つける。'
+    case 'surface-chatter-item1': return '主軸回転数を10-20%増減させて共振を避ける。安定限界線図を参考に。'
+    case 'surface-chatter-item2': return '工具突き出し長を最小限に。目安は直径の3-4倍以内。'
+    case 'surface-chatter-item3': return 'クランプ力を増強し、支持点を増やす。薄物は特に注意。'
+    default: return '詳細な対策内容を確認してください。'
+  }
+}
+
+export default function TroubleshootingResults({ advice, context, onRestart }: TroubleshootingResultsProps) {
   const getLocalizedAdvice = (): Advice => {
     const problemId = context.selectionPath[context.selectionPath.length - 1]
     
     return {
       ...advice,
-      title: t(`adviceTitle.${problemId}`) || advice.title,
-      text: t(`adviceText.${problemId}`) || advice.text,
+      title: getAdviceTitle(problemId) || advice.title,
+      text: getAdviceText(problemId) || advice.text,
       items: advice.items?.map(item => ({
         ...item,
-        title: t(`problems.${problemId}`) || item.title,
-        description: t(`problemDescriptions.${problemId}`) || item.description
+        title: getProblemTitle(item.title) || item.title,
+        description: getProblemDescription(item.title) || item.description
       }))
     }
   }
@@ -54,8 +129,8 @@ export default function TroubleshootingResults({ advice, context, onRestart }: T
           fontSize: '14px',
           marginBottom: '20px'
         }}>
-          🎯 {t('diagnosisAccuracy')}: {(context.confidence * 100).toFixed(0)}% | 
-          {t('path')}: {context.selectionPath.join(' → ')}
+          🎯 診断精度: {(context.confidence * 100).toFixed(0)}% | 
+          経路: {context.selectionPath.join(' → ')}
         </div>
 
         <p style={{ fontSize: '16px', color: '#e0e0e0', lineHeight: '1.6' }}>
@@ -179,7 +254,7 @@ export default function TroubleshootingResults({ advice, context, onRestart }: T
           alignItems: 'center',
           gap: '10px'
         }}>
-          📋 {t('basicSolutions')}
+          📋 基本対策
         </h3>
 
         {localizedAdvice.items && (
@@ -215,7 +290,7 @@ export default function TroubleshootingResults({ advice, context, onRestart }: T
                     margin: '0 0 5px 0',
                     color: '#667eea'
                   }}>
-                    {t(item.title)}
+                    {getProblemTitle(item.title)}
                   </h4>
                   <p style={{ 
                     fontSize: '14px', 
@@ -223,7 +298,7 @@ export default function TroubleshootingResults({ advice, context, onRestart }: T
                     margin: 0,
                     lineHeight: '1.4'
                   }}>
-                    {t(item.description)}
+                    {getProblemDescription(item.title)}
                   </p>
                 </div>
               </div>
@@ -248,7 +323,7 @@ export default function TroubleshootingResults({ advice, context, onRestart }: T
             fontWeight: '600'
           }}
         >
-          🔄 {t('restartDiagnosis')}
+          🔄 新しい診断を開始
         </button>
       </div>
     </div>

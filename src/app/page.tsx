@@ -2,14 +2,11 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { loadCompanies, loadSearchIndex, loadWorkInstruction, Company, Product, WorkInstruction, SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
-import { useTranslation } from '@/hooks/useTranslation'
-import LanguageSelector from '@/components/LanguageSelector'
 import ParticleBackground from '@/components/ParticleBackground'
 import WorkInstructionResults from '@/components/WorkInstructionResults'
 import SearchBar from '@/components/SearchBar'
 
 export default function Home() {
-  const { t } = useTranslation()
   const [companies, setCompanies] = useState<Company[]>([])
   const [searchIndex, setSearchIndex] = useState<SearchIndex | null>(null)
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
@@ -88,7 +85,7 @@ export default function Home() {
   // 会社選択画面
   const renderCompanySelection = () => (
     <>
-      <h1 className="text-4xl font-bold mb-8 text-center text-emerald-100 bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">{t('title')}</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center text-emerald-100 bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">作業手順データベース</h1>
       {/* 検索バー */}
       {searchIndex && (
         <div className="search-bar-container w-full max-w-[600px]">
@@ -96,14 +93,14 @@ export default function Home() {
             searchIndex={searchIndex}
             onSearch={handleSearch}
             onDrawingSelect={handleSearchDrawingSelect}
-            placeholder={t('searchPlaceholder')}
+            placeholder="図番を入力してください（例: ABC-001）"
           />
         </div>
       )}
       {/* 検索結果表示 */}
       {showSearchResults && searchResults.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-emerald-100">{t('searchResults')}</h2>
+          <h2 className="text-xl font-semibold mb-4 text-emerald-100">検索結果</h2>
           <div className="selection-grid">
             {searchResults.map((result, index) => (
               <button
@@ -115,15 +112,15 @@ export default function Home() {
                 <div className="title" style={{fontSize:'1.1rem'}}>{result.drawingNumber}</div>
                 <div className="desc" style={{marginBottom:4}}>{result.title}</div>
                 <div className="desc" style={{fontSize:'0.95rem',color:'#8ff'}}>{result.companyName} - {result.productName}</div>
-                <div className="desc" style={{fontSize:'0.92rem',color:'#bff'}}>{result.difficulty}・{result.estimatedTime}</div>
+                <div className="desc" style={{fontSize:'0.92rem',color:'#bff'}}>{result.estimatedTime}</div>
               </button>
             ))}
           </div>
         </div>
       )}
-      <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{t('selectCompany')}</h2>
+      <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">会社を選択してください</h2>
       {loading && (
-        <div className="text-center text-lg text-emerald-200 py-20">{t('loading')}</div>
+        <div className="text-center text-lg text-emerald-200 py-20">読み込み中...</div>
       )}
       {error && (
         <div className="text-center text-red-400 py-20">{error}</div>
@@ -153,7 +150,7 @@ export default function Home() {
         className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
         onClick={() => setSelectedCompany(null)}
       >
-        ← {t('backToCompanies')}
+        ← 会社一覧に戻る
       </button>
       <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedCompany?.name} の部品を選択</h2>
       <div className="selection-grid">
@@ -200,49 +197,33 @@ export default function Home() {
   // 作業手順（詳細表示）画面
   const renderWorkInstruction = () => (
     <>
+      {workInstruction && (
+        <WorkInstructionResults
+          instruction={workInstruction}
+          onBack={handleBackToSearch}
+          onRelatedDrawingClick={handleRelatedDrawingClick}
+        />
+      )}
       {instructionLoading && (
-        <div className="text-center text-lg text-gray-400 py-20">{t('loading')}</div>
+        <div className="text-center text-lg text-gray-400 py-20">読み込み中...</div>
       )}
       {instructionError && (
         <div className="text-center text-red-400 py-20">{instructionError}</div>
       )}
-      {workInstruction && (
-        <WorkInstructionResults 
-          instruction={workInstruction}
-          onBack={showSearchResults ? handleBackToSearch : () => setSelectedDrawing(null)}
-          onRelatedDrawingClick={handleRelatedDrawingClick}
-        />
-      )}
     </>
   )
 
-  let content
-  if (selectedDrawing && workInstruction) {
-    // 詳細手順が表示されている場合
-    content = renderWorkInstruction()
-  } else if (!selectedCompany) {
-    // 会社選択画面
-    content = renderCompanySelection()
-  } else if (!selectedProduct) {
-    // 部品選択画面
-    content = renderProductSelection()
-  } else if (!selectedDrawing) {
-    // 図番選択画面
-    content = renderDrawingSelection()
-  } else {
-    // 詳細手順読み込み中
-    content = renderWorkInstruction()
-  }
-
   return (
-    <main className="min-h-screen bg-gradient-to-br from-emerald-900 via-green-900 to-teal-900 text-white relative">
-      <div className="absolute inset-0 z-0">
-        <ParticleBackground />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <ParticleBackground />
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          {!selectedCompany && !selectedProduct && !selectedDrawing && renderCompanySelection()}
+          {selectedCompany && !selectedProduct && !selectedDrawing && renderProductSelection()}
+          {selectedCompany && selectedProduct && !selectedDrawing && renderDrawingSelection()}
+          {selectedDrawing && renderWorkInstruction()}
+        </div>
       </div>
-      <div className="container mx-auto px-4 py-16 relative z-10">
-        <LanguageSelector />
-        {content}
-      </div>
-    </main>
+    </div>
   )
 }

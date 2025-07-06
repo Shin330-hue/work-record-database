@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { DiagnosisContext, Advice } from '@/lib/contextBuilder'
-import { useTranslation } from '@/hooks/useTranslation'
 
 interface Props {
   context: DiagnosisContext
@@ -9,7 +8,6 @@ interface Props {
 }
 
 export default function AIDetailedAdvice({ }: Props) {
-  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const [aiAdvice, setAiAdvice] = useState<string>('')
   const [error, setError] = useState<string>('')
@@ -24,7 +22,7 @@ export default function AIDetailedAdvice({ }: Props) {
       await new Promise(resolve => setTimeout(resolve, 2000))
       setAiAdvice('AI分析結果：切削条件を最適化することで、この問題を効果的に解決できます。')
     } catch {
-      setError(t('aiError'))
+      setError('AI分析中にエラーが発生しました')
     } finally {
       setIsLoading(false)
     }
@@ -44,7 +42,7 @@ export default function AIDetailedAdvice({ }: Props) {
         alignItems: 'center',
         gap: '10px'
       }}>
-        🤖 {t('aiAnalysis')}
+        🤖 AI詳細分析
       </h3>
 
       {!aiAdvice && !isLoading && (
@@ -66,7 +64,7 @@ export default function AIDetailedAdvice({ }: Props) {
 
       {isLoading && (
         <div style={{ textAlign: 'center', padding: '20px' }}>
-          <div>🔄 {t('aiLoading')}</div>
+          <div>🔄 AI分析中...</div>
         </div>
       )}
 

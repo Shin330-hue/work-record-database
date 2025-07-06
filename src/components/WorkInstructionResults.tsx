@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { WorkInstruction } from '@/lib/dataLoader'
-import { useTranslation } from '@/hooks/useTranslation'
 import WorkStep from './WorkStep'
 import { getFrontendDataPath } from '../lib/dataLoader';
 
@@ -11,8 +10,8 @@ interface WorkInstructionResultsProps {
   onRelatedDrawingClick: (drawingNumber: string) => void
 }
 
+
 export default function WorkInstructionResults({ instruction, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
-  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'troubleshooting'>('steps')
   // overview用のファイル状態
   const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[] }>({ pdfs: [], images: [], videos: [] })
@@ -77,7 +76,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
     <div className="work-instruction-container">
       {/* 戻るボタン */}
       <button onClick={onBack} className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 font-medium shadow-lg">
-        {t('backToSearch')}
+        検索に戻る
       </button>
 
       {/* ヘッダー */}
@@ -86,12 +85,11 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           <div>
             <div className="text-2xl font-bold text-emerald-300 mb-2">{instruction.metadata.drawingNumber}</div>
             <div className="text-xl font-semibold text-white mb-1">{instruction.metadata.title}</div>
-            <div className="text-emerald-200/80 text-sm mb-2">{t('author')}: {instruction.metadata.author}</div>
+            <div className="text-emerald-200/80 text-sm mb-2">作成者: {instruction.metadata.author}</div>
             <div className="flex flex-wrap gap-4 text-emerald-200/70 text-sm">
-              <span>{t('difficulty')}: {t(instruction.metadata.difficulty)}</span>
-              <span>{t('estimatedTime')}: {instruction.metadata.estimatedTime}</span>
-              <span>{t('machineType')}: {instruction.metadata.machineType}</span>
-              <span>{t('toolsRequired')}: {instruction.metadata.toolsRequired?.join(', ')}</span>
+              <span>所要時間: {instruction.metadata.estimatedTime}</span>
+              <span>使用機械: {instruction.metadata.machineType}</span>
+              <span>必要工具: {instruction.metadata.toolsRequired?.join(', ')}</span>
             </div>
           </div>
         </div>
@@ -169,11 +167,11 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
 
       {/* 概要 */}
       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mb-8">
-        <h2 className="text-2xl font-bold text-emerald-100 mb-2">{t('overview')}</h2>
+        <h2 className="text-2xl font-bold text-emerald-100 mb-2">概要</h2>
         <p className="text-white mb-2">{instruction.overview.description}</p>
         {instruction.overview.warnings && instruction.overview.warnings.length > 0 && (
           <div className="mb-2">
-            <h4 className="text-lg font-semibold text-emerald-300 mb-1">{t('warnings')}</h4>
+            <h4 className="text-lg font-semibold text-emerald-300 mb-1">注意事項</h4>
             <ul className="list-disc pl-6 text-emerald-200">
               {instruction.overview.warnings.map((w, i) => (
                 <li key={i}>{w}</li>
@@ -182,8 +180,8 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           </div>
         )}
         <div className="flex flex-wrap gap-6 text-emerald-200/80 text-sm mt-2">
-          <span>{t('preparationTime')}: {instruction.overview.preparationTime}</span>
-          <span>{t('processingTime')}: {instruction.overview.processingTime}</span>
+          <span>準備時間: {instruction.overview.preparationTime}</span>
+          <span>加工時間: {instruction.overview.processingTime}</span>
         </div>
       </div>
 
@@ -197,7 +195,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           }`}
           onClick={() => setActiveTab('steps')}
         >
-          {t('workSteps')}
+          作業ステップ
         </button>
         <button
           className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
@@ -207,7 +205,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           }`}
           onClick={() => setActiveTab('related')}
         >
-          {t('relatedDrawings')}
+          関連図番
         </button>
         <button
           className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
@@ -217,82 +215,80 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           }`}
           onClick={() => setActiveTab('troubleshooting')}
         >
-          {t('troubleshooting')}
+          トラブルシューティング
         </button>
       </div>
 
-      {/* タブ内容 */}
-      <div>
-        {activeTab === 'steps' && (
-          <div>
-            {instruction.workSteps.map((step, idx) => (
-              <WorkStep 
-                key={idx} 
-                step={step} 
-                instruction={instruction}
-                getStepFiles={getStepFiles}
-              />
-            ))}
-          </div>
-        )}
+      {/* タブコンテンツ */}
+      {activeTab === 'steps' && (
+        <div className="work-steps">
+          {instruction.workSteps.map((step, index) => (
+            <WorkStep
+              key={index}
+              step={step}
+              instruction={instruction}
+              getStepFiles={getStepFiles}
+            />
+          ))}
+        </div>
+      )}
 
-        {activeTab === 'related' && (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20">
-            <h2 className="text-2xl font-bold text-emerald-100 mb-6">{t('relatedDrawings')}</h2>
-            {instruction.relatedDrawings.length === 0 ? (
-              <p className="text-emerald-200/70">{t('noResults')}</p>
-            ) : (
-              <ul className="space-y-4">
-                {instruction.relatedDrawings.map((rel, idx) => (
-                  <li key={idx} className="flex items-center gap-4 p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-                    <button
-                      className="text-emerald-300 hover:text-emerald-200 font-mono hover:underline transition-colors"
-                      onClick={() => onRelatedDrawingClick(rel.drawingNumber)}
-                    >
-                      {rel.drawingNumber}
-                    </button>
-                    <span className="text-white">{rel.description}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
+      {activeTab === 'related' && (
+        <div className="related-drawings">
+          <h2 className="text-2xl font-bold text-emerald-100 mb-6">関連図番</h2>
+          {instruction.relatedDrawings && instruction.relatedDrawings.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {instruction.relatedDrawings.map((related, index) => (
+                <button
+                  key={index}
+                  onClick={() => onRelatedDrawingClick(related.drawingNumber)}
+                  className="text-left p-4 bg-white/10 backdrop-blur-md rounded-xl border border-emerald-500/20 hover:bg-white/15 transition-all duration-300"
+                >
+                  <div className="font-mono text-emerald-300 text-lg mb-2">{related.drawingNumber}</div>
+                  <div className="text-white text-sm mb-1">{related.relation}</div>
+                  <div className="text-emerald-200/70 text-xs">{related.description}</div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-emerald-200/70">該当する図番が見つかりません</p>
+          )}
+        </div>
+      )}
 
-        {activeTab === 'troubleshooting' && (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20">
-            <h2 className="text-2xl font-bold text-emerald-100 mb-6">{t('troubleshooting')}</h2>
-            {instruction.troubleshooting.length === 0 ? (
-              <p className="text-emerald-200/70">{t('noResults')}</p>
-            ) : (
-              <ul className="space-y-4">
-                {instruction.troubleshooting.map((item, idx) => (
-                  <li key={idx} className="p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                    <div className="font-semibold text-emerald-200 mb-2">{item.problem}</div>
-                    <div className="text-white mb-2"><span className="text-emerald-200/80">{t('cause')}:</span> {item.cause}</div>
-                    <div className="text-emerald-100"><span className="text-emerald-200/80">{t('solution')}:</span> {item.solution}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
-      </div>
+      {activeTab === 'troubleshooting' && (
+        <div className="troubleshooting">
+          <h2 className="text-2xl font-bold text-emerald-100 mb-6">トラブルシューティング</h2>
+          {instruction.troubleshooting && instruction.troubleshooting.length > 0 ? (
+            <div className="space-y-4">
+              {instruction.troubleshooting.map((item, index) => (
+                <div key={index} className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-emerald-500/20">
+                  <div className="text-white mb-2"><span className="text-emerald-200/80">原因:</span> {item.cause}</div>
+                  <div className="text-emerald-100"><span className="text-emerald-200/80">解決策:</span> {item.solution}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-emerald-200/70">該当する図番が見つかりません</p>
+          )}
+        </div>
+      )}
 
       {/* 改訂履歴 */}
       {instruction.revisionHistory && instruction.revisionHistory.length > 0 && (
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mt-10">
-          <h2 className="text-2xl font-bold text-emerald-100 mb-6">{t('revisionHistory')}</h2>
-          <ul className="space-y-3">
-            {instruction.revisionHistory.map((rev, idx) => (
-              <li key={idx} className="flex items-center gap-4 p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-                <span className="text-emerald-300 font-mono bg-emerald-500/20 px-2 py-1 rounded">{rev.version}</span>
-                <span className="text-emerald-200/70">{rev.date}</span>
-                <span className="text-white font-medium">{rev.author}</span>
-                <span className="text-emerald-100">{rev.changes}</span>
-              </li>
+        <div className="mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20">
+          <h2 className="text-2xl font-bold text-emerald-100 mb-6">改訂履歴</h2>
+          <div className="space-y-4">
+            {instruction.revisionHistory.map((revision, index) => (
+              <div key={index} className="bg-black/40 rounded-xl p-4 border border-emerald-500/30">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="text-emerald-300 font-medium">{revision.date}</div>
+                  <div className="text-emerald-200/80 text-sm">{revision.author}</div>
+                </div>
+                <div className="text-emerald-100 text-sm">{revision.changes}</div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>
