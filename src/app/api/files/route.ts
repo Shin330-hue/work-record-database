@@ -81,6 +81,8 @@ export async function GET(request: NextRequest) {
           return ['mp4', 'webm', 'avi', 'mov'].includes(extension || '')
         case 'pdfs':
           return extension === 'pdf'
+        case 'programs':
+          return ['nc', 'min', 'cam', 'dxf', 'dwg', 'stp'].includes(extension || '')
         default:
           return true
       }

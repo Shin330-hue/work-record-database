@@ -14,24 +14,32 @@ interface WorkInstructionResultsProps {
 export default function WorkInstructionResults({ instruction, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
   const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'troubleshooting'>('steps')
   // overview用のファイル状態
-  const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[] }>({ pdfs: [], images: [], videos: [] })
+  const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[], programs: string[] }>({ pdfs: [], images: [], videos: [], programs: [] })
 
   const dataRoot = getFrontendDataPath();
 
+  // ファイルダウンロード関数
+  const downloadFile = (filename: string, folderType: string, subFolder?: string) => {
+    const drawingNumber = instruction.metadata.drawingNumber
+    const filePath = `${dataRoot}/work-instructions/drawing-${drawingNumber}/${folderType}/${subFolder || ''}/${encodeURIComponent(filename)}`
+    const link = document.createElement('a')
+    link.href = filePath
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   // フォルダ内ファイル一覧を取得する関数
-  const getFilesFromFolder = async (drawingNumber: string, folderType: 'images' | 'videos' | 'pdfs', subFolder?: string) => {
+  const getFilesFromFolder = async (drawingNumber: string, folderType: 'images' | 'videos' | 'pdfs' | 'programs', subFolder?: string) => {
     try {
       const params = new URLSearchParams({
         drawingNumber,
         folderType,
         ...(subFolder && { subFolder })
       })
-      
       const response = await fetch(`/api/files?${params}`)
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
       const data = await response.json()
       return data.files || []
     } catch (error) {
@@ -44,14 +52,14 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
   useEffect(() => {
     const loadOverviewFiles = async () => {
       const drawingNumber = instruction.metadata.drawingNumber
-      const [pdfs, images, videos] = await Promise.all([
+      const [pdfs, images, videos, programs] = await Promise.all([
         getFilesFromFolder(drawingNumber, 'pdfs', 'overview'),
         getFilesFromFolder(drawingNumber, 'images', 'overview'),
-        getFilesFromFolder(drawingNumber, 'videos', 'overview')
+        getFilesFromFolder(drawingNumber, 'videos', 'overview'),
+        getFilesFromFolder(drawingNumber, 'programs', 'overview')
       ])
-      setOverviewFiles({ pdfs, images, videos })
+      setOverviewFiles({ pdfs, images, videos, programs })
     }
-    
     loadOverviewFiles()
   }, [instruction])
 
@@ -62,12 +70,13 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
     const drawingNumber = instruction.metadata.drawingNumber
     const stepFolder = `step_0${stepNumber}`
     
-    const [stepImages, stepVideos] = await Promise.all([
+    const [stepImages, stepVideos, stepPrograms] = await Promise.all([
       getFilesFromFolder(drawingNumber, 'images', stepFolder),
-      getFilesFromFolder(drawingNumber, 'videos', stepFolder)
+      getFilesFromFolder(drawingNumber, 'videos', stepFolder),
+      getFilesFromFolder(drawingNumber, 'programs', stepFolder)
     ])
     
-    return { images: stepImages, videos: stepVideos }
+    return { images: stepImages, videos: stepVideos, programs: stepPrograms }
   }
 
 
@@ -96,7 +105,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
       </div>
 
       {/* overviewメディア群 */}
-      {(overviewFiles.pdfs.length > 0 || overviewFiles.images.length > 0 || overviewFiles.videos.length > 0) && (
+      {(overviewFiles.pdfs.length > 0 || overviewFiles.images.length > 0 || overviewFiles.videos.length > 0 || overviewFiles.programs.length > 0) && (
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mb-8">
           <h2 className="text-2xl font-bold text-emerald-100 mb-4">概要メディア</h2>
           {/* PDF */}
@@ -159,6 +168,25 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
                     </video>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+          {/* プログラムファイル */}
+          {overviewFiles.programs.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-emerald-200 mb-3">プログラムファイル</h3>
+              <div className="bg-black/30 rounded-xl p-4 border border-emerald-500/20">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {overviewFiles.programs.map((program, i) => (
+                    <button
+                      key={`overview-program-${i}`}
+                      onClick={() => downloadFile(program, 'programs', 'overview')}
+                      className="text-left px-3 py-2 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors duration-200 hover:text-blue-300"
+                    >
+                      <div className="text-sm font-medium truncate">{program}</div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}

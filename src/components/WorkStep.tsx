@@ -5,7 +5,7 @@ import { WorkInstruction, WorkStep as WorkStepType, getFrontendDataPath } from '
 interface WorkStepProps {
   step: WorkStepType
   instruction: WorkInstruction
-  getStepFiles: (stepNumber: number) => Promise<{ images: string[], videos: string[] }>
+  getStepFiles: (stepNumber: number) => Promise<{ images: string[], videos: string[], programs: string[] }>
 }
 
 // 警告レベルの翻訳関数
@@ -33,7 +33,7 @@ const getPropertyText = (prop: string): string => {
 }
 
 export default function WorkStep({ step, instruction, getStepFiles }: WorkStepProps) {
-  const [stepFiles, setStepFiles] = useState<{ images: string[], videos: string[] }>({ images: [], videos: [] })
+  const [stepFiles, setStepFiles] = useState<{ images: string[], videos: string[], programs: string[] }>({ images: [], videos: [], programs: [] })
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -53,6 +53,19 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
   }, [step.stepNumber, getStepFiles])
 
   const dataRoot = getFrontendDataPath();
+
+  // ファイルダウンロード関数
+  const downloadStepFile = (filename: string) => {
+    const drawingNumber = instruction.metadata.drawingNumber
+    const filePath = `${dataRoot}/work-instructions/drawing-${drawingNumber}/programs/step_0${step.stepNumber}/${encodeURIComponent(filename)}`
+    
+    const link = document.createElement('a')
+    link.href = filePath
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   return (
     <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 shadow-lg">
@@ -77,8 +90,8 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
         </div>
       )}
       
-      {/* 画像・動画 */}
-      {!isLoading && (stepFiles.images.length > 0 || stepFiles.videos.length > 0) && (
+      {/* 画像・動画・プログラムファイル */}
+      {!isLoading && (stepFiles.images.length > 0 || stepFiles.videos.length > 0 || stepFiles.programs.length > 0) && (
         <div className="media-gallery mt-6">
           <h4 className="text-lg font-semibold text-emerald-200 mb-4">メディア</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -154,10 +167,30 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       {step.qualityCheck && (
         <div className="quality-check mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
           <h4 className="text-lg font-semibold text-emerald-200 mb-4">品質確認</h4>
-          <div className="text-emerald-100 text-sm space-y-2">
-            <div><span className="font-medium">確認項目:</span> {step.qualityCheck.checkPoints?.join(', ')}</div>
-            <div><span className="font-medium">検査工具:</span> {step.qualityCheck.inspectionTools?.join(', ')}</div>
+                      <div className="text-emerald-100 text-sm space-y-2">
+              <div><span className="font-medium">確認項目:</span> {step.qualityCheck.checkPoints?.join(', ')}</div>
+              <div><span className="font-medium">検査工具:</span> {step.qualityCheck.inspectionTools?.join(', ')}            </div>
           </div>
+          
+          {/* プログラムファイル */}
+          {stepFiles.programs.length > 0 && (
+            <div className="mb-4">
+              <h5 className="text-md font-medium text-emerald-300 mb-2">プログラムファイル</h5>
+              <div className="bg-black/30 rounded-lg p-3 border border-emerald-500/20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                  {stepFiles.programs.map((program, i) => (
+                    <button
+                      key={`step-program-${i}`}
+                      onClick={() => downloadStepFile(program)}
+                      className="text-left px-2 py-1 text-blue-400 hover:bg-blue-500/20 rounded transition-colors duration-200 hover:text-blue-300 text-sm"
+                    >
+                      {program}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
       

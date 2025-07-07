@@ -226,8 +226,8 @@ export const getFrontendDataPath = (): string => {
     console.log('💾 NAS使用パスを返します: /data');
     return '/data';
   }
-  console.log('🖥️ ローカルパスを返します: /data_test');
-  return '/data_test';
+  console.log('🖥️ ローカルパスを返します: /data');
+  return '/data';
 }
 
 // データ読み込み関数
