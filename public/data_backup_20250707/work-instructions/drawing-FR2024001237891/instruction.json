@@ -1,0 +1,223 @@
+{
+  "metadata": {
+    "drawingNumber": "FR2024001237891",
+    "title": "機械装置用メインフレーム",
+    "companyId": "chuo-tekko",
+    "productId": "frame-parts",
+    "version": "1.3",
+    "createdDate": "2024-02-15",
+    "updatedDate": "2024-11-20",
+    "author": "田中工場長",
+    "difficulty": "中級",
+    "estimatedTime": "180分",
+    "machineType": "マシニングセンタ, ラジアルボール盤",
+    "toolsRequired": ["φ20エンドミル", "φ12エンドミル", "φ8ドリル", "φ6ドリル", "M8タップ", "M6タップ"]
+  },
+  "overview": {
+    "description": "産業機械の骨格となるメインフレーム部品の加工を行います。SS400材からマシニングセンタで外形・ポケット加工を行い、ラジアルボール盤で精密な穴あけ・タップ加工を実施します。寸法精度と表面粗さに注意が必要な重要部品です。",
+    "warnings": [
+      "材料のひずみに注意し、十分な除去加工を行ってください",
+      "穴位置の精度が組み立て精度に直結するため、慎重な段取りが必要です",
+      "切削油を十分に供給し、工具寿命の延長を図ってください"
+    ],
+    "preparationTime": "45分",
+    "processingTime": "135分"
+  },
+  "workSteps": [
+    {
+      "stepNumber": 1,
+      "title": "マシニングセンタでの外形・ポケット加工",
+      "description": "SS400材からメインフレームの外形形状とポケット部の荒加工・仕上げ加工を行います",
+      "detailedInstructions": [
+        "材料寸法確認（300×200×50mm SS400）および外観検査を実施",
+        "マシニングセンタのバイスに材料をセット、ダイヤルゲージで水平出し確認",
+        "φ20エンドミルで外形荒加工（切り込み3mm、送り500mm/min、回転数800rpm）",
+        "φ12エンドミルで外形仕上げ加工（切り込み0.5mm、送り300mm/min、回転数1200rpm）",
+        "φ12エンドミルでポケット部荒加工（Z方向切り込み2mm、XY送り400mm/min）",
+        "φ8エンドミルでポケット部仕上げ加工（切り込み0.3mm、送り200mm/min、回転数1500rpm）",
+        "加工後の寸法測定（外形±0.1mm、ポケット深さ±0.05mm）"
+      ],
+      "images": ["step01-material-setup.jpg", "step01-machining-roughing.jpg", "step01-pocket-finishing.jpg"],
+      "videos": ["step01-machining-process.mp4"],
+      "timeRequired": "90分",
+      "cuttingConditions": {
+        "roughing": {
+          "tool": "φ20 4枚刃エンドミル（TiAlNコーティング）",
+          "spindleSpeed": "800rpm",
+          "feedRate": "500mm/min",
+          "depthOfCut": "3.0mm",
+          "stepOver": "12.0mm",
+          "coolant": "水溶性切削油（7%）"
+        },
+        "finishing": {
+          "tool": "φ12 4枚刃エンドミル（TiCNコーティング）",
+          "spindleSpeed": "1200rpm",
+          "feedRate": "300mm/min", 
+          "depthOfCut": "0.5mm",
+          "stepOver": "8.0mm",
+          "coolant": "水溶性切削油（7%）"
+        }
+      },
+      "qualityCheck": {
+        "checkPoints": ["外形寸法（±0.1mm）", "ポケット深さ（±0.05mm）", "表面粗さ（Ra3.2以下）", "直角度（0.05mm以下）"],
+        "inspectionTools": ["ノギス", "ハイトゲージ", "表面粗さ計", "スコヤ"]
+      },
+      "notes": [
+        "荒加工時は切削抵抗を考慮し、ワークのクランプ状態を随時確認",
+        "仕上げ加工前に切り屑の除去と加工面の清拭を徹底する",
+        "ポケット部の隅R部分は工具径の50%程度のRが付くことを考慮"
+      ],
+      "warningLevel": "important"
+    },
+    {
+      "stepNumber": 2,
+      "title": "ラジアルボール盤での穴あけ加工",
+      "description": "組み立て用の取付穴とボルト穴をラジアルボール盤で精密に加工します",
+      "detailedInstructions": [
+        "加工済みワークをラジアルボール盤の定盤に設置、ストレートエッジで基準面確認",
+        "図面に基づき穴位置をケガキ、ポンチングで穴位置マーキング",
+        "φ8ドリルで下穴加工（8箇所、貫通穴、回転数600rpm、送り0.15mm/rev）",
+        "φ6ドリルで小径穴加工（12箇所、深さ30mm、回転数800rpm、送り0.12mm/rev）",
+        "穴径・穴位置の寸法測定を実施（穴径公差+0/+0.05mm、位置度±0.03mm）",
+        "バリ取り作業を手作業で実施"
+      ],
+      "images": ["step02-drilling-setup.jpg", "step02-hole-positioning.jpg", "step02-drilling-process.jpg"],
+      "videos": [],
+      "timeRequired": "45分",
+      "cuttingConditions": {
+        "drilling_8mm": {
+          "tool": "φ8 ハイスドリル（ストレートシャンク）",
+          "spindleSpeed": "600rpm",
+          "feedRate": "0.15mm/rev",
+          "coolant": "切削油（ストレート油）"
+        },
+        "drilling_6mm": {
+          "tool": "φ6 ハイスドリル（ストレートシャンク）", 
+          "spindleSpeed": "800rpm",
+          "feedRate": "0.12mm/rev",
+          "coolant": "切削油（ストレート油）"
+        }
+      },
+      "qualityCheck": {
+        "checkPoints": ["穴径（φ8 +0/+0.05mm）", "穴径（φ6 +0/+0.03mm）", "穴位置度（±0.03mm）", "穴の真円度（0.01mm以下）"],
+        "inspectionTools": ["プラグゲージ", "座標測定機", "真円度測定機"]
+      },
+      "notes": [
+        "穴あけ時のドリル食い付きに注意、無理な送りは避ける",
+        "切削油は十分に供給し、ドリル折れを防止する",
+        "貫通時のバリ発生を最小限にするため、送り速度を調整"
+      ],
+      "warningLevel": "caution"
+    },
+    {
+      "stepNumber": 3,
+      "title": "タップ加工・最終検査",
+      "description": "ボルト用ねじ穴の加工と最終的な寸法・品質検査を実施します",
+      "detailedInstructions": [
+        "φ8穴にM8×1.25タップ加工（8箇所、タップ回転数150rpm、切削油使用）",
+        "φ6穴にM6×1.0タップ加工（12箇所、タップ回転数180rpm、切削油使用）",
+        "ねじゲージによるねじ精度確認（6H級）",
+        "全体寸法の最終測定（外形、ポケット、穴位置）",
+        "表面状態の目視確認、バリ・傷の有無チェック",
+        "完成品の清拭・防錆処理"
+      ],
+      "images": ["step03-tapping.jpg", "step03-inspection.jpg", "step03-final-product.jpg"],
+      "videos": ["step03-final-inspection.mp4"],
+      "timeRequired": "45分",
+      "cuttingConditions": {
+        "tapping_M8": {
+          "tool": "M8×1.25 ハイスタップ（TiNコーティング）",
+          "spindleSpeed": "150rpm",
+          "feedRate": "187.5mm/min（自動送り）",
+          "coolant": "タッピング油"
+        },
+        "tapping_M6": {
+          "tool": "M6×1.0 ハイスタップ（TiNコーティング）",
+          "spindleSpeed": "180rpm", 
+          "feedRate": "180mm/min（自動送り）",
+          "coolant": "タッピング油"
+        }
+      },
+      "qualityCheck": {
+        "checkPoints": [
+          "ねじ精度（M8×1.25-6H、M6×1.0-6H）",
+          "外形寸法（図面指示±0.1mm）",
+          "ポケット寸法（図面指示±0.05mm）",
+          "穴位置度（±0.03mm）",
+          "表面粗さ（Ra3.2以下）"
+        ],
+        "inspectionTools": ["ねじゲージ", "ノギス", "ハイトゲージ", "座標測定機", "表面粗さ計"]
+      },
+      "notes": [
+        "タップ加工時は無理な力をかけず、切削油を十分に使用する",
+        "ねじ穴の通り確認は必須、不良の場合は即座に報告",
+        "最終検査で不適合が発見された場合は、可能な限り修正加工を検討"
+      ],
+      "warningLevel": "critical"
+    }
+  ],
+  "relatedDrawings": [
+    {
+      "drawingNumber": "FR2024002138492",
+      "relation": "類似フレーム",
+      "description": "同シリーズ小型フレーム"
+    },
+    {
+      "drawingNumber": "BR2024001345671", 
+      "relation": "組み立て部品",
+      "description": "取付用ブラケット"
+    }
+  ],
+  "troubleshooting": [
+    {
+      "problem": "外形寸法不良",
+      "cause": "工具摩耗または機械の熱変位",
+      "solution": "工具交換と十分な暖機運転を実施"
+    },
+    {
+      "problem": "穴位置精度不良",
+      "cause": "ケガキ不正確またはドリル逃げ",
+      "solution": "ケガキ再確認、ドリル状態チェック、段取り見直し"
+    },
+    {
+      "problem": "タップ折れ",
+      "cause": "切削油不足または無理な送り",
+      "solution": "切削油十分供給、送り速度調整、タップ状態確認"
+    },
+    {
+      "problem": "表面粗さ不良",
+      "cause": "切削条件不適切または工具状態不良",
+      "solution": "切削条件見直し、工具交換、切削油見直し"
+    }
+  ],
+  "mediaFolders": {
+    "images": "step_01",
+    "videos": "step_01"
+  },
+  "revisionHistory": [
+    {
+      "version": "1.0",
+      "date": "2024-02-15",
+      "author": "田中工場長",
+      "changes": "初版作成"
+    },
+    {
+      "version": "1.1",
+      "date": "2024-05-10",
+      "author": "佐藤主任",
+      "changes": "切削条件を最適化、穴あけ精度向上"
+    },
+    {
+      "version": "1.2",
+      "date": "2024-08-25",
+      "author": "山田技師",
+      "changes": "品質チェック項目追加、トラブルシューティング強化"
+    },
+    {
+      "version": "1.3",
+      "date": "2024-11-20",
+      "author": "田中工場長",
+      "changes": "タップ加工条件見直し、最終検査手順改良"
+    }
+  ]
+}
