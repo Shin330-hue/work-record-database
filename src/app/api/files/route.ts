@@ -29,18 +29,54 @@ export async function GET(request: NextRequest) {
     const drawingNumber = searchParams.get('drawingNumber')
     const folderType = searchParams.get('folderType') // 'images', 'videos', 'pdfs'
     const subFolder = searchParams.get('subFolder') || ''
+    
+    // 加工アイデア用のパラメータ
+    const ideaCategory = searchParams.get('ideaCategory')
+    const ideaId = searchParams.get('ideaId')
 
-    if (!drawingNumber || !folderType) {
+    // パラメータの検証
+    if (!folderType) {
       return NextResponse.json(
-        { error: 'drawingNumber と folderType は必須です' },
+        { error: 'folderType は必須です' },
         { status: 400 }
       )
     }
 
+    // 作業手順用と加工アイデア用でパラメータを分岐
+    if (ideaCategory && ideaId) {
+      // 加工アイデア用のパラメータ検証
+      if (!ideaCategory || !ideaId) {
+        return NextResponse.json(
+          { error: 'ideaCategory と ideaId は必須です' },
+          { status: 400 }
+        )
+      }
+    } else {
+      // 作業手順用のパラメータ検証
+      if (!drawingNumber) {
+        return NextResponse.json(
+          { error: 'drawingNumber は必須です' },
+          { status: 400 }
+        )
+      }
+    }
+
     // データルートパスを取得
     const dataRoot = getDataRootPath()
-    const basePath = join(dataRoot, 'work-instructions', `drawing-${drawingNumber}`, folderType)
-    const folderPath = subFolder ? join(basePath, subFolder) : basePath
+    
+    // パス構築を分岐
+    let basePath: string
+    let folderPath: string
+    
+    if (ideaCategory && ideaId) {
+      // 加工アイデア用のパス構築
+      basePath = join(dataRoot, 'ideas-library', ideaCategory, ideaId, folderType)
+      folderPath = subFolder ? join(basePath, subFolder) : basePath
+    } else {
+      // 作業手順用のパス構築（既存）
+      basePath = join(dataRoot, 'work-instructions', `drawing-${drawingNumber}`, folderType)
+      folderPath = subFolder ? join(basePath, subFolder) : basePath
+    }
 
     // デバッグ用ログ
     if (process.env.DEBUG_DATA_LOADING === 'true') {
@@ -49,7 +85,10 @@ export async function GET(request: NextRequest) {
         basePath: basePath,
         folderPath: folderPath,
         USE_NAS: process.env.USE_NAS,
-        DEV_DATA_ROOT_PATH: process.env.DEV_DATA_ROOT_PATH
+        DEV_DATA_ROOT_PATH: process.env.DEV_DATA_ROOT_PATH,
+        ideaCategory,
+        ideaId,
+        drawingNumber
       })
     }
 

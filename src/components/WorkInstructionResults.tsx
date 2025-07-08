@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { WorkInstruction } from '@/lib/dataLoader'
+import { WorkInstruction, Idea, loadRelatedIdeas } from '@/lib/dataLoader'
 import WorkStep from './WorkStep'
+import IdeaDisplay from './IdeaDisplay'
 import { getFrontendDataPath } from '../lib/dataLoader';
 
 interface WorkInstructionResultsProps {
@@ -12,9 +13,11 @@ interface WorkInstructionResultsProps {
 
 
 export default function WorkInstructionResults({ instruction, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
-  const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'troubleshooting'>('steps')
+  const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'ideas'>('steps')
   // overview用のファイル状態
   const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[], programs: string[] }>({ pdfs: [], images: [], videos: [], programs: [] })
+  // 関連アイデアの状態
+  const [relatedIdeas, setRelatedIdeas] = useState<Idea[]>([])
 
   const dataRoot = getFrontendDataPath();
 
@@ -62,6 +65,19 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
     }
     loadOverviewFiles()
   }, [instruction])
+
+  // 関連アイデアの読み込み
+  useEffect(() => {
+    const loadIdeas = async () => {
+      if (instruction.relatedIdeas && instruction.relatedIdeas.length > 0) {
+        const ideas = await loadRelatedIdeas(instruction.relatedIdeas)
+        setRelatedIdeas(ideas)
+      } else {
+        setRelatedIdeas([])
+      }
+    }
+    loadIdeas()
+  }, [instruction.relatedIdeas])
 
 
 
@@ -237,13 +253,13 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
         </button>
         <button
           className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-            activeTab === 'troubleshooting' 
+            activeTab === 'ideas' 
               ? 'bg-emerald-500 text-white shadow-lg' 
               : 'bg-white/10 backdrop-blur-md text-emerald-200 hover:bg-white/15 border border-emerald-500/30'
           }`}
-          onClick={() => setActiveTab('troubleshooting')}
+          onClick={() => setActiveTab('ideas')}
         >
-          トラブルシューティング
+          加工アイデア
         </button>
       </div>
 
@@ -284,20 +300,19 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
         </div>
       )}
 
-      {activeTab === 'troubleshooting' && (
-        <div className="troubleshooting">
-          <h2 className="text-2xl font-bold text-emerald-100 mb-6">トラブルシューティング</h2>
-          {instruction.troubleshooting && instruction.troubleshooting.length > 0 ? (
+      {activeTab === 'ideas' && (
+        <div className="ideas">
+          <h2 className="text-2xl font-bold text-emerald-100 mb-6">
+            加工アイデア ({relatedIdeas.length}件)
+          </h2>
+          {relatedIdeas.length > 0 ? (
             <div className="space-y-4">
-              {instruction.troubleshooting.map((item, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-emerald-500/20">
-                  <div className="text-white mb-2"><span className="text-emerald-200/80">原因:</span> {item.cause}</div>
-                  <div className="text-emerald-100"><span className="text-emerald-200/80">解決策:</span> {item.solution}</div>
-                </div>
+              {relatedIdeas.map((idea) => (
+                <IdeaDisplay key={idea.id} idea={idea} />
               ))}
             </div>
           ) : (
-            <p className="text-emerald-200/70">該当する図番が見つかりません</p>
+            <p className="text-emerald-200/70">加工アイデアが登録されていません</p>
           )}
         </div>
       )}

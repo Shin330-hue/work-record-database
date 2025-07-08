@@ -207,6 +207,7 @@ export interface WorkInstruction {
   relatedDrawings: RelatedDrawing[]
   troubleshooting: TroubleshootingItem[]
   revisionHistory: RevisionHistory[]
+  relatedIdeas?: string[] // パス形式: "category/idea-id"
 }
 
 // フロントエンド用のデータパス取得
@@ -325,4 +326,45 @@ export const getProductById = (company: Company, productId: string): Product | n
 // 図番から検索アイテムを取得
 export const getDrawingSearchItem = (searchIndex: SearchIndex, drawingNumber: string): DrawingSearchItem | null => {
   return searchIndex.drawings.find(drawing => drawing.drawingNumber === drawingNumber) || null
+}
+
+// アイデア関連の型定義
+export interface Idea {
+  id: string;
+  title: string;
+  category: string;
+  tags: string[];
+  description: string;
+  content: string;
+  keyPoints: string[];
+  images: string[];
+  videos: string[];
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  applicableMaterials: string[];
+}
+
+export interface IdeaLibrary {
+  ideas: Idea[];
+}
+
+// 関連アイデアを読み込む（並列読み込みで高速化）
+export const loadRelatedIdeas = async (ideaPaths: string[]): Promise<Idea[]> => {
+  try {
+    // 並列読み込みで高速化
+    const promises = ideaPaths.map(async (path) => {
+      const [category, folderName] = path.split('/');
+      const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
+      const response = await fetch(`${dataPath}/ideas-library/${category}/${folderName}/idea.json`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    });
+    
+    const results = await Promise.all(promises);
+    return results;
+  } catch (error) {
+    console.error('アイデアの読み込みに失敗:', error);
+    return [];
+  }
 }
