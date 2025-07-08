@@ -10,7 +10,7 @@ export default function Home() {
   const [companies, setCompanies] = useState<Company[]>([])
   const [searchIndex, setSearchIndex] = useState<SearchIndex | null>(null)
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [selectedDrawing, setSelectedDrawing] = useState<string | null>(null)
   const [workInstruction, setWorkInstruction] = useState<WorkInstruction | null>(null)
   const [searchResults, setSearchResults] = useState<DrawingSearchItem[]>([])
@@ -66,7 +66,7 @@ export default function Home() {
   const handleSearchDrawingSelect = (drawingNumber: string) => {
     setSelectedDrawing(drawingNumber)
     setSelectedCompany(null)
-    setSelectedProduct(null)
+    setSelectedCategory(null)
     setShowSearchResults(false)
   }
 
@@ -143,56 +143,76 @@ export default function Home() {
     </>
   )
 
-  // 部品選択画面
-  const renderProductSelection = () => (
-    <>
-      <button
-        className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
-        onClick={() => setSelectedCompany(null)}
-      >
-        ← 会社一覧に戻る
-      </button>
-      <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedCompany?.name} の部品を選択</h2>
-      <div className="selection-grid">
-        {selectedCompany?.products.map((product) => (
-          <button
-            key={product.id}
-            className="selection-card"
-            onClick={() => setSelectedProduct(product)}
-          >
-            <div className="icon">🧩</div>
-            <div className="title">{product.name}</div>
-            <div className="desc">{product.description}</div>
-          </button>
-        ))}
-      </div>
-    </>
-  )
+  // カテゴリ選択画面
+  const renderCategorySelection = () => {
+    // 重複チェックしてユニークなカテゴリを抽出
+    const categories = selectedCompany?.products.reduce((acc, product) => {
+      if (!acc.includes(product.category)) {
+        acc.push(product.category)
+      }
+      return acc
+    }, [] as string[]) || []
 
-  // 図番選択画面
-  const renderDrawingSelection = () => (
-    <>
-      <button
-        className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
-        onClick={() => setSelectedProduct(null)}
-      >
-        ← {selectedCompany?.name} の部品一覧に戻る
-      </button>
-      <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedProduct?.name} の図番を選択</h2>
-      <div className="selection-grid">
-        {selectedProduct?.drawings.map((drawingNumber) => (
-          <button
-            key={drawingNumber}
-            className="selection-card"
-            onClick={() => setSelectedDrawing(drawingNumber)}
-          >
-            <div className="icon">📄</div>
-            <div className="title">{drawingNumber}</div>
-          </button>
-        ))}
-      </div>
-    </>
-  )
+    return (
+      <>
+        <button
+          className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+          onClick={() => setSelectedCompany(null)}
+        >
+          ← 会社一覧に戻る
+        </button>
+        <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedCompany?.name} のカテゴリを選択</h2>
+        <div className="selection-grid">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className="selection-card"
+              onClick={() => setSelectedCategory(category)}
+            >
+              <div className="icon">📂</div>
+              <div className="title">{category}</div>
+              <div className="desc">カテゴリ</div>
+            </button>
+          ))}
+        </div>
+      </>
+    )
+  }
+
+  // 図番選択画面（カテゴリ別）
+  const renderDrawingSelection = () => {
+    // 選択されたカテゴリの製品をフィルタリング
+    const categoryProducts = selectedCompany?.products.filter(
+      product => product.category === selectedCategory
+    ) || []
+
+    return (
+      <>
+        <button
+          className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+          onClick={() => setSelectedCategory(null)}
+        >
+          ← {selectedCompany?.name} のカテゴリ一覧に戻る
+        </button>
+        <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedCategory} の図番を選択</h2>
+        <div className="selection-grid">
+          {categoryProducts.map((product) => 
+            product.drawings.map((drawingNumber) => (
+              <button
+                key={drawingNumber}
+                className="selection-card"
+                onClick={() => setSelectedDrawing(drawingNumber)}
+              >
+                <div className="icon">📄</div>
+                <div className="title">{drawingNumber}</div>
+                <div className="desc">{product.name}</div>
+              </button>
+            ))
+          )}
+        </div>
+      </>
+    )
+  }
 
   // 作業手順（詳細表示）画面
   const renderWorkInstruction = () => (
@@ -218,10 +238,10 @@ export default function Home() {
       <ParticleBackground />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center justify-center min-h-screen">
-          {!selectedCompany && !selectedProduct && !selectedDrawing && renderCompanySelection()}
-          {selectedCompany && !selectedProduct && !selectedDrawing && renderProductSelection()}
-          {selectedCompany && selectedProduct && !selectedDrawing && renderDrawingSelection()}
-          {selectedDrawing && renderWorkInstruction()}
+          {!selectedCompany && !selectedCategory && !selectedDrawing && renderCompanySelection()}
+          {selectedCompany && !selectedCategory && !selectedDrawing && renderCategorySelection()}
+          {selectedCompany && selectedCategory && !selectedDrawing && renderDrawingSelection()}
+          {selectedCompany && selectedCategory && selectedDrawing && renderWorkInstruction()}
         </div>
       </div>
     </div>
