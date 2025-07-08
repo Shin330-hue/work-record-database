@@ -40,17 +40,20 @@ export default function Home() {
   // 図番選択時に作業手順データをロード
   useEffect(() => {
     if (selectedDrawing) {
+      console.log('🔍 図番選択:', selectedDrawing) // デバッグログ追加
       setInstructionLoading(true)
       setInstructionError(null)
       setWorkInstruction(null)
       setShowSearchResults(false)
       loadWorkInstruction(selectedDrawing)
         .then((data) => {
+          console.log('✅ 作業手順データ読み込み成功:', data) // デバッグログ追加
           setWorkInstruction(data)
           setInstructionLoading(false)
         })
-        .catch(() => {
-          setInstructionError('作業手順データの読み込みに失敗しました')
+        .catch((error) => {
+          console.error('❌ 作業手順データ読み込みエラー:', error) // デバッグログ追加
+          setInstructionError(`作業手順データの読み込みに失敗しました: ${error.message}`)
           setInstructionLoading(false)
         })
     }
@@ -241,7 +244,7 @@ export default function Home() {
           {!selectedCompany && !selectedCategory && !selectedDrawing && renderCompanySelection()}
           {selectedCompany && !selectedCategory && !selectedDrawing && renderCategorySelection()}
           {selectedCompany && selectedCategory && !selectedDrawing && renderDrawingSelection()}
-          {selectedCompany && selectedCategory && selectedDrawing && renderWorkInstruction()}
+          {selectedDrawing && renderWorkInstruction()}
         </div>
       </div>
     </div>

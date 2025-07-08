@@ -19,8 +19,8 @@ const getDataRootPath = (): string => {
     return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
   }
   
-  // 開発環境のデフォルト
-  return join(process.cwd(), 'public', 'data_test')
+  // 開発環境のデフォルト - 修正: data_test → data
+  return join(process.cwd(), 'public', 'data')
 }
 
 export async function GET(request: NextRequest) {
