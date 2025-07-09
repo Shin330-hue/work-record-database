@@ -129,7 +129,7 @@ export default function Home() {
         <div className="text-center text-red-400 py-20">{error}</div>
       )}
       {!loading && !error && (
-        <div className="selection-grid">
+        <div className="selection-grid w-full">
           {companies.map((company) => (
             <button
               key={company.id}
@@ -165,7 +165,7 @@ export default function Home() {
           ← 会社一覧に戻る
         </button>
         <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedCompany?.name} のカテゴリを選択</h2>
-        <div className="selection-grid">
+        <div className="selection-grid w-full">
           {categories.map((category) => (
             <button
               key={category}
@@ -198,7 +198,7 @@ export default function Home() {
           ← {selectedCompany?.name} のカテゴリ一覧に戻る
         </button>
         <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">{selectedCategory} の図番を選択</h2>
-        <div className="selection-grid">
+        <div className="selection-grid w-full">
           {categoryProducts.map((product) => 
             product.drawings.map((drawingNumber) => (
               <button
