@@ -111,7 +111,7 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
             <div className="text-2xl font-bold text-emerald-300 mb-2">{instruction.metadata.drawingNumber}</div>
             <div className="text-xl font-semibold text-white mb-1">{instruction.metadata.title}</div>
             <div className="text-emerald-200/80 text-sm mb-2">作成者: {instruction.metadata.author}</div>
-            <div className="flex flex-wrap gap-4 text-emerald-200/70 text-sm">
+            <div className="flex flex-col gap-2 text-emerald-200/70 text-sm mt-2">
               <span>所要時間: {instruction.metadata.estimatedTime}</span>
               <span>使用機械: {instruction.metadata.machineType}</span>
               <span>必要工具: {instruction.metadata.toolsRequired?.join(', ')}</span>
@@ -209,10 +209,32 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
         </div>
       )}
 
+      {/* ヒヤリハット（Near Miss）表示 */}
+      {instruction.nearMiss && instruction.nearMiss.length > 0 && (
+        <div className="bg-yellow-100/10 backdrop-blur-md rounded-2xl p-6 border border-yellow-400/30 mb-8">
+          <h3 className="text-xl font-bold text-yellow-300 mb-3">⚠️ ヒヤリハット事例</h3>
+          <ul className="space-y-4">
+            {instruction.nearMiss.map((item, idx) => (
+              <li key={idx} className="bg-yellow-900/20 rounded-xl p-4 border border-yellow-400/20">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-1">
+                  <span className="font-semibold text-yellow-200">{item.title}</span>
+                  <span className={`text-xs px-2 py-1 rounded ${item.severity === 'high' || item.severity === 'critical' ? 'bg-red-500/60 text-white' : 'bg-yellow-500/40 text-yellow-900'}`}>
+                    重大度: {item.severity === 'critical' ? '最重要' : item.severity === 'high' ? '高' : item.severity === 'medium' ? '中' : '低'}
+                  </span>
+                </div>
+                <div className="text-yellow-100 mb-1">内容: {item.description}</div>
+                <div className="text-yellow-200/80 mb-1">原因: {item.cause}</div>
+                <div className="text-yellow-200/80">対策: {item.prevention}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* 概要 */}
       <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mb-8">
         <h2 className="text-2xl font-bold text-emerald-100 mb-2">概要</h2>
-        <p className="text-white mb-2">{instruction.overview.description}</p>
+        <p className="text-white mb-2 whitespace-pre-line">{instruction.overview.description}</p>
         {instruction.overview.warnings && instruction.overview.warnings.length > 0 && (
           <div className="mb-2">
             <h4 className="text-lg font-semibold text-emerald-300 mb-1">注意事項</h4>

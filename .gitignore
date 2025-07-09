@@ -2,6 +2,7 @@
 
 public/data
 public/data/
+doc/import_files
 
 # dependencies
 /node_modules

@@ -1,0 +1,4 @@
+﻿ステップ番号,タイトル,説明,詳細手順,時間,警告レベル,画像ファイル,動画ファイル
+1,マシニングセンタでの外形・ポケット加工,SS400材からメインフレームの外形形状とポケット部の荒加工・仕上げ加工を行います,材料寸法確認（300×200×50mm SS400）および外観検査を実施;マシニングセンタのバイスに材料をセット、ダイヤルゲージで水平出し確認;φ20エンドミルで外形荒加工（切り込み3mm、送り500mm/min、回転数800rpm）,90分,important,"step01-material-setup.jpg,step01-machining-roughing.jpg,step01-pocket-finishing.jpg",step01-machining-process.mp4
+2,ラジアルボール盤での穴あけ加工,組み立て用の取付穴とボルト穴をラジアルボール盤で精密に加工します,加工済みワークをラジアルボール盤の定盤に設置、ストレートエッジで基準面確認;図面に基づき穴位置をケガキ、ポンチングで穴位置マーキング;φ8ドリルで下穴加工（8箇所、貫通穴、回転数600rpm、送り0.15mm/rev）,45分,caution,"step02-drilling-setup.jpg,step02-hole-positioning.jpg,step02-drilling-process.jpg",
+3,タップ加工・最終検査,ボルト用ねじ穴の加工と最終的な寸法・品質検査を実施します,φ8穴にM8×1.25タップ加工（8箇所、タップ回転数150rpm、切削油使用）;φ6穴にM6×1.0タップ加工（12箇所、タップ回転数180rpm、切削油使用）;ねじゲージによるねじ精度確認（6H級）,45分,critical,"step03-tapping.jpg,step03-inspection.jpg,step03-final-product.jpg",step03-final-inspection.mp4

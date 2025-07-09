@@ -199,13 +199,22 @@ export interface RevisionHistory {
   changes: string
 }
 
+// ヒヤリハット
+export interface NearMissItem {
+  title: string
+  description: string
+  cause: string
+  prevention: string
+  severity: 'low' | 'medium' | 'high' | 'critical'
+}
+
 // 作業手順データ
 export interface WorkInstruction {
   metadata: InstructionMetadata
   overview: InstructionOverview
   workSteps: WorkStep[]
+  nearMiss?: NearMissItem[]
   relatedDrawings: RelatedDrawing[]
-  troubleshooting: TroubleshootingItem[]
   revisionHistory: RevisionHistory[]
   relatedIdeas?: string[] // パス形式: "category/idea-id"
 }
