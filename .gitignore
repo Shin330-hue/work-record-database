@@ -37,6 +37,17 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# NAS設定ファイル（セキュリティ）
+scripts/mount-nas.bat
+scripts/mount-nas.sh
+nas-config.env
+*.env.nas
+*.env.production
+
+# 認証情報を含むファイル
+**/credentials/
+**/secrets/
+
 # vercel
 .vercel
 

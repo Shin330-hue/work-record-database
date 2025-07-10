@@ -1,7 +1,7 @@
 // src/app/page.tsx - 会社・部品カードの表示をシンプルに
 'use client'
 import { useEffect, useState } from 'react'
-import { loadCompanies, loadSearchIndex, loadWorkInstruction, Company, Product, WorkInstruction, SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
+import { loadCompanies, loadSearchIndex, loadWorkInstruction, Company, WorkInstruction, SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
 import ParticleBackground from '@/components/ParticleBackground'
 import WorkInstructionResults from '@/components/WorkInstructionResults'
 import SearchBar from '@/components/SearchBar'
