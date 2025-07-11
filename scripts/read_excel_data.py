@@ -242,7 +242,7 @@ def main():
     """メイン処理"""
     
     # Excelファイルのパス
-    excel_file_path = "../doc/import_files/6800301576_カバー/図面データ入力テンプレート_16800301576.xlsx"
+    excel_file_path = "doc/import_files/82096-2-R04_サクションカバー/図面データ入力テンプレート_82096-2-R04.xlsx"
     
     print("🚀 図面データExcelファイル読み込み・整合性チェック開始")
     print("="*60)
