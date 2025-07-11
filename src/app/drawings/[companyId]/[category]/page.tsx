@@ -12,7 +12,6 @@ interface DrawingsPageProps {
 
 export default function DrawingsPage({ params }: DrawingsPageProps) {
   const { companyId, category } = use(params)
-  const [companies, setCompanies] = useState<Company[]>([])
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -23,7 +22,6 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
     // 会社データを読み込み
     loadCompanies()
       .then((companiesData) => {
-        setCompanies(companiesData)
         // URLパラメータから会社とカテゴリを特定
         const company = companiesData.find(c => c.id === companyId)
         if (company) {

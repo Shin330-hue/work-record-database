@@ -11,7 +11,6 @@ interface CategoryPageProps {
 
 export default function CategoryPage({ params }: CategoryPageProps) {
   const { companyId } = use(params)
-  const [companies, setCompanies] = useState<Company[]>([])
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -21,7 +20,6 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     // 会社データを読み込み
     loadCompanies()
       .then((companiesData) => {
-        setCompanies(companiesData)
         // URLパラメータから会社を特定
         const company = companiesData.find(c => c.id === companyId)
         if (company) {
