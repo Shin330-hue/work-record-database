@@ -2,7 +2,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { loadCompanies, loadSearchIndex, loadWorkInstruction, Company, WorkInstruction, SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
-import ParticleBackground from '@/components/ParticleBackground'
 import WorkInstructionResults from '@/components/WorkInstructionResults'
 import SearchBar from '@/components/SearchBar'
 
@@ -238,7 +237,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <ParticleBackground />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center justify-center min-h-screen">
           {!selectedCompany && !selectedCategory && !selectedDrawing && renderCompanySelection()}
