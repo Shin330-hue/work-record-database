@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { readdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { createErrorResponse, createSuccessResponse, logError, createValidationError } from '@/lib/apiUtils'
 
 const getDataRootPath = (): string => {
   // USE_NASの設定を最優先
@@ -24,40 +25,32 @@ const getDataRootPath = (): string => {
 }
 
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const drawingNumber = searchParams.get('drawingNumber')
+  const folderType = searchParams.get('folderType') // 'images', 'videos', 'pdfs'
+  const subFolder = searchParams.get('subFolder') || ''
+  
+  // 加工アイデア用のパラメータ
+  const ideaCategory = searchParams.get('ideaCategory')
+  const ideaId = searchParams.get('ideaId')
+
   try {
-    const { searchParams } = new URL(request.url)
-    const drawingNumber = searchParams.get('drawingNumber')
-    const folderType = searchParams.get('folderType') // 'images', 'videos', 'pdfs'
-    const subFolder = searchParams.get('subFolder') || ''
-    
-    // 加工アイデア用のパラメータ
-    const ideaCategory = searchParams.get('ideaCategory')
-    const ideaId = searchParams.get('ideaId')
 
     // パラメータの検証
     if (!folderType) {
-      return NextResponse.json(
-        { error: 'folderType は必須です' },
-        { status: 400 }
-      )
+      return createValidationError('folderType', '必須パラメータです', request.url)
     }
 
     // 作業手順用と加工アイデア用でパラメータを分岐
     if (ideaCategory && ideaId) {
       // 加工アイデア用のパラメータ検証
       if (!ideaCategory || !ideaId) {
-        return NextResponse.json(
-          { error: 'ideaCategory と ideaId は必須です' },
-          { status: 400 }
-        )
+        return createValidationError('ideaCategory/ideaId', '両方とも必須パラメータです', request.url)
       }
     } else {
       // 作業手順用のパラメータ検証
       if (!drawingNumber) {
-        return NextResponse.json(
-          { error: 'drawingNumber は必須です' },
-          { status: 400 }
-        )
+        return createValidationError('drawingNumber', '必須パラメータです', request.url)
       }
     }
 
@@ -129,20 +122,24 @@ export async function GET(request: NextRequest) {
 
     console.log(`📁 ファイル一覧取得: ${folderPath} → ${filteredFiles.length}個のファイル`)
 
-    return NextResponse.json({
+    return createSuccessResponse({
       files: filteredFiles,
       folderPath: folderPath.replace(process.cwd(), ''),
       count: filteredFiles.length
     })
 
   } catch (error) {
-    console.error('❌ ファイル一覧取得エラー:', error)
-    return NextResponse.json(
-      { 
-        error: 'ファイル一覧の取得に失敗しました',
-        details: error instanceof Error ? error.message : '不明なエラー'
-      },
-      { status: 500 }
+    logError('ファイル一覧取得エラー', error, { 
+      drawingNumber, 
+      folderType, 
+      ideaCategory, 
+      ideaId
+    })
+    return createErrorResponse(
+      'ファイル一覧の取得に失敗しました',
+      500,
+      error instanceof Error ? error.message : '不明なエラー',
+      request.url
     )
   }
 } 

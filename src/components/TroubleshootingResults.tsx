@@ -2,7 +2,6 @@
 'use client'
 import Image from 'next/image'
 import { DiagnosisContext, Advice } from '@/lib/contextBuilder'
-import AIDetailedAdvice from './AIDetailedAdvice'
 
 interface TroubleshootingResultsProps {
   advice: Advice
@@ -306,8 +305,6 @@ export default function TroubleshootingResults({ advice, context, onRestart }: T
           </div>
         )}
       </div>
-
-      <AIDetailedAdvice context={context} basicAdvice={localizedAdvice} />
 
       <div style={{ textAlign: 'center', marginTop: '30px' }}>
         <button

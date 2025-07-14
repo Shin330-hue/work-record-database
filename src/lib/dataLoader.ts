@@ -1,9 +1,28 @@
 // src/lib/dataLoader.ts - 案件記録データベース用に完全書き換え
 
+// ファイルパスサニタイゼーション関数
+function sanitizeDrawingNumber(drawingNumber: string): string {
+  if (!drawingNumber || typeof drawingNumber !== 'string') {
+    throw new Error('図番が無効です')
+  }
+  
+  // 英数字、ハイフン、アンダースコアのみ許可し、最大100文字に制限
+  const sanitized = drawingNumber
+    .replace(/[^a-zA-Z0-9\-_]/g, '-')
+    .substring(0, 100)
+    .trim()
+  
+  if (sanitized.length === 0) {
+    throw new Error('図番が無効です')
+  }
+  
+  return sanitized
+}
+
 // 環境に応じたデータパス取得
 const getDataPath = (): string => {
-  // デバッグ用ログ
-  if (process.env.DEBUG_DATA_LOADING === 'true') {
+  // デバッグ用ログ（開発環境のみ）
+  if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
     console.log('🔍 getDataPath 呼び出し:', {
       NODE_ENV: process.env.NODE_ENV,
       USE_NAS: process.env.USE_NAS,
@@ -15,16 +34,14 @@ const getDataPath = (): string => {
   // 本番環境（社内ノートPC）
   if (process.env.NODE_ENV === 'production') {
     const path = process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
-    if (process.env.DEBUG_DATA_LOADING === 'true') {
-      console.log('🏭 本番環境パス:', path)
-    }
+    // 本番環境ではログ出力しない
     return path
   }
   
   // NAS使用開発環境
   if (process.env.USE_NAS === 'true') {
     const path = process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
-    if (process.env.DEBUG_DATA_LOADING === 'true') {
+    if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
       console.log('💾 NAS使用パス:', path)
     }
     return path
@@ -32,7 +49,7 @@ const getDataPath = (): string => {
   
   // ローカル開発環境（DEV_DATA_ROOT_PATHを使用）
   const path = process.env.DEV_DATA_ROOT_PATH || './public/data_test'
-  if (process.env.DEBUG_DATA_LOADING === 'true') {
+  if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
     console.log('🖥️ ローカル開発パス:', path)
   }
   return path
@@ -223,27 +240,33 @@ export interface WorkInstruction {
 export const getFrontendDataPath = (): string => {
   if (typeof window === 'undefined') return '';
   
-  // デバッグログを常に出力
-  console.log('🔍 getFrontendDataPath 詳細:', {
-    NEXT_PUBLIC_USE_NAS: process.env.NEXT_PUBLIC_USE_NAS,
-    NEXT_PUBLIC_USE_NAS_type: typeof process.env.NEXT_PUBLIC_USE_NAS,
-    NEXT_PUBLIC_USE_NAS_strict: process.env.NEXT_PUBLIC_USE_NAS === 'true',
-    NODE_ENV: process.env.NODE_ENV,
-    isWindow: typeof window !== 'undefined'
-  });
+  // デバッグログ（開発環境のみ）
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 getFrontendDataPath 詳細:', {
+      NEXT_PUBLIC_USE_NAS: process.env.NEXT_PUBLIC_USE_NAS,
+      NEXT_PUBLIC_USE_NAS_type: typeof process.env.NEXT_PUBLIC_USE_NAS,
+      NEXT_PUBLIC_USE_NAS_strict: process.env.NEXT_PUBLIC_USE_NAS === 'true',
+      NODE_ENV: process.env.NODE_ENV,
+      isWindow: typeof window !== 'undefined'
+    });
+  }
   
   if (process.env.NEXT_PUBLIC_USE_NAS === 'true') {
-    console.log('💾 NAS使用パスを返します: /data');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('💾 NAS使用パスを返します: /data');
+    }
     return '/data';
   }
-  console.log('🖥️ ローカルパスを返します: /data');
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🖥️ ローカルパスを返します: /data');
+  }
   return '/data';
 }
 
 // データ読み込み関数
 export const loadCompanies = async (): Promise<Company[]> => {
   try {
-    if (process.env.DEBUG_DATA_LOADING === 'true') {
+    if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
       console.log('🔍 会社データ読み込み情報:', {
         isServerSide: typeof window === 'undefined',
         dataPath: getDataPath(),
@@ -259,7 +282,9 @@ export const loadCompanies = async (): Promise<Company[]> => {
     const data = await response.json();
     return data.companies || [];
   } catch (error) {
-    console.error('会社データの読み込みに失敗:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('会社データの読み込みに失敗:', error);
+    }
     return [];
   }
 }
@@ -281,7 +306,9 @@ export const loadSearchIndex = async (): Promise<SearchIndex> => {
     }
     return await response.json();
   } catch (error) {
-    console.error('検索インデックスの読み込みに失敗:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('検索インデックスの読み込みに失敗:', error);
+    }
     return {
       drawings: [],
       metadata: {
@@ -304,7 +331,7 @@ export const loadWorkInstruction = async (drawingNumber: string): Promise<WorkIn
         nodeEnv: process.env.NODE_ENV
       })
     }
-    const safeDrawingNumber = drawingNumber.replace(/[^a-zA-Z0-9-]/g, '-');
+    const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber);
     const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
     const response = await fetch(`${dataPath}/work-instructions/drawing-${safeDrawingNumber}/instruction.json`);
     if (!response.ok) {
@@ -312,15 +339,15 @@ export const loadWorkInstruction = async (drawingNumber: string): Promise<WorkIn
     }
     return await response.json();
   } catch (error) {
-    console.error(`作業手順の読み込みに失敗 (${drawingNumber}):`, error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`作業手順の読み込みに失敗 (${drawingNumber}):`, error);
+    }
     return null;
   }
 }
 
-// 図番をファイル名安全な形式に変換する関数
-export const sanitizeDrawingNumber = (drawingNumber: string): string => {
-  return drawingNumber.replace(/[^a-zA-Z0-9-]/g, '-')
-}
+// 図番をファイル名安全な形式に変換する関数（外部からも利用可能）
+export { sanitizeDrawingNumber }
 
 // 会社IDから会社情報を取得
 export const getCompanyById = (companies: Company[], companyId: string): Company | null => {
@@ -337,24 +364,8 @@ export const getDrawingSearchItem = (searchIndex: SearchIndex, drawingNumber: st
   return searchIndex.drawings.find(drawing => drawing.drawingNumber === drawingNumber) || null
 }
 
-// アイデア関連の型定義
-export interface Idea {
-  id: string;
-  title: string;
-  category: string;
-  tags: string[];
-  description: string;
-  content: string;
-  keyPoints: string[];
-  images: string[];
-  videos: string[];
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  applicableMaterials: string[];
-}
-
-export interface IdeaLibrary {
-  ideas: Idea[];
-}
+// アイデア関連の型定義をimport
+import { Idea } from '@/types/idea'
 
 // 関連アイデアを読み込む（並列読み込みで高速化）
 export const loadRelatedIdeas = async (ideaPaths: string[]): Promise<Idea[]> => {
@@ -373,7 +384,9 @@ export const loadRelatedIdeas = async (ideaPaths: string[]): Promise<Idea[]> => 
     const results = await Promise.all(promises);
     return results;
   } catch (error) {
-    console.error('アイデアの読み込みに失敗:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('アイデアの読み込みに失敗:', error);
+    }
     return [];
   }
 }

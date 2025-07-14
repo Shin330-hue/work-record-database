@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { WorkInstruction, Idea, loadRelatedIdeas } from '@/lib/dataLoader'
+import { WorkInstruction, loadRelatedIdeas } from '@/lib/dataLoader'
+import { Idea } from '@/types/idea'
 import WorkStep from './WorkStep'
 import IdeaDisplay from './IdeaDisplay'
 import { getFrontendDataPath } from '../lib/dataLoader';
@@ -44,7 +45,8 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
       const response = await fetch(`/api/files?${params}`)
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
       const data = await response.json()
-      return data.files || []
+      // 新しいAPI形式に対応（data.data.files）
+      return data.success ? (data.data.files || []) : (data.files || [])
     } catch (error) {
       console.error(`Error loading files from ${folderType}:`, error)
       return []

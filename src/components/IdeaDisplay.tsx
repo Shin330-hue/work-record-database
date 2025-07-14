@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Idea } from '@/lib/dataLoader';
+import { Idea } from '@/types/idea';
 import { getFrontendDataPath } from '@/lib/dataLoader';
 
 interface IdeaDisplayProps {
