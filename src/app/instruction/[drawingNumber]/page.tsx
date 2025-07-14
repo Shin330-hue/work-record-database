@@ -1,7 +1,8 @@
 'use client'
 import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
-import { loadWorkInstruction, WorkInstruction } from '@/lib/dataLoader'
+import { loadWorkInstruction, WorkInstruction, loadContributions } from '@/lib/dataLoader'
+import { ContributionFile } from '@/types/contribution'
 import WorkInstructionResults from '@/components/WorkInstructionResults'
 
 interface InstructionPageProps {
@@ -13,6 +14,7 @@ interface InstructionPageProps {
 export default function InstructionPage({ params }: InstructionPageProps) {
   const { drawingNumber } = use(params)
   const [workInstruction, setWorkInstruction] = useState<WorkInstruction | null>(null)
+  const [contributions, setContributions] = useState<ContributionFile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -25,15 +27,20 @@ export default function InstructionPage({ params }: InstructionPageProps) {
     setError(null)
     setWorkInstruction(null)
     
-    loadWorkInstruction(decodedDrawingNumber)
-      .then((data) => {
-        console.log('✅ 作業手順データ読み込み成功:', data) // デバッグログ追加
-        setWorkInstruction(data)
+    Promise.all([
+      loadWorkInstruction(decodedDrawingNumber),
+      loadContributions(decodedDrawingNumber)
+    ])
+      .then(([instructionData, contributionData]) => {
+        console.log('✅ 作業手順データ読み込み成功:', instructionData)
+        console.log('✅ 追記データ読み込み成功:', contributionData)
+        setWorkInstruction(instructionData)
+        setContributions(contributionData)
         setLoading(false)
       })
       .catch((error) => {
-        console.error('❌ 作業手順データ読み込みエラー:', error) // デバッグログ追加
-        setError(`作業手順データの読み込みに失敗しました: ${error.message}`)
+        console.error('❌ データ読み込みエラー:', error)
+        setError(`データの読み込みに失敗しました: ${error.message}`)
         setLoading(false)
       })
   }, [drawingNumber])
@@ -102,6 +109,7 @@ export default function InstructionPage({ params }: InstructionPageProps) {
         <div className="flex flex-col items-center justify-center min-h-screen">
           <WorkInstructionResults
             instruction={workInstruction}
+            contributions={contributions}
             onBack={handleBackToSearch}
             onRelatedDrawingClick={handleRelatedDrawingClick}
           />

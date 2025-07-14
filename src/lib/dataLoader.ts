@@ -240,8 +240,8 @@ export interface WorkInstruction {
 export const getFrontendDataPath = (): string => {
   if (typeof window === 'undefined') return '';
   
-  // デバッグログ（開発環境のみ）
-  if (process.env.NODE_ENV === 'development') {
+  // デバッグログ（開発環境のみ、制限付き）
+  if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
     console.log('🔍 getFrontendDataPath 詳細:', {
       NEXT_PUBLIC_USE_NAS: process.env.NEXT_PUBLIC_USE_NAS,
       NEXT_PUBLIC_USE_NAS_type: typeof process.env.NEXT_PUBLIC_USE_NAS,
@@ -252,12 +252,12 @@ export const getFrontendDataPath = (): string => {
   }
   
   if (process.env.NEXT_PUBLIC_USE_NAS === 'true') {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
       console.log('💾 NAS使用パスを返します: /data');
     }
     return '/data';
   }
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
     console.log('🖥️ ローカルパスを返します: /data');
   }
   return '/data';
@@ -366,6 +366,7 @@ export const getDrawingSearchItem = (searchIndex: SearchIndex, drawingNumber: st
 
 // アイデア関連の型定義をimport
 import { Idea } from '@/types/idea'
+import { ContributionFile, ContributionData } from '@/types/contribution'
 
 // 関連アイデアを読み込む（並列読み込みで高速化）
 export const loadRelatedIdeas = async (ideaPaths: string[]): Promise<Idea[]> => {
@@ -388,5 +389,94 @@ export const loadRelatedIdeas = async (ideaPaths: string[]): Promise<Idea[]> => 
       console.error('アイデアの読み込みに失敗:', error);
     }
     return [];
+  }
+}
+
+// 追記データ読み込み関数
+export const loadContributions = async (drawingNumber: string): Promise<ContributionFile> => {
+  try {
+    if (process.env.DEBUG_DATA_LOADING === 'true') {
+      console.log('🔍 追記データ読み込み情報:', {
+        drawingNumber,
+        isServerSide: typeof window === 'undefined',
+        dataPath: getDataPath(),
+        useNAS: process.env.USE_NAS,
+        nodeEnv: process.env.NODE_ENV
+      })
+    }
+    const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber)
+    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath()
+    const response = await fetch(`${dataPath}/work-instructions/drawing-${safeDrawingNumber}/contributions/contributions.json`)
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        return {
+          drawingNumber,
+          contributions: [],
+          metadata: {
+            totalContributions: 0,
+            lastUpdated: new Date().toISOString(),
+            version: '1.0',
+            mergedCount: 0
+          }
+        }
+      }
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return await response.json()
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`追記データの読み込みに失敗 (${drawingNumber}):`, error)
+    }
+    return {
+      drawingNumber,
+      contributions: [],
+      metadata: {
+        totalContributions: 0,
+        lastUpdated: new Date().toISOString(),
+        version: '1.0',
+        mergedCount: 0
+      }
+    }
+  }
+}
+
+// 全図番の最新追記データを取得
+export const loadRecentContributions = async (limit: number = 10): Promise<{ drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[]> => {
+  try {
+    // 検索インデックスから全図番を取得
+    const searchIndex = await loadSearchIndex()
+    const allContributions: { drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[] = []
+
+    // 各図番の追記データを並列取得
+    const contributionPromises = searchIndex.drawings.map(async (drawing) => {
+      try {
+        const contributionFile = await loadContributions(drawing.drawingNumber)
+        return contributionFile.contributions.map(contribution => ({
+          drawingNumber: drawing.drawingNumber,
+          contribution,
+          drawingTitle: drawing.title
+        }))
+      } catch {
+        return []
+      }
+    })
+
+    const results = await Promise.all(contributionPromises)
+    results.forEach(contributions => {
+      allContributions.push(...contributions)
+    })
+
+    // 投稿日時でソートして最新順に
+    allContributions.sort((a, b) => 
+      new Date(b.contribution.timestamp).getTime() - new Date(a.contribution.timestamp).getTime()
+    )
+
+    return allContributions.slice(0, limit)
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('最新追記データの読み込みに失敗:', error)
+    }
+    return []
   }
 }

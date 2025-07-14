@@ -1,26 +1,36 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import { WorkInstruction, loadRelatedIdeas } from '@/lib/dataLoader'
 import { Idea } from '@/types/idea'
+import { ContributionFile } from '@/types/contribution'
 import WorkStep from './WorkStep'
 import IdeaDisplay from './IdeaDisplay'
+import ContributionForm from './ContributionForm'
+import ContributionDisplay from './ContributionDisplay'
 import { getFrontendDataPath } from '../lib/dataLoader';
 
 interface WorkInstructionResultsProps {
   instruction: WorkInstruction
+  contributions: ContributionFile | null
   onBack: () => void
   onRelatedDrawingClick: (drawingNumber: string) => void
 }
 
 
-export default function WorkInstructionResults({ instruction, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
+export default function WorkInstructionResults({ instruction, contributions, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
   const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'ideas'>('steps')
   // overview用のファイル状態
   const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[], programs: string[] }>({ pdfs: [], images: [], videos: [], programs: [] })
   // 関連アイデアの状態
   const [relatedIdeas, setRelatedIdeas] = useState<Idea[]>([])
+  // 追記フォームの状態
+  const [showContributionForm, setShowContributionForm] = useState(false)
+  const [contributionTarget, setContributionTarget] = useState<{
+    section: 'overview' | 'step' | 'general'
+    stepNumber?: number
+  }>({ section: 'general' })
 
-  const dataRoot = getFrontendDataPath();
+  const dataRoot = useMemo(() => getFrontendDataPath(), []);
 
   // ファイルダウンロード関数
   const downloadFile = (filename: string, folderType: string, subFolder?: string) => {
@@ -251,6 +261,27 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
           <span>準備時間: {instruction.overview.preparationTime}</span>
           <span>加工時間: {instruction.overview.processingTime}</span>
         </div>
+        
+        {/* 概要への追記表示 */}
+        {contributions && (
+          <ContributionDisplay 
+            contributions={contributions.contributions.filter(c => c.targetSection === 'overview')}
+            drawingNumber={instruction.metadata.drawingNumber}
+          />
+        )}
+        
+        {/* 概要追記ボタン */}
+        <div className="mt-4">
+          <button
+            onClick={() => {
+              setContributionTarget({ section: 'overview' })
+              setShowContributionForm(true)
+            }}
+            className="px-3 py-1 text-xs bg-blue-600/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors"
+          >
+            ＋ 概要に追記
+          </button>
+        </div>
       </div>
 
       {/* タブ切替 */}
@@ -357,6 +388,21 @@ export default function WorkInstructionResults({ instruction, onBack, onRelatedD
             ))}
           </div>
         </div>
+      )}
+
+      {/* 追記フォーム */}
+      {showContributionForm && (
+        <ContributionForm
+          drawingNumber={instruction.metadata.drawingNumber}
+          targetSection={contributionTarget.section}
+          stepNumber={contributionTarget.stepNumber}
+          onSubmit={() => {
+            setShowContributionForm(false)
+            // ページをリロードして最新の追記データを取得
+            window.location.reload()
+          }}
+          onCancel={() => setShowContributionForm(false)}
+        />
       )}
     </div>
   )

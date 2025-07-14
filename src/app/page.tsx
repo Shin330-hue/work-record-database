@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loadCompanies, loadSearchIndex, Company, SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
 import SearchBar from '@/components/SearchBar'
+import RecentContributions from '@/components/RecentContributions'
 
 export default function Home() {
   const [companies, setCompanies] = useState<Company[]>([])
@@ -45,6 +46,11 @@ export default function Home() {
   // 会社選択時の処理
   const handleCompanySelect = (company: Company) => {
     router.push(`/category/${company.id}`)
+  }
+
+  // 追記から図番へ遷移
+  const handleContributionDrawingClick = (drawingNumber: string) => {
+    router.push(`/instruction/${encodeURIComponent(drawingNumber)}`)
   }
 
   return (
@@ -118,6 +124,13 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {/* 最新追記セクション */}
+          {!showSearchResults && (
+            <div className="w-full max-w-[800px] mt-8">
+              <RecentContributions onDrawingClick={handleContributionDrawingClick} />
+            </div>
+          )}
         </div>
       </div>
     </div>
