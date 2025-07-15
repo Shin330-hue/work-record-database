@@ -77,7 +77,51 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
               </p>
             )}
 
-            {contribution.content.imagePath && (
+            {/* 複数ファイル表示（新フォーマット） */}
+            {contribution.content.files && contribution.content.files.length > 0 && (
+              <div className="mb-2 space-y-2">
+                {contribution.content.files.length > 1 && (
+                  <p className="text-xs text-gray-600">📎 {contribution.content.files.length}個のファイル</p>
+                )}
+                <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                  {contribution.content.files.map((file, index) => (
+                    <div key={index}>
+                      {file.fileType === 'image' && (
+                        <div>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`${dataPath}/work-instructions/drawing-${drawingNumber}/contributions/${file.filePath}`}
+                            alt={file.originalFileName}
+                            className="w-full rounded border"
+                            style={{ maxHeight: '200px', objectFit: 'cover' }}
+                          />
+                          <p className="text-xs text-gray-500 mt-1">{file.originalFileName}</p>
+                        </div>
+                      )}
+                      {file.fileType === 'video' && (
+                        <div>
+                          <video
+                            controls
+                            className="w-full rounded border"
+                            style={{ maxHeight: '200px' }}
+                          >
+                            <source
+                              src={`${dataPath}/work-instructions/drawing-${drawingNumber}/contributions/${file.filePath}`}
+                              type={file.mimeType}
+                            />
+                            お使いのブラウザは動画をサポートしていません。
+                          </video>
+                          <p className="text-xs text-gray-500 mt-1">{file.originalFileName}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 既存フォーマット表示（後方互換性） */}
+            {!contribution.content.files && contribution.content.imagePath && (
               <div className="mb-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -89,7 +133,7 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
               </div>
             )}
 
-            {contribution.content.videoPath && (
+            {!contribution.content.files && contribution.content.videoPath && (
               <div className="mb-2">
                 <video
                   controls
@@ -105,7 +149,8 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
               </div>
             )}
 
-            {contribution.content.originalFileName && (
+            {/* 既存フォーマットのファイル名表示（新フォーマットにファイルがない場合のみ） */}
+            {!contribution.content.files && contribution.content.originalFileName && (
               <p className="text-xs text-gray-500">
                 📎 {contribution.content.originalFileName}
               </p>

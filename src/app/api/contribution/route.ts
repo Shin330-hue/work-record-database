@@ -2,11 +2,66 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir, readFile } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
-import { ContributionData, ContributionFile } from '@/types/contribution'
+import { ContributionData, ContributionFile, ContributionFileData } from '@/types/contribution'
 import { sanitizeDrawingNumber } from '@/lib/dataLoader'
 
 function generateId(): string {
   return Date.now().toString() + '_' + Math.random().toString(36).substr(2, 9)
+}
+
+// セキュリティ対策: ファイル検証
+function validateFile(file: File): { valid: boolean; error?: string } {
+  const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
+  const MAX_TOTAL_SIZE = 100 * 1024 * 1024 // 100MB
+  
+  // ファイルサイズチェック
+  if (file.size > MAX_FILE_SIZE) {
+    return { valid: false, error: `ファイルサイズが大きすぎます。最大50MBまでです。(${file.name})` }
+  }
+  
+  // MIMEタイプチェック
+  const allowedTypes = [
+    'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+    'video/mp4', 'video/webm', 'video/avi', 'video/mov'
+  ]
+  if (!allowedTypes.includes(file.type)) {
+    return { valid: false, error: `サポートされていないファイル形式です。(${file.name})` }
+  }
+  
+  // ファイル名チェック（危険な拡張子の除外）
+  const dangerousExtensions = ['.exe', '.bat', '.cmd', '.com', '.scr', '.js', '.vbs', '.jar']
+  const fileName = file.name.toLowerCase()
+  if (dangerousExtensions.some(ext => fileName.endsWith(ext))) {
+    return { valid: false, error: `実行可能ファイルはアップロードできません。(${file.name})` }
+  }
+  
+  return { valid: true }
+}
+
+function validateFiles(files: File[]): { valid: boolean; error?: string } {
+  const MAX_TOTAL_SIZE = 100 * 1024 * 1024 // 100MB
+  const MAX_FILE_COUNT = 10
+  
+  // ファイル数チェック
+  if (files.length > MAX_FILE_COUNT) {
+    return { valid: false, error: `ファイル数が上限を超えています。最大${MAX_FILE_COUNT}ファイルまでです。` }
+  }
+  
+  // 総容量チェック
+  const totalSize = files.reduce((sum, file) => sum + file.size, 0)
+  if (totalSize > MAX_TOTAL_SIZE) {
+    return { valid: false, error: `総ファイルサイズが大きすぎます。最大100MBまでです。` }
+  }
+  
+  // 個別ファイル検証
+  for (const file of files) {
+    const validation = validateFile(file)
+    if (!validation.valid) {
+      return validation
+    }
+  }
+  
+  return { valid: true }
 }
 
 function getContributionPath(drawingNumber: string): string {
@@ -66,10 +121,23 @@ export async function POST(request: NextRequest) {
     const targetSection = formData.get('targetSection') as string
     const stepNumber = formData.get('stepNumber') as string
     const text = formData.get('text') as string
-    const file = formData.get('file') as File | null
+    // 複数ファイル取得（後方互換性維持）
+    const singleFile = formData.get('file') as File | null
+    const multipleFiles = formData.getAll('files') as File[]
+    
+    // 実際のファイル配列を決定
+    const files: File[] = multipleFiles.length > 0 ? multipleFiles : (singleFile ? [singleFile] : [])
 
     if (!drawingNumber || !userId || !userName || !type || !targetSection) {
       return NextResponse.json({ error: 'Required fields missing' }, { status: 400 })
+    }
+
+    // ファイル検証
+    if (files.length > 0) {
+      const validation = validateFiles(files)
+      if (!validation.valid) {
+        return NextResponse.json({ error: validation.error }, { status: 400 })
+      }
     }
 
     const contributionPath = getContributionPath(drawingNumber)
@@ -79,17 +147,47 @@ export async function POST(request: NextRequest) {
     contributionFile.drawingNumber = drawingNumber
 
     const contributionId = generateId()
-    let filePath: string | undefined
+    
+    // 複数ファイル処理
+    const processedFiles: ContributionFileData[] = []
+    let legacyImagePath: string | undefined
+    let legacyVideoPath: string | undefined
+    let legacyFileName: string | undefined
+    let legacyFileSize: number | undefined
 
-    if (file && file.size > 0) {
-      const fileExtension = path.extname(file.name)
-      const fileName = `${userId}_${contributionId}${fileExtension}`
-      const fileType = file.type.startsWith('image/') ? 'images' : 'videos'
-      const fullFilePath = path.join(contributionPath, 'files', fileType, fileName)
-      
-      const bytes = await file.arrayBuffer()
-      await writeFile(fullFilePath, Buffer.from(bytes))
-      filePath = `files/${fileType}/${fileName}`
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      if (file && file.size > 0) {
+        const fileExtension = path.extname(file.name)
+        const fileName = `${userId}_${contributionId}_${i}${fileExtension}`
+        const fileType = file.type.startsWith('image/') ? 'images' : 'videos'
+        const fullFilePath = path.join(contributionPath, 'files', fileType, fileName)
+        
+        const bytes = await file.arrayBuffer()
+        await writeFile(fullFilePath, Buffer.from(bytes))
+        
+        const relativePath = `files/${fileType}/${fileName}`
+        
+        processedFiles.push({
+          fileName,
+          originalFileName: file.name,
+          fileType: file.type.startsWith('image/') ? 'image' : 'video',
+          mimeType: file.type,
+          fileSize: file.size,
+          filePath: relativePath
+        })
+
+        // 最初のファイルを既存フィールドにも設定（後方互換性）
+        if (i === 0) {
+          if (file.type.startsWith('image/')) {
+            legacyImagePath = relativePath
+          } else if (file.type.startsWith('video/')) {
+            legacyVideoPath = relativePath
+          }
+          legacyFileName = file.name
+          legacyFileSize = file.size
+        }
+      }
     }
 
     const contribution: ContributionData = {
@@ -102,10 +200,13 @@ export async function POST(request: NextRequest) {
       stepNumber: stepNumber ? parseInt(stepNumber) : undefined,
       content: {
         text: text || undefined,
-        imagePath: file?.type.startsWith('image/') ? filePath : undefined,
-        videoPath: file?.type.startsWith('video/') ? filePath : undefined,
-        originalFileName: file?.name,
-        fileSize: file?.size
+        // 既存フィールド（後方互換性）
+        imagePath: legacyImagePath,
+        videoPath: legacyVideoPath,
+        originalFileName: legacyFileName,
+        fileSize: legacyFileSize,
+        // 新規フィールド（複数ファイル）
+        files: processedFiles.length > 0 ? processedFiles : undefined
       },
       status: 'active'
     }

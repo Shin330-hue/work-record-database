@@ -12,12 +12,24 @@ export interface ContributionData {
 
 export interface ContributionContent {
   text?: string
+  // 既存フィールド（下位互換性維持）
   imagePath?: string
   videoPath?: string
   originalFileName?: string
   fileSize?: number
+  // 新規フィールド（複数ファイル対応）
+  files?: ContributionFileData[]
   nearmiss?: NearMissContribution
   troubleshoot?: TroubleshootContribution
+}
+
+export interface ContributionFileData {
+  fileName: string
+  originalFileName: string
+  fileType: 'image' | 'video'
+  mimeType: string
+  fileSize: number
+  filePath: string
 }
 
 export interface NearMissContribution {
