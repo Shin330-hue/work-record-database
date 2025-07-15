@@ -404,9 +404,7 @@ export const loadContributions = async (drawingNumber: string): Promise<Contribu
         nodeEnv: process.env.NODE_ENV
       })
     }
-    const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber)
-    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath()
-    const response = await fetch(`${dataPath}/work-instructions/drawing-${safeDrawingNumber}/contributions/contributions.json`)
+    const response = await fetch(`/api/contribution?drawingNumber=${encodeURIComponent(drawingNumber)}`)
     
     if (!response.ok) {
       if (response.status === 404) {
