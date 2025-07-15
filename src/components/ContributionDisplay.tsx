@@ -1,7 +1,5 @@
 'use client'
-import { useMemo } from 'react'
 import { ContributionData } from '@/types/contribution'
-import { getFrontendDataPath } from '@/lib/dataLoader'
 
 interface ContributionDisplayProps {
   contributions: ContributionData[]
@@ -9,7 +7,6 @@ interface ContributionDisplayProps {
 }
 
 export default function ContributionDisplay({ contributions, drawingNumber }: ContributionDisplayProps) {
-  const dataPath = useMemo(() => getFrontendDataPath(), [])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ja-JP', {
@@ -90,7 +87,7 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
                         <div>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`${dataPath}/work-instructions/drawing-${drawingNumber}/contributions/${file.filePath}`}
+                            src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}&v=${new Date(contribution.timestamp).getTime()}`}
                             alt={file.originalFileName}
                             className="w-full rounded border"
                             style={{ maxHeight: '200px', objectFit: 'cover' }}
@@ -106,7 +103,7 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
                             style={{ maxHeight: '200px' }}
                           >
                             <source
-                              src={`${dataPath}/work-instructions/drawing-${drawingNumber}/contributions/${file.filePath}`}
+                              src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}&v=${new Date(contribution.timestamp).getTime()}`}
                               type={file.mimeType}
                             />
                             お使いのブラウザは動画をサポートしていません。
@@ -125,7 +122,7 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
               <div className="mb-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`${dataPath}/work-instructions/drawing-${drawingNumber}/contributions/${contribution.content.imagePath}`}
+                  src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(contribution.content.imagePath)}&v=${new Date(contribution.timestamp).getTime()}`}
                   alt="追記画像"
                   className="max-w-xs rounded border"
                   style={{ maxHeight: '200px' }}
@@ -141,7 +138,7 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
                   style={{ maxHeight: '200px' }}
                 >
                   <source
-                    src={`${dataPath}/work-instructions/drawing-${drawingNumber}/contributions/${contribution.content.videoPath}`}
+                    src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(contribution.content.videoPath)}&v=${new Date(contribution.timestamp).getTime()}`}
                     type="video/mp4"
                   />
                   お使いのブラウザは動画をサポートしていません。

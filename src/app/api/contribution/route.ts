@@ -12,7 +12,6 @@ function generateId(): string {
 // セキュリティ対策: ファイル検証
 function validateFile(file: File): { valid: boolean; error?: string } {
   const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
-  const MAX_TOTAL_SIZE = 100 * 1024 * 1024 // 100MB
   
   // ファイルサイズチェック
   if (file.size > MAX_FILE_SIZE) {
@@ -159,7 +158,9 @@ export async function POST(request: NextRequest) {
       const file = files[i]
       if (file && file.size > 0) {
         const fileExtension = path.extname(file.name)
-        const fileName = `${userId}_${contributionId}_${i}${fileExtension}`
+        // ファイル名を安全な形式に（日本語・特殊文字を除去）
+        const safeUserId = userId.replace(/[^\w\-]/g, '_')
+        const fileName = `${safeUserId}_${contributionId}_${i}${fileExtension}`
         const fileType = file.type.startsWith('image/') ? 'images' : 'videos'
         const fullFilePath = path.join(contributionPath, 'files', fileType, fileName)
         

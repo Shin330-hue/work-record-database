@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readdir } from 'fs/promises'
-import { join } from 'path'
+import { join, extname } from 'path'
 import { existsSync } from 'fs'
 import { createErrorResponse, createSuccessResponse, logError, createValidationError } from '@/lib/apiUtils'
 
@@ -33,10 +33,53 @@ export async function GET(request: NextRequest) {
   // 加工アイデア用のパラメータ
   const ideaCategory = searchParams.get('ideaCategory')
   const ideaId = searchParams.get('ideaId')
+  
+  // 追加投稿ファイル用のパラメータ
+  const contributionFile = searchParams.get('contributionFile')
 
   try {
 
-    // パラメータの検証
+    // 追加投稿ファイルの単一配信（優先処理）
+    if (contributionFile) {
+      if (!drawingNumber) {
+        return createValidationError('drawingNumber', '追加投稿ファイル配信には必須パラメータです', request.url)
+      }
+      
+      // 追加投稿ファイルの直接配信
+      const dataRoot = getDataRootPath()
+      const contributionPath = join(dataRoot, 'work-instructions', `drawing-${drawingNumber}`, 'contributions')
+      const safePath = contributionFile.replace(/\.\./g, '').replace(/[<>"|*?]/g, '')
+      const fullFilePath = join(contributionPath, safePath)
+
+      if (!existsSync(fullFilePath)) {
+        return NextResponse.json({ error: 'File not found' }, { status: 404 })
+      }
+
+      const { readFile } = await import('fs/promises')
+      const fileBuffer = await readFile(fullFilePath)
+      
+      // ファイル拡張子からMIMEタイプを判定
+      const ext = extname(fullFilePath).toLowerCase()
+      let mimeType = 'application/octet-stream'
+      
+      if (['.jpg', '.jpeg'].includes(ext)) mimeType = 'image/jpeg'
+      else if (ext === '.png') mimeType = 'image/png'
+      else if (ext === '.gif') mimeType = 'image/gif'
+      else if (ext === '.webp') mimeType = 'image/webp'
+      else if (ext === '.mp4') mimeType = 'video/mp4'
+      else if (ext === '.webm') mimeType = 'video/webm'
+      else if (ext === '.avi') mimeType = 'video/avi'
+      else if (ext === '.mov') mimeType = 'video/mov'
+
+      return new NextResponse(fileBuffer, {
+        headers: {
+          'Content-Type': mimeType,
+          'Cache-Control': 'public, max-age=3600'
+        }
+      })
+    }
+
+    // パラメータの検証（通常のファイル一覧取得）
     if (!folderType) {
       return createValidationError('folderType', '必須パラメータです', request.url)
     }
@@ -71,19 +114,6 @@ export async function GET(request: NextRequest) {
       folderPath = subFolder ? join(basePath, subFolder) : basePath
     }
 
-    // デバッグ用ログ
-    if (process.env.DEBUG_DATA_LOADING === 'true') {
-      console.log('🔍 files API パス情報:', {
-        dataRoot: dataRoot,
-        basePath: basePath,
-        folderPath: folderPath,
-        USE_NAS: process.env.USE_NAS,
-        DEV_DATA_ROOT_PATH: process.env.DEV_DATA_ROOT_PATH,
-        ideaCategory,
-        ideaId,
-        drawingNumber
-      })
-    }
 
     // フォルダが存在するかチェック
     if (!existsSync(folderPath)) {
@@ -120,7 +150,6 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    console.log(`📁 ファイル一覧取得: ${folderPath} → ${filteredFiles.length}個のファイル`)
 
     return createSuccessResponse({
       files: filteredFiles,
