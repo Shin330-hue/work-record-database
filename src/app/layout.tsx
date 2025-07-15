@@ -6,8 +6,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '案件記録データベース',
-  description: '案件の作業手順・図番を検索できるデータベースシステム',
+  title: '図面記録データベース',
+  description: '図面の作業手順・図番を検索できるデータベースシステム',
 }
 
 export default function RootLayout({

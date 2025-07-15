@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { loadCompanies, loadSearchIndex, Company, SearchIndex, DrawingSearchItem } from '@/lib/dataLoader'
 import SearchBar from '@/components/SearchBar'
 import RecentContributions from '@/components/RecentContributions'
+import Header from '@/components/Header'
 
 export default function Home() {
   const [companies, setCompanies] = useState<Company[]>([])
@@ -55,29 +56,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col items-center justify-center min-h-screen">
-          {/* タイトル */}
-          <h1 className="text-4xl font-bold mb-8 text-center text-emerald-100 bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
-            作業手順データベース
-          </h1>
-
-          {/* 検索バー */}
-          {searchIndex && (
-            <div className="search-bar-container w-full max-w-[600px] mb-8">
-              <SearchBar
-                searchIndex={searchIndex}
-                onSearch={handleSearch}
-                onDrawingSelect={handleSearchDrawingSelect}
-                placeholder="図番を入力してください（例: ABC-001）"
-              />
-            </div>
-          )}
+      <Header />
+      <div className="container mx-auto px-4">
+        <div className="custom-top-spacing space-y-8">
 
           {/* 検索結果表示 */}
           {showSearchResults && searchResults.length > 0 && (
-            <div className="mb-8 w-full max-w-[800px]">
-              <h2 className="text-xl font-semibold mb-4 text-emerald-100">検索結果</h2>
+            <div className="w-full max-w-[800px] mx-auto">
+              <h2 className="text-xl font-semibold mb-6 text-emerald-100">検索結果</h2>
               <div className="selection-grid">
                 {searchResults.map((result, index) => (
                   <button
@@ -97,8 +83,23 @@ export default function Home() {
           )}
 
           {/* 会社選択セクション */}
-          <div className="w-full max-w-[800px]">
-            <h2 className="text-2xl font-bold mb-8 text-center text-emerald-100">会社を選択してください</h2>
+          <div className="w-full max-w-[800px] mx-auto">
+            {/* タイトルと検索バーの並び */}
+            <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-8">
+              <h2 className="text-2xl font-bold text-emerald-100 lg:flex-shrink-0">会社を選択してください</h2>
+              
+              {/* 検索バー */}
+              {searchIndex && (
+                <div className="search-bar-container custom-search-width">
+                  <SearchBar
+                    searchIndex={searchIndex}
+                    onSearch={handleSearch}
+                    onDrawingSelect={handleSearchDrawingSelect}
+                    placeholder="図番を入力してください（例: ABC-001）"
+                  />
+                </div>
+              )}
+            </div>
             
             {loading && (
               <div className="text-center text-lg text-emerald-200 py-20">読み込み中...</div>
@@ -127,7 +128,7 @@ export default function Home() {
 
           {/* 最新追記セクション */}
           {!showSearchResults && (
-            <div className="w-full max-w-[800px] mt-8">
+            <div className="w-full max-w-[800px] mx-auto mt-8">
               <RecentContributions onDrawingClick={handleContributionDrawingClick} />
             </div>
           )}

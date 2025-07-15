@@ -140,9 +140,10 @@ export default function RecentContributions({ onDrawingClick }: RecentContributi
         ))}
       </div>
 
-      <div className="mt-4 text-center">
-        <button className="text-emerald-300 text-sm hover:text-emerald-200 transition-colors">
-          全ての追記を見る →
+      <div className="mt-6 text-center">
+        <button className="custom-rect-button blue">
+          <span>全ての追記を見る</span>
+          <span>→</span>
         </button>
       </div>
     </div>

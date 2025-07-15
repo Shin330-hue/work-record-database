@@ -520,6 +520,25 @@ body::before {
   .result-container {
     padding: 40px 25px;
   }
+
+  .selection-card {
+    padding: 48px 24px;
+    min-height: 220px;
+  }
+
+  .selection-card .icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .selection-card .title {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  .selection-card .desc {
+    font-size: 1.1rem;
+  }
 }
 
 /* 検索バー用スタイル */
@@ -626,16 +645,17 @@ body::before {
   background: rgba(30, 30, 50, 0.8);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 18px;
-  padding: 32px 24px;
+  padding: 40px 24px;
   text-align: center;
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
   cursor: pointer;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  min-height: 180px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
 }
 .selection-card:hover {
   transform: translateY(-10px) scale(1.03);
@@ -709,24 +729,29 @@ body::before {
 /* --- 検索ボックス --- */
 .search-bar-container {
   max-width: 600px;
-  margin: 0 auto 24px auto;
+  margin: 0 0 24px 0;
   position: relative;
   display: flex;
   align-items: center;
 }
 .search-input {
   width: 100%;
+  min-width: 400px;
   padding: 10px 16px 10px 40px;
   font-size: 1rem;
   border-radius: 25px;
-  border: 2px solid rgba(255,215,0,0.3);
+  border: 2px solid rgba(255,215,0,0.6);
   background: rgba(255,255,255,0.05);
   color: #fff;
   outline: none;
-  min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
   line-height: 1.2;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: rgba(255,215,0,0.8);
 }
 .search-input::placeholder {
   color: #bbb;
@@ -768,4 +793,185 @@ a[href$=".pdf"]:visited {
   color: #fb7185 !important;      /* ピンク色 */
   background: #ffe4e6 !important; /* 薄いピンク背景（必要なら） */
   border-color: #f9a8d4 !important; /* 薄いピンク枠（必要なら） */
+}
+
+/* カスタム追記ボタン */
+.custom-add-button {
+  background: linear-gradient(to right, #ff8c00, #ffa500);
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic", "Meiryo", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease-out;
+}
+
+.custom-add-button:hover {
+  background: linear-gradient(to right, #ff7700, #ff9400);
+  transform: scale(1.02);
+}
+
+/* カスタムトップスペーシング */
+.custom-top-spacing {
+  padding-top: 40px;
+}
+
+/* カスタム検索バー幅 */
+.custom-search-width {
+  max-width: 600px;
+  width: 100%;
+}
+
+/* 長方形ボタン（ベース） */
+.custom-rect-button {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "BIZ UDPGothic", "Meiryo", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 20px 48px;
+  color: white;
+  border-radius: 12px;
+  transition: all 0.2s ease-out;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.05em;
+  touch-action: manipulation;
+  user-select: none;
+  text-decoration: none; /* リンク対応 */
+}
+
+.custom-rect-button:hover {
+  transform: scale(1.02);
+}
+
+/* 色バリエーション - ブルー（デフォルト） */
+.custom-rect-button.blue {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8);
+}
+.custom-rect-button.blue:hover {
+  background: linear-gradient(to right, #2563eb, #1e40af);
+}
+
+/* 色バリエーション - グレー（戻るボタン用） */
+.custom-rect-button.gray {
+  background: linear-gradient(to right, #6b7280, #4b5563);
+}
+.custom-rect-button.gray:hover {
+  background: linear-gradient(to right, #4b5563, #374151);
+}
+
+/* 色バリエーション - エメラルド（タブ用） */
+.custom-rect-button.emerald {
+  background: linear-gradient(to right, #10b981, #059669);
+}
+.custom-rect-button.emerald:hover {
+  background: linear-gradient(to right, #059669, #047857);
+}
+
+/* 色バリエーション - パープル（ファイル用） */
+.custom-rect-button.purple {
+  background: linear-gradient(to right, #8b5cf6, #7c3aed);
+}
+.custom-rect-button.purple:hover {
+  background: linear-gradient(to right, #7c3aed, #6d28d9);
+}
+
+/* 小さめサイズ（ファイルダウンロード用） */
+.custom-rect-button.small {
+  padding: 12px 24px;
+  font-size: 0.9rem;
+}
+
+/* カスタムフォーム要素 */
+.custom-form-textarea {
+  width: 100%;
+  padding: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.2s ease;
+}
+
+.custom-form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.custom-form-input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  transition: border-color 0.2s ease;
+}
+
+.custom-form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.custom-form-select {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  background-color: white;
+  transition: border-color 0.2s ease;
+}
+
+.custom-form-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ファイル選択ボタン */
+.custom-file-input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px dashed #3b82f6;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  background-color: #f8fafc;
+  color: #374151;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.custom-file-input:hover {
+  border-color: #2563eb;
+  background-color: #e0f2fe;
+}
+
+.custom-file-input:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.custom-file-input::file-selector-button {
+  background: linear-gradient(to right, #3b82f6, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+}
+
+.custom-file-input::file-selector-button:hover {
+  background: linear-gradient(to right, #2563eb, #1e40af);
+  transform: scale(1.02);
 }

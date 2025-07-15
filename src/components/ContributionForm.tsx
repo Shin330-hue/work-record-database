@@ -161,7 +161,7 @@ export default function ContributionForm({
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              className="custom-form-input"
               placeholder="例: 田中太郎"
               required
             />
@@ -174,7 +174,7 @@ export default function ContributionForm({
             <select
               value={type}
               onChange={(e) => setType(e.target.value as typeof type)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              className="custom-form-select"
             >
               <option value="comment">コメント・注意点</option>
               <option value="image">画像追加</option>
@@ -191,8 +191,7 @@ export default function ContributionForm({
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-              rows={4}
+              className="custom-form-textarea"
               placeholder="気づいた点、改善提案、注意事項など..."
               required={files.length === 0}
             />
@@ -207,7 +206,7 @@ export default function ContributionForm({
               multiple
               onChange={handleFilesChange}
               accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/webm,video/avi,video/mov"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+              className="custom-file-input"
             />
             <p className="text-xs text-gray-500 mt-1">
               📋 制限: 最大10ファイル、各ファイル50MB以下、総容量100MB以下<br/>
@@ -227,7 +226,7 @@ export default function ContributionForm({
                     <button
                       type="button"
                       onClick={() => removeFile(index)}
-                      className="text-red-500 hover:text-red-700 ml-2"
+                      className="text-red-500 hover:text-red-700 ml-2 px-4 py-2 rounded-lg text-base touch-manipulation hover:bg-red-50"
                     >
                       削除
                     </button>
@@ -244,17 +243,17 @@ export default function ContributionForm({
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300"
+              className="custom-rect-button gray"
               disabled={isSubmitting}
             >
-              キャンセル
+              <span>キャンセル</span>
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+              className="custom-rect-button blue"
               disabled={isSubmitting}
             >
-              {isSubmitting ? '投稿中...' : '投稿'}
+              <span>{isSubmitting ? '投稿中...' : '投稿'}</span>
             </button>
           </div>
         </form>

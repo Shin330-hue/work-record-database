@@ -87,15 +87,17 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
             <div className="flex gap-4">
               <button
                 onClick={handleBackToCategories}
-                className="px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+                className="custom-rect-button gray"
               >
-                カテゴリ一覧に戻る
+                <span>←</span>
+                <span>カテゴリ一覧に戻る</span>
               </button>
               <button
                 onClick={handleBackToCompanies}
-                className="px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+                className="custom-rect-button gray"
               >
-                会社一覧に戻る
+                <span>←</span>
+                <span>会社一覧に戻る</span>
               </button>
             </div>
           </div>
@@ -113,15 +115,17 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
             <div className="flex gap-4">
               <button
                 onClick={handleBackToCategories}
-                className="px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+                className="custom-rect-button gray"
               >
-                カテゴリ一覧に戻る
+                <span>←</span>
+                <span>カテゴリ一覧に戻る</span>
               </button>
               <button
                 onClick={handleBackToCompanies}
-                className="px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+                className="custom-rect-button gray"
               >
-                会社一覧に戻る
+                <span>←</span>
+                <span>会社一覧に戻る</span>
               </button>
             </div>
           </div>
@@ -142,9 +146,10 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
           {/* 戻るボタン */}
           <button
             onClick={handleBackToCategories}
-            className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+            className="custom-rect-button gray mb-6"
           >
-            ← {selectedCompany.name} のカテゴリ一覧に戻る
+            <span>←</span>
+            <span>{selectedCompany.name} のカテゴリ一覧に戻る</span>
           </button>
 
           {/* タイトル */}

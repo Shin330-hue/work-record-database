@@ -182,9 +182,10 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                     <button
                       key={`step-program-${i}`}
                       onClick={() => downloadStepFile(program)}
-                      className="text-left px-2 py-1 text-blue-400 hover:bg-blue-500/20 rounded transition-colors duration-200 hover:text-blue-300 text-sm"
+                      className="custom-rect-button purple small"
                     >
-                      {program}
+                      <span>📁</span>
+                      <span>{program}</span>
                     </button>
                   ))}
                 </div>

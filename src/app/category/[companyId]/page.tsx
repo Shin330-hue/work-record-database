@@ -65,9 +65,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             <div className="text-center text-red-400 py-20">{error}</div>
             <button
               onClick={handleBackToCompanies}
-              className="px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+              className="custom-rect-button gray"
             >
-              会社一覧に戻る
+              <span>←</span>
+              <span>会社一覧に戻る</span>
             </button>
           </div>
         </div>
@@ -83,9 +84,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             <div className="text-center text-red-400 py-20">会社が見つかりません</div>
             <button
               onClick={handleBackToCompanies}
-              className="px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+              className="custom-rect-button gray"
             >
-              会社一覧に戻る
+              <span>←</span>
+              <span>会社一覧に戻る</span>
             </button>
           </div>
         </div>
@@ -108,9 +110,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           {/* 戻るボタン */}
           <button
             onClick={handleBackToCompanies}
-            className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 text-sm font-medium shadow-lg"
+            className="custom-rect-button gray mb-6"
           >
-            ← 会社一覧に戻る
+            <span>←</span>
+            <span>会社一覧に戻る</span>
           </button>
 
           {/* タイトル */}

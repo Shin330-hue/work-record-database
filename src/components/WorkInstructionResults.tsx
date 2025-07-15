@@ -112,8 +112,9 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   return (
     <div className="work-instruction-container">
       {/* 戻るボタン */}
-      <button onClick={onBack} className="mb-6 px-6 py-3 bg-emerald-600/20 backdrop-blur-md text-emerald-100 rounded-xl hover:bg-emerald-500/30 transition-all duration-300 border border-emerald-500/30 hover:border-emerald-400/50 font-medium shadow-lg">
-        検索に戻る
+      <button onClick={onBack} className="custom-rect-button gray mb-6">
+        <span>←</span>
+        <span>検索に戻る</span>
       </button>
 
       {/* ヘッダー */}
@@ -147,17 +148,10 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                     href={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdfs/overview/${encodeURIComponent(pdf)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-3 px-4 py-3 bg-red-500/10 backdrop-blur-md text-red-400 rounded-xl border border-red-500/30 transition-all duration-200 min-w-0 max-w-xs"
+                    className="custom-rect-button purple small"
                   >
-                    <div className="flex-shrink-0">
-                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm font-medium truncate">{pdf}</div>
-                      <div className="text-xs text-red-400/70">PDF文書</div>
-                    </div>
+                    <span>📄</span>
+                    <span>{pdf}</span>
                   </a>
                 ))}
               </div>
@@ -209,9 +203,10 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                     <button
                       key={`overview-program-${i}`}
                       onClick={() => downloadFile(program, 'programs', 'overview')}
-                      className="text-left px-3 py-2 text-blue-400 hover:bg-blue-500/20 rounded-lg transition-colors duration-200 hover:text-blue-300"
+                      className="custom-rect-button purple small"
                     >
-                      <div className="text-sm font-medium truncate">{program}</div>
+                      <span>📁</span>
+                      <span>{program}</span>
                     </button>
                   ))}
                 </div>
@@ -271,15 +266,27 @@ export default function WorkInstructionResults({ instruction, contributions, onB
         )}
         
         {/* 概要追記ボタン */}
-        <div className="mt-4">
+        <div className="mt-6">
           <button
             onClick={() => {
               setContributionTarget({ section: 'overview' })
               setShowContributionForm(true)
             }}
-            className="px-3 py-1 text-xs bg-blue-600/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors"
+            className="
+              custom-add-button
+              inline-flex items-center justify-center gap-4
+              px-24 py-6
+              text-white font-bold text-lg
+              rounded-full
+              touch-manipulation
+              select-none
+              shadow-lg hover:shadow-xl
+              min-h-[60px]
+              min-w-[280px]
+            "
           >
-            ＋ 概要に追記
+            <span className="text-xl font-black">✚</span>
+            <span className="font-bold tracking-wider">概要に追記</span>
           </button>
         </div>
       </div>
@@ -287,31 +294,19 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       {/* タブ切替 */}
       <div className="flex gap-2 mb-6">
         <button
-          className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-            activeTab === 'steps' 
-              ? 'bg-emerald-500 text-white shadow-lg' 
-              : 'bg-white/10 backdrop-blur-md text-emerald-200 hover:bg-white/15 border border-emerald-500/30'
-          }`}
+          className={`custom-rect-button ${activeTab === 'steps' ? 'emerald' : 'gray'}`}
           onClick={() => setActiveTab('steps')}
         >
           作業ステップ
         </button>
         <button
-          className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-            activeTab === 'related' 
-              ? 'bg-emerald-500 text-white shadow-lg' 
-              : 'bg-white/10 backdrop-blur-md text-emerald-200 hover:bg-white/15 border border-emerald-500/30'
-          }`}
+          className={`custom-rect-button ${activeTab === 'related' ? 'emerald' : 'gray'}`}
           onClick={() => setActiveTab('related')}
         >
           関連図番
         </button>
         <button
-          className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-            activeTab === 'ideas' 
-              ? 'bg-emerald-500 text-white shadow-lg' 
-              : 'bg-white/10 backdrop-blur-md text-emerald-200 hover:bg-white/15 border border-emerald-500/30'
-          }`}
+          className={`custom-rect-button ${activeTab === 'ideas' ? 'emerald' : 'gray'}`}
           onClick={() => setActiveTab('ideas')}
         >
           加工アイデア
