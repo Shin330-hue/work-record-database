@@ -12,7 +12,6 @@ function generateId(): string {
 // セキュリティ対策: ファイル検証
 function validateFile(file: File): { valid: boolean; error?: string } {
   const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
-  const MAX_TOTAL_SIZE = 100 * 1024 * 1024 // 100MB
   
   // ファイルサイズチェック
   if (file.size > MAX_FILE_SIZE) {
