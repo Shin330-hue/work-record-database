@@ -81,3 +81,6 @@ venv/
 __pycache__/ 
 *.pyc 
 .env 
+
+# Claude Code project memory
+CLAUDE.md 
