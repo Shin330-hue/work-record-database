@@ -249,6 +249,18 @@ export default function NewDrawingPage() {
     setDrawings(newDrawings)
   }
 
+  const updateDrawingCompany = (index: number, company: DrawingFormData['company']) => {
+    const newDrawings = [...drawings]
+    newDrawings[index] = { ...newDrawings[index], company }
+    setDrawings(newDrawings)
+  }
+
+  const updateDrawingProduct = (index: number, product: DrawingFormData['product']) => {
+    const newDrawings = [...drawings]
+    newDrawings[index] = { ...newDrawings[index], product }
+    setDrawings(newDrawings)
+  }
+
   // PDFファイルを更新
   const updatePdfFile = (index: number, file: File | undefined) => {
     const newDrawings = [...drawings]
@@ -370,7 +382,7 @@ export default function NewDrawingPage() {
                 <CompanySelector
                   companies={companies}
                   value={drawing.company}
-                  onChange={(company) => updateDrawing(index, 'company', company)}
+                  onChange={(company) => updateDrawingCompany(index, company)}
                 />
 
                 {/* 2. 図番 */}
@@ -409,7 +421,7 @@ export default function NewDrawingPage() {
                     <input
                       type="text"
                       value={drawing.product.category}
-                      onChange={(e) => updateDrawing(index, 'product', { ...drawing.product, category: e.target.value })}
+                      onChange={(e) => updateDrawingProduct(index, { ...drawing.product, category: e.target.value })}
                       placeholder="ブラケット、カバー、シャフト等"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       list="categories-list"
@@ -435,7 +447,7 @@ export default function NewDrawingPage() {
                   <input
                     type="text"
                     value={drawing.product.name}
-                    onChange={(e) => updateDrawing(index, 'product', { ...drawing.product, name: e.target.value })}
+                    onChange={(e) => updateDrawingProduct(index, { ...drawing.product, name: e.target.value })}
                     placeholder="チェーンソー、カバー、シャフト等"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />

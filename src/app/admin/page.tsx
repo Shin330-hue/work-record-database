@@ -16,10 +16,8 @@ export default function AdminDashboard() {
   })
   const [recentContributions, setRecentContributions] = useState<Array<{
     drawingNumber: string;
-    drawingTitle: string;
-    userName: string;
-    timestamp: string;
-    comment: string;
+    contribution: import('@/types/contribution').ContributionData;
+    drawingTitle?: string;
   }>>([])
   const [loading, setLoading] = useState(true)
 

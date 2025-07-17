@@ -128,7 +128,7 @@ export class DataTransaction {
     if (existsSync(companiesPath)) {
       companies = JSON.parse(await readFile(companiesPath, 'utf-8'))
     } else {
-      companies = { companies: [], metadata: {} }
+      companies = { companies: [], metadata: { lastUpdated: new Date().toISOString(), version: '1.0.0' } }
     }
     
     // 会社の存在確認・追加
@@ -170,12 +170,8 @@ export class DataTransaction {
     
     // メタデータ更新
     companies.metadata = {
-      totalCompanies: companies.companies.length,
-      totalProducts: companies.companies.reduce((sum, c) => sum + c.products.length, 0),
-      totalDrawings: companies.companies.reduce((sum, c) => 
-        sum + c.products.reduce((pSum, p) => pSum + p.drawings.length, 0), 0
-      ),
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
+      version: companies.metadata.version || '1.0.0'
     }
     
     // ファイル保存

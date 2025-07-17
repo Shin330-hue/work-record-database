@@ -162,6 +162,7 @@ export function generateBasicInstruction(data: {
       author: "管理画面",
       estimatedTime: `${data.estimatedTime}分`,
       machineType: data.machineType,
+      difficulty: data.difficulty,
       toolsRequired: []
     },
     overview: {

@@ -540,16 +540,15 @@ export default function DrawingEdit() {
                       {contribution.content.text}
                     </div>
                     
-                    {(contribution.images?.length > 0 || contribution.videos?.length > 0) && (
+                    {contribution.content.files && contribution.content.files.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {contribution.images?.map((image, imgIndex) => (
-                          <span key={imgIndex} className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                            📷 {image}
-                          </span>
-                        ))}
-                        {contribution.videos?.map((video, vidIndex) => (
-                          <span key={vidIndex} className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
-                            🎥 {video}
+                        {contribution.content.files.map((file, fileIndex) => (
+                          <span key={fileIndex} className={`inline-flex items-center px-2 py-1 text-xs rounded ${
+                            file.fileType === 'image' 
+                              ? 'bg-blue-100 text-blue-800' 
+                              : 'bg-purple-100 text-purple-800'
+                          }`}>
+                            {file.fileType === 'image' ? '📷' : '🎥'} {file.originalFileName}
                           </span>
                         ))}
                       </div>

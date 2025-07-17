@@ -234,6 +234,7 @@ export interface WorkInstruction {
   workSteps: WorkStep[]
   nearMiss?: NearMissItem[]
   relatedDrawings: RelatedDrawing[]
+  troubleshooting?: TroubleshootingItem[]
   revisionHistory: RevisionHistory[]
   relatedIdeas?: string[] // パス形式: "category/idea-id"
 }
