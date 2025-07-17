@@ -152,6 +152,7 @@ export interface InstructionMetadata {
   author: string
   estimatedTime: string
   machineType: string
+  difficulty: string
   toolsRequired: string[]
 }
 

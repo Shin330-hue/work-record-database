@@ -243,7 +243,7 @@ export default function NewDrawingPage() {
   }
 
   // 図番データを更新
-  const updateDrawing = (index: number, field: keyof DrawingFormData, value: any) => {
+  const updateDrawing = (index: number, field: keyof DrawingFormData, value: string | string[]) => {
     const newDrawings = [...drawings]
     newDrawings[index] = { ...newDrawings[index], [field]: value }
     setDrawings(newDrawings)
@@ -299,7 +299,7 @@ export default function NewDrawingPage() {
       formData.append('drawings', JSON.stringify(drawings))
       
       // PDFファイルを追加
-      drawings.forEach((drawing, index) => {
+      drawings.forEach((drawing) => {
         if (drawing.pdfFile) {
           formData.append(`pdf_${drawing.drawingNumber}`, drawing.pdfFile)
         }
@@ -321,7 +321,7 @@ export default function NewDrawingPage() {
       } else {
         setError(result.error || '登録に失敗しました')
       }
-    } catch (error) {
+    } catch {
       setError('登録中にエラーが発生しました')
     } finally {
       setLoading(false)

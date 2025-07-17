@@ -30,10 +30,11 @@ export function generateCompanyId(companyName: string): string {
 }
 
 export function generateProductId(productName: string): string {
-  // タイムスタンプベースのユニークID
+  // 製品名ベースのユニークID
+  const sanitized = productName.replace(/[^a-zA-Z0-9\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '').substring(0, 10)
   const timestamp = Date.now().toString()
-  const random = Math.random().toString(36).substr(2, 6)
-  return `product-${timestamp}-${random}`
+  const random = Math.random().toString(36).substr(2, 4)
+  return `product-${sanitized}-${timestamp}-${random}`
 }
 
 // フォルダ階層作成
@@ -71,7 +72,7 @@ export async function createDrawingDirectoryStructure(drawingNumber: string): Pr
         await mkdir(fullPath, { recursive: true })
       } catch (error) {
         // フォルダが既に存在する場合は無視
-        if ((error as any).code !== 'EEXIST') {
+        if ((error as NodeJS.ErrnoException).code !== 'EEXIST') {
           throw error
         }
       }

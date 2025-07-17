@@ -14,7 +14,13 @@ export default function AdminDashboard() {
     totalProducts: 0,
     totalContributions: 0
   })
-  const [recentContributions, setRecentContributions] = useState<any[]>([])
+  const [recentContributions, setRecentContributions] = useState<Array<{
+    drawingNumber: string;
+    drawingTitle: string;
+    userName: string;
+    timestamp: string;
+    comment: string;
+  }>>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {

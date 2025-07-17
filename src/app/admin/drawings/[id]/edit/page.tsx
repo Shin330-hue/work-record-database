@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions } from '@/lib/dataLoader'
-import { ContributionFile, ContributionData } from '@/types/contribution'
+import { ContributionFile } from '@/types/contribution'
 
 interface EditFormData {
   drawingNumber: string
@@ -33,7 +33,6 @@ export default function DrawingEdit() {
   const drawingNumber = params.id as string
 
   const [formData, setFormData] = useState<EditFormData | null>(null)
-  const [companies, setCompanies] = useState<any[]>([])
   const [contributions, setContributions] = useState<ContributionFile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -129,7 +128,6 @@ export default function DrawingEdit() {
         console.log('🎯 構築されたフォームデータ:', editData)
 
         setFormData(editData)
-        setCompanies(companiesData)
         setContributions(contributionsData)
       } catch (error) {
         console.error('編集データ読み込みエラー:', error)
@@ -539,7 +537,7 @@ export default function DrawingEdit() {
                     </div>
                     
                     <div className="text-sm text-gray-700 mb-3">
-                      {contribution.comment}
+                      {contribution.content.text}
                     </div>
                     
                     {(contribution.images?.length > 0 || contribution.videos?.length > 0) && (

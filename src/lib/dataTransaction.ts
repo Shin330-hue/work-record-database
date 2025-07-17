@@ -3,7 +3,7 @@
 import { writeFile, readFile, copyFile } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
-import { Company, Product, SearchIndex, DrawingSearchItem } from './dataLoader'
+import { Company, SearchIndex, DrawingSearchItem } from './dataLoader'
 import { generateCompanyId, generateProductId } from './drawingUtils'
 
 // 環境に応じたデータパス取得
@@ -124,7 +124,7 @@ export class DataTransaction {
     await this.createBackup(companiesPath)
     
     // 既存データ読み込み
-    let companies: { companies: Company[]; metadata: any }
+    let companies: { companies: Company[]; metadata: { lastUpdated: string; version: string } }
     if (existsSync(companiesPath)) {
       companies = JSON.parse(await readFile(companiesPath, 'utf-8'))
     } else {

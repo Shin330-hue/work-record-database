@@ -9,8 +9,7 @@ import {
 import { 
   createMultipleDrawings, 
   DataTransaction,
-  NewDrawingData,
-  ProcessedDrawingData
+  NewDrawingData
 } from '@/lib/dataTransaction'
 
 // 管理画面認証チェック
@@ -33,7 +32,7 @@ function checkAdminAuth(request: NextRequest): boolean {
 }
 
 // 入力データバリデーション
-function validateDrawingData(data: any): { valid: boolean; errors: string[] } {
+function validateDrawingData(data: NewDrawingData): { valid: boolean; errors: string[] } {
   const errors: string[] = []
   
   // 必須フィールドチェック
@@ -91,7 +90,7 @@ function validateDrawingData(data: any): { valid: boolean; errors: string[] } {
 }
 
 // 複数件データのバリデーション
-function validateMultipleDrawingInputs(drawings: any[]): { valid: boolean; errors: string[] } {
+function validateMultipleDrawingInputs(drawings: NewDrawingData[]): { valid: boolean; errors: string[] } {
   const errors: string[] = []
   const drawingNumbers = new Set<string>()
   

@@ -40,10 +40,10 @@ const getDataPath = (): string => {
 // 図番データ更新
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const drawingNumber = params.id
+    const { id: drawingNumber } = await params
     
     if (!drawingNumber) {
       return NextResponse.json(
@@ -178,7 +178,7 @@ class UpdateTransaction {
     const searchIndex = JSON.parse(cleanData)
     
     const drawingIndex = searchIndex.drawings.findIndex(
-      (d: any) => d.drawingNumber === drawingNumber
+      (d: {drawingNumber: string}) => d.drawingNumber === drawingNumber
     )
 
     if (drawingIndex >= 0) {
