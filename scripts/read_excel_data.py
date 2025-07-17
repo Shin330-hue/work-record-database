@@ -241,8 +241,8 @@ def display_data_summary(sheets_data, validation_results):
 def main():
     """メイン処理"""
     
-    # Excelファイルのパス
-    excel_file_path = "doc/import_files/82096-2-R04_サクションカバー/図面データ入力テンプレート_82096-2-R04.xlsx"
+    # Excelファイルのパスを図番12750800122用に変更
+    excel_file_path = "doc/import_files/12750800122_リテーナ/図面データ入力テンプレート_12750800122.xlsx"
     
     print("🚀 図面データExcelファイル読み込み・整合性チェック開始")
     print("="*60)
@@ -261,7 +261,7 @@ def main():
     display_data_summary(sheets_data, validation_results)
     
     # 結果をJSONファイルに保存
-    output_file = "excel_data_analysis.json"
+    output_file = "excel_data_analysis_12750800122.json"
     analysis_data = {
         'file_path': excel_file_path,
         'sheets_data': {name: df.to_dict('records') for name, df in sheets_data.items()},

@@ -126,7 +126,11 @@ export default function WorkInstructionResults({ instruction, contributions, onB
             <div className="text-emerald-200/80 text-sm mb-2">作成者: {instruction.metadata.author}</div>
             <div className="flex flex-col gap-2 text-emerald-200/70 text-sm mt-2">
               <span>所要時間: {instruction.metadata.estimatedTime}</span>
-              <span>使用機械: {instruction.metadata.machineType}</span>
+              <span>使用機械: {
+                Array.isArray(instruction.metadata.machineType) 
+                  ? instruction.metadata.machineType.join(', ')
+                  : instruction.metadata.machineType?.split(',').map(type => type.trim()).join(', ') || ''
+              }</span>
               <span>必要工具: {instruction.metadata.toolsRequired?.join(', ')}</span>
             </div>
           </div>

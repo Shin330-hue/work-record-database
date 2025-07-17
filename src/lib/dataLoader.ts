@@ -136,6 +136,7 @@ export interface DrawingSearchItem {
   hasVideos: boolean
   hasDrawing: boolean
   stepCount: number
+  difficulty: string
   estimatedTime: string
   machineType: string
 }
