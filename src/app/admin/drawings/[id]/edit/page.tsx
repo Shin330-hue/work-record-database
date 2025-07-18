@@ -5,7 +5,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions } from '@/lib/dataLoader'
+import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 
 interface EditFormData {
@@ -26,6 +26,12 @@ interface EditFormData {
   description: string
   keywords: string[]
   toolsRequired: string[]
+  overview: {
+    warnings: string[]
+    preparationTime: string
+    processingTime: string
+  }
+  workSteps: WorkStep[]
 }
 
 type TabType = 'basic' | 'workSteps' | 'quality' | 'related'
@@ -135,7 +141,13 @@ export default function DrawingEdit() {
           machineType: normalizeMachineType(workInstruction.metadata.machineType),
           description: workInstruction.overview.description || '',
           keywords: searchItem.keywords || [],
-          toolsRequired: workInstruction.metadata.toolsRequired || []
+          toolsRequired: workInstruction.metadata.toolsRequired || [],
+          overview: {
+            warnings: workInstruction.overview.warnings || [],
+            preparationTime: workInstruction.overview.preparationTime?.replace('分', '') || '30',
+            processingTime: workInstruction.overview.processingTime?.replace('分', '') || '60'
+          },
+          workSteps: workInstruction.workSteps || []
         }
 
         console.log('🎯 構築されたフォームデータ:', editData)
@@ -165,7 +177,12 @@ export default function DrawingEdit() {
         ...formData,
         machineType: formData.machineType.join(','),
         keywords: formData.keywords.join(','),
-        toolsRequired: formData.toolsRequired.join(',')
+        toolsRequired: formData.toolsRequired.join(','),
+        overview: {
+          ...formData.overview,
+          warnings: formData.overview.warnings.filter(w => w.trim())
+        },
+        workSteps: formData.workSteps
       }
 
       // デバッグ用ログ
@@ -236,6 +253,46 @@ export default function DrawingEdit() {
       return {
         ...prev,
         toolsRequired: toolsString.split(',').map(t => t.trim()).filter(t => t)
+      }
+    })
+  }
+
+  // 警告事項の配列操作ハンドラー
+  const handleWarningChange = (index: number, value: string) => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      const newWarnings = [...prev.overview.warnings]
+      newWarnings[index] = value
+      return {
+        ...prev,
+        overview: { ...prev.overview, warnings: newWarnings }
+      }
+    })
+  }
+
+  const addWarning = () => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        overview: { ...prev.overview, warnings: [...prev.overview.warnings, ''] }
+      }
+    })
+  }
+
+  const removeWarning = (index: number) => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      const newWarnings = prev.overview.warnings.filter((_, i) => i !== index)
+      return {
+        ...prev,
+        overview: { ...prev.overview, warnings: newWarnings }
       }
     })
   }
@@ -573,10 +630,99 @@ export default function DrawingEdit() {
 
           {/* 作業手順タブ */}
           {activeTab === 'workSteps' && (
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">🔧 作業手順</h2>
-              <div className="text-center py-8 text-gray-500">
-                作業手順の編集機能は実装中です
+            <div className="space-y-6">
+              {/* 概要セクション */}
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">🔧 作業手順概要</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      準備時間
+                    </label>
+                    <div className="flex">
+                      <input
+                        type="number"
+                        value={formData.overview.preparationTime}
+                        onChange={(e) => setFormData(prev => prev ? {
+                          ...prev,
+                          overview: { ...prev.overview, preparationTime: e.target.value }
+                        } : prev)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        min="0"
+                        max="9999"
+                      />
+                      <span className="px-3 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600">
+                        分
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      加工時間
+                    </label>
+                    <div className="flex">
+                      <input
+                        type="number"
+                        value={formData.overview.processingTime}
+                        onChange={(e) => setFormData(prev => prev ? {
+                          ...prev,
+                          overview: { ...prev.overview, processingTime: e.target.value }
+                        } : prev)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        min="0"
+                        max="9999"
+                      />
+                      <span className="px-3 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600">
+                        分
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    警告事項
+                  </label>
+                  <div className="space-y-2">
+                    {formData.overview.warnings.map((warning, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <input
+                          type="text"
+                          value={warning}
+                          onChange={(e) => handleWarningChange(index, e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="警告事項を入力..."
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeWarning(index)}
+                          className="px-3 py-2 text-red-600 hover:text-red-800 font-medium"
+                        >
+                          削除
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={addWarning}
+                      className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+                    >
+                      + 警告事項を追加
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 作業ステップセクション */}
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  作業ステップ ({formData.workSteps.length}件)
+                </h3>
+                <div className="text-center py-8 text-gray-500">
+                  作業ステップの編集機能は実装中です
+                </div>
               </div>
             </div>
           )}

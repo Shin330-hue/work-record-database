@@ -23,6 +23,12 @@ interface UpdateDrawingData {
   description: string
   keywords: string
   toolsRequired: string
+  overview: {
+    warnings: string[]
+    preparationTime: string
+    processingTime: string
+  }
+  workSteps: any[]
 }
 
 // データパス取得
@@ -86,7 +92,9 @@ export async function PUT(
       estimatedTime: updateData.estimatedTime,
       machineType: updateData.machineType,
       toolsRequired: updateData.toolsRequired,
-      keywords: updateData.keywords
+      keywords: updateData.keywords,
+      overview: updateData.overview,
+      workStepsCount: updateData.workSteps?.length || 0
     })
 
     const dataPath = getDataPath()
@@ -161,7 +169,15 @@ class UpdateTransaction {
     // 概要更新
     instruction.overview = {
       ...instruction.overview,
-      description: updateData.description || instruction.overview.description
+      description: updateData.description || instruction.overview.description,
+      warnings: updateData.overview.warnings,
+      preparationTime: `${updateData.overview.preparationTime}分`,
+      processingTime: `${updateData.overview.processingTime}分`
+    }
+
+    // 作業ステップ更新
+    if (updateData.workSteps && updateData.workSteps.length > 0) {
+      instruction.workSteps = updateData.workSteps
     }
 
     // ファイル書き込み
