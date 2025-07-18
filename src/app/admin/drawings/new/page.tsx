@@ -144,9 +144,27 @@ function CompanySelector({
       )}
       
       {isNewMode && (
-        <p className="mt-1 text-sm text-blue-600">
-          新規会社として登録されます
-        </p>
+        <div className="mt-3 space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              会社ID <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={value.id || ''}
+              onChange={(e) => onChange({ ...value, id: e.target.value })}
+              placeholder="例: kouwa-engineering"
+              pattern="^[a-z0-9-]+$"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              英数字とハイフンのみ使用可能（例: kouwa-engineering）
+            </p>
+          </div>
+          <p className="text-sm text-blue-600">
+            新規会社として登録されます
+          </p>
+        </div>
       )}
     </div>
   )
@@ -271,6 +289,7 @@ export default function NewDrawingPage() {
   // バリデーション
   const validateForm = () => {
     const errors: string[] = []
+    const existingIds = companies.map(c => c.id).filter(id => id) // 既存の会社ID一覧
     
     drawings.forEach((drawing, index) => {
       if (!drawing.drawingNumber.trim()) {
@@ -282,6 +301,24 @@ export default function NewDrawingPage() {
       if (!drawing.company.name.trim()) {
         errors.push(`図番 ${index + 1}: 会社名は必須です`)
       }
+      
+      // 新規会社の場合はIDも必須
+      if (drawing.company.type === 'new') {
+        if (!drawing.company.id?.trim()) {
+          errors.push(`図番 ${index + 1}: 新規会社の場合、会社IDは必須です`)
+        } else {
+          // 会社IDの形式チェック
+          const idPattern = /^[a-z0-9-]+$/
+          if (!idPattern.test(drawing.company.id)) {
+            errors.push(`図番 ${index + 1}: 会社IDは英数字とハイフンのみ使用可能です`)
+          }
+          // 重複チェック
+          if (existingIds.includes(drawing.company.id)) {
+            errors.push(`図番 ${index + 1}: 会社ID「${drawing.company.id}」は既に使用されています`)
+          }
+        }
+      }
+      
       if (!drawing.product.name.trim()) {
         errors.push(`図番 ${index + 1}: 製品名は必須です`)
       }
