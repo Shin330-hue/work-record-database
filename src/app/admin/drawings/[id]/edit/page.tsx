@@ -25,7 +25,10 @@ interface EditFormData {
   machineType: string[]
   description: string
   keywords: string[]
+  toolsRequired: string[]
 }
+
+type TabType = 'basic' | 'workSteps' | 'quality' | 'related'
 
 export default function DrawingEdit() {
   const router = useRouter()
@@ -37,9 +40,18 @@ export default function DrawingEdit() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [activeTab, setActiveTab] = useState<TabType>('basic')
 
   // 機械種別の選択肢（新規登録画面と統一）
   const machineTypes = ['マシニング', 'ターニング', '横中', 'ラジアル', 'フライス']
+
+  // タブ定義
+  const tabs: { id: TabType; label: string; icon: string }[] = [
+    { id: 'basic', label: '基本情報', icon: '📋' },
+    { id: 'workSteps', label: '作業手順', icon: '🔧' },
+    { id: 'quality', label: '品質・安全', icon: '⚠️' },
+    { id: 'related', label: '関連情報', icon: '🔗' }
+  ]
 
   useEffect(() => {
     const loadEditData = async () => {
@@ -122,7 +134,8 @@ export default function DrawingEdit() {
           estimatedTime: workInstruction.metadata.estimatedTime?.replace('分', '') || '180',
           machineType: normalizeMachineType(workInstruction.metadata.machineType),
           description: workInstruction.overview.description || '',
-          keywords: searchItem.keywords || []
+          keywords: searchItem.keywords || [],
+          toolsRequired: workInstruction.metadata.toolsRequired || []
         }
 
         console.log('🎯 構築されたフォームデータ:', editData)
@@ -151,7 +164,8 @@ export default function DrawingEdit() {
       const updateData = {
         ...formData,
         machineType: formData.machineType.join(','),
-        keywords: formData.keywords.join(',')
+        keywords: formData.keywords.join(','),
+        toolsRequired: formData.toolsRequired.join(',')
       }
 
       // デバッグ用ログ
@@ -210,6 +224,18 @@ export default function DrawingEdit() {
       return {
         ...prev,
         keywords: keywordsString.split(',').map(k => k.trim()).filter(k => k)
+      }
+    })
+  }
+
+  const handleToolsRequiredChange = (toolsString: string) => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        toolsRequired: toolsString.split(',').map(t => t.trim()).filter(t => t)
       }
     })
   }
@@ -343,9 +369,35 @@ export default function DrawingEdit() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* タブナビゲーション */}
+        <div className="bg-white rounded-lg shadow mb-6">
+          <div className="border-b border-gray-200">
+            <nav className="-mb-px flex space-x-8 px-6">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
+                    activeTab === tab.id
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* 基本情報 */}
-          <div className="bg-white p-6 rounded-lg shadow">
+          {/* 基本情報タブ */}
+          {activeTab === 'basic' && (
+            <>
+              {/* 基本情報 */}
+              <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">基本情報</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -473,6 +525,22 @@ export default function DrawingEdit() {
 
             <div className="mt-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
+                必要工具
+              </label>
+              <input
+                type="text"
+                value={formData.toolsRequired.join(', ')}
+                onChange={(e) => handleToolsRequiredChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="必要工具をカンマ区切りで入力..."
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                作業に必要な工具をカンマ区切りで入力してください
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 説明・備考
               </label>
               <textarea
@@ -500,19 +568,39 @@ export default function DrawingEdit() {
               </p>
             </div>
           </div>
+            </>
+          )}
 
-          {/* エラー表示 */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-4">
-              <div className="text-red-800">{error}</div>
+          {/* 作業手順タブ */}
+          {activeTab === 'workSteps' && (
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">🔧 作業手順</h2>
+              <div className="text-center py-8 text-gray-500">
+                作業手順の編集機能は実装中です
+              </div>
             </div>
           )}
 
-          {/* 追記管理セクション */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              💬 追記情報 ({contributions?.contributions.length || 0}件)
-            </h2>
+          {/* 品質・安全タブ */}
+          {activeTab === 'quality' && (
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">⚠️ 品質・安全</h2>
+              <div className="text-center py-8 text-gray-500">
+                品質・安全管理機能は実装中です
+              </div>
+            </div>
+          )}
+
+          {/* 関連情報タブ */}
+          {activeTab === 'related' && (
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">🔗 関連情報</h2>
+              
+              {/* 追記管理セクション */}
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  💬 追記情報 ({contributions?.contributions.length || 0}件)
+                </h3>
             
             {contributions && contributions.contributions.length > 0 ? (
               <div className="space-y-4">
@@ -587,7 +675,16 @@ export default function DrawingEdit() {
                 追記はありません
               </div>
             )}
-          </div>
+              </div>
+            </div>
+          )}
+
+          {/* エラー表示 */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-4">
+              <div className="text-red-800">{error}</div>
+            </div>
+          )}
 
           {/* 操作ボタン */}
           <div className="flex justify-end space-x-4">

@@ -22,6 +22,7 @@ interface UpdateDrawingData {
   machineType: string
   description: string
   keywords: string
+  toolsRequired: string
 }
 
 // データパス取得
@@ -84,6 +85,7 @@ export async function PUT(
       difficulty: updateData.difficulty,
       estimatedTime: updateData.estimatedTime,
       machineType: updateData.machineType,
+      toolsRequired: updateData.toolsRequired,
       keywords: updateData.keywords
     })
 
@@ -152,6 +154,7 @@ class UpdateTransaction {
       difficulty: updateData.difficulty,
       estimatedTime: `${updateData.estimatedTime}分`,
       machineType: updateData.machineType.split(',').map(m => m.trim()).filter(m => m),
+      toolsRequired: updateData.toolsRequired.split(',').map(t => t.trim()).filter(t => t),
       updatedDate: new Date().toISOString().split('T')[0]
     }
 
