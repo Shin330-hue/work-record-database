@@ -31,6 +31,11 @@ interface UpdateDrawingData {
   }
   workSteps: WorkStep[]
   nearMiss: NearMissItem[]
+  relatedDrawings: Array<{
+    drawingNumber: string
+    relation: string
+    description: string
+  }>
 }
 
 // データパス取得
@@ -97,7 +102,8 @@ export async function PUT(
       keywords: updateData.keywords,
       overview: updateData.overview,
       workStepsCount: updateData.workSteps?.length || 0,
-      nearMissCount: updateData.nearMiss?.length || 0
+      nearMissCount: updateData.nearMiss?.length || 0,
+      relatedDrawingsCount: updateData.relatedDrawings?.length || 0
     })
 
     const dataPath = getDataPath()
@@ -186,6 +192,11 @@ class UpdateTransaction {
     // ヒヤリハット事例更新
     if (updateData.nearMiss) {
       instruction.nearMiss = updateData.nearMiss
+    }
+
+    // 関連図番更新
+    if (updateData.relatedDrawings) {
+      instruction.relatedDrawings = updateData.relatedDrawings
     }
 
     // ファイル書き込み

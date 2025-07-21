@@ -34,6 +34,11 @@ interface EditFormData {
   }
   workSteps: WorkStep[]
   nearMiss: NearMissItem[]
+  relatedDrawings: Array<{
+    drawingNumber: string
+    relation: string
+    description: string
+  }>
 }
 
 type TabType = 'basic' | 'workSteps' | 'quality' | 'related'
@@ -163,7 +168,8 @@ export default function DrawingEdit() {
             images: step.images || [],
             videos: step.videos || []
           })) || [],
-          nearMiss: workInstruction.nearMiss || []
+          nearMiss: workInstruction.nearMiss || [],
+          relatedDrawings: workInstruction.relatedDrawings || []
         }
 
         console.log('🎯 構築されたフォームデータ:', editData)
@@ -251,7 +257,8 @@ export default function DrawingEdit() {
           warnings: formData.overview.warnings.filter(w => w.trim())
         },
         workSteps: formData.workSteps,
-        nearMiss: formData.nearMiss
+        nearMiss: formData.nearMiss,
+        relatedDrawings: formData.relatedDrawings
       }
 
       // デバッグ用ログ
@@ -1230,14 +1237,127 @@ export default function DrawingEdit() {
 
           {/* 関連情報タブ */}
           {activeTab === 'related' && (
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">🔗 関連情報</h2>
+            <div className="space-y-6">
+              {/* 関連図番セクション */}
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">📋 関連図番</h2>
+                
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      関連図番一覧 ({formData.relatedDrawings.length}件)
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData(prev => {
+                          if (!prev) return prev
+                          return {
+                            ...prev,
+                            relatedDrawings: [...prev.relatedDrawings, {
+                              drawingNumber: '',
+                              relation: '関連図番',
+                              description: ''
+                            }]
+                          }
+                        })
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+                    >
+                      + 関連図番を追加
+                    </button>
+                  </div>
+                  
+                  {formData.relatedDrawings.length > 0 ? (
+                    <div className="space-y-4">
+                      {formData.relatedDrawings.map((related, index) => (
+                        <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                          <div className="flex justify-between items-start mb-3">
+                            <h4 className="text-sm font-medium text-gray-900">関連図番 {index + 1}</h4>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFormData(prev => {
+                                  if (!prev) return prev
+                                  return {
+                                    ...prev,
+                                    relatedDrawings: prev.relatedDrawings.filter((_, i) => i !== index)
+                                  }
+                                })
+                              }}
+                              className="text-red-600 hover:text-red-800 text-sm"
+                            >
+                              削除
+                            </button>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                図番 <span className="text-red-500">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                value={related.drawingNumber}
+                                onChange={(e) => {
+                                  const newRelatedDrawings = [...formData.relatedDrawings]
+                                  newRelatedDrawings[index] = {
+                                    ...newRelatedDrawings[index],
+                                    drawingNumber: e.target.value
+                                  }
+                                  setFormData(prev => prev ? {
+                                    ...prev,
+                                    relatedDrawings: newRelatedDrawings
+                                  } : prev)
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="例: DRAW-2024-001"
+                                required
+                              />
+                            </div>
+                            
+                            <div className="md:col-span-1">
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                説明
+                              </label>
+                              <input
+                                type="text"
+                                value={related.description}
+                                onChange={(e) => {
+                                  const newRelatedDrawings = [...formData.relatedDrawings]
+                                  newRelatedDrawings[index] = {
+                                    ...newRelatedDrawings[index],
+                                    description: e.target.value
+                                  }
+                                  setFormData(prev => prev ? {
+                                    ...prev,
+                                    relatedDrawings: newRelatedDrawings
+                                  } : prev)
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="この図番との関係性を説明..."
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      関連図番がありません。「+ 関連図番を追加」ボタンで追加してください。
+                    </div>
+                  )}
+                </div>
+              </div>
               
               {/* 追記管理セクション */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  💬 追記情報 ({contributions?.contributions.length || 0}件)
-                </h3>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">💬 追記情報</h2>
+                
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    追記一覧 ({contributions?.contributions.length || 0}件)
+                  </h3>
             
             {contributions && contributions.contributions.length > 0 ? (
               <div className="space-y-4">
@@ -1312,6 +1432,7 @@ export default function DrawingEdit() {
                 追記はありません
               </div>
             )}
+                </div>
               </div>
             </div>
           )}
