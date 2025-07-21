@@ -1714,179 +1714,141 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
             <h4 className="text-sm font-medium text-gray-900 mb-3">品質確認</h4>
             <div className="space-y-4">
-              {/* 確認項目 */}
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">
-                  確認項目
-                </label>
-                <div className="space-y-2">
-                  {(step.qualityCheck?.checkPoints || []).map((point, pointIndex) => (
-                    <div key={pointIndex} className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500 w-6">{pointIndex + 1}.</span>
+              {/* 確認項目リスト */}
+              {(step.qualityCheck?.items || []).map((item, itemIndex) => (
+                <div key={itemIndex} className="border border-gray-300 rounded-md p-4 bg-white">
+                  <div className="flex items-center justify-between mb-3">
+                    <h5 className="text-sm font-medium text-gray-900">確認項目 {itemIndex + 1}</h5>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newItems = [...(step.qualityCheck?.items || [])];
+                        newItems.splice(itemIndex, 1);
+                        onUpdate({
+                          ...step,
+                          qualityCheck: {
+                            items: newItems
+                          }
+                        });
+                      }}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      削除
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-sm text-gray-700 mb-1">
+                        確認項目
+                      </label>
                       <input
                         type="text"
-                        value={point}
+                        value={item.checkPoint || ''}
                         onChange={(e) => {
-                          const newCheckPoints = [...(step.qualityCheck?.checkPoints || [])];
-                          newCheckPoints[pointIndex] = e.target.value;
+                          const newItems = [...(step.qualityCheck?.items || [])];
+                          newItems[itemIndex] = { ...item, checkPoint: e.target.value };
                           onUpdate({
                             ...step,
                             qualityCheck: {
-                              ...step.qualityCheck,
-                              checkPoints: newCheckPoints
+                              items: newItems
                             }
                           });
                         }}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="チェック項目を入力..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="例: 寸法確認"
                       />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const newCheckPoints = [...(step.qualityCheck?.checkPoints || [])];
-                          newCheckPoints.splice(pointIndex, 1);
-                          onUpdate({
-                            ...step,
-                            qualityCheck: {
-                              ...step.qualityCheck,
-                              checkPoints: newCheckPoints
-                            }
-                          });
-                        }}
-                        className="px-2 py-1 text-red-600 hover:text-red-800"
-                      >
-                        削除
-                      </button>
                     </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const newCheckPoints = [...(step.qualityCheck?.checkPoints || []), ''];
-                      onUpdate({
-                        ...step,
-                        qualityCheck: {
-                          ...step.qualityCheck,
-                          checkPoints: newCheckPoints
-                        }
-                      });
-                    }}
-                    className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
-                  >
-                    + 確認項目を追加
-                  </button>
-                </div>
-              </div>
-
-              {/* 公差・表面粗さ */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm text-gray-700 mb-1">
-                    公差
-                  </label>
-                  <input
-                    type="text"
-                    value={step.qualityCheck?.tolerance || ''}
-                    onChange={(e) => onUpdate({
-                      ...step,
-                      qualityCheck: {
-                        ...step.qualityCheck,
-                        checkPoints: step.qualityCheck?.checkPoints || [],
-                        tolerance: e.target.value
-                      }
-                    })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="例: 0.05"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-gray-700 mb-1">
-                    表面粗さ
-                  </label>
-                  <input
-                    type="text"
-                    value={step.qualityCheck?.surfaceRoughness || ''}
-                    onChange={(e) => onUpdate({
-                      ...step,
-                      qualityCheck: {
-                        ...step.qualityCheck,
-                        checkPoints: step.qualityCheck?.checkPoints || [],
-                        surfaceRoughness: e.target.value
-                      }
-                    })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="例: Ra3.2"
-                  />
-                </div>
-              </div>
-
-              {/* 検査工具 */}
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">
-                  検査工具
-                </label>
-                <div className="space-y-2">
-                  {(step.qualityCheck?.inspectionTools || []).map((tool, toolIndex) => (
-                    <div key={toolIndex} className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500 w-6">{toolIndex + 1}.</span>
+                    
+                    <div>
+                      <label className="block text-sm text-gray-700 mb-1">
+                        公差
+                      </label>
                       <input
                         type="text"
-                        value={tool}
+                        value={item.tolerance || ''}
                         onChange={(e) => {
-                          const newTools = [...(step.qualityCheck?.inspectionTools || [])];
-                          newTools[toolIndex] = e.target.value;
+                          const newItems = [...(step.qualityCheck?.items || [])];
+                          newItems[itemIndex] = { ...item, tolerance: e.target.value };
                           onUpdate({
                             ...step,
                             qualityCheck: {
-                              ...step.qualityCheck,
-                              checkPoints: step.qualityCheck?.checkPoints || [],
-                              inspectionTools: newTools
+                              items: newItems
                             }
                           });
                         }}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="検査工具を入力..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="例: ±0.05"
                       />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const newTools = [...(step.qualityCheck?.inspectionTools || [])];
-                          newTools.splice(toolIndex, 1);
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm text-gray-700 mb-1">
+                        表面粗さ
+                      </label>
+                      <input
+                        type="text"
+                        value={item.surfaceRoughness || ''}
+                        onChange={(e) => {
+                          const newItems = [...(step.qualityCheck?.items || [])];
+                          newItems[itemIndex] = { ...item, surfaceRoughness: e.target.value };
                           onUpdate({
                             ...step,
                             qualityCheck: {
-                              ...step.qualityCheck,
-                              checkPoints: step.qualityCheck?.checkPoints || [],
-                              inspectionTools: newTools
+                              items: newItems
                             }
                           });
                         }}
-                        className="px-2 py-1 text-red-600 hover:text-red-800"
-                      >
-                        削除
-                      </button>
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="例: Ra3.2"
+                      />
                     </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const newTools = [...(step.qualityCheck?.inspectionTools || []), ''];
-                      onUpdate({
-                        ...step,
-                        qualityCheck: {
-                          ...step.qualityCheck,
-                          checkPoints: step.qualityCheck?.checkPoints || [],
-                          inspectionTools: newTools
-                        }
-                      });
-                    }}
-                    className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
-                  >
-                    + 検査工具を追加
-                  </button>
+                    
+                    <div className="md:col-span-2">
+                      <label className="block text-sm text-gray-700 mb-1">
+                        検査工具
+                      </label>
+                      <input
+                        type="text"
+                        value={item.inspectionTool || ''}
+                        onChange={(e) => {
+                          const newItems = [...(step.qualityCheck?.items || [])];
+                          newItems[itemIndex] = { ...item, inspectionTool: e.target.value };
+                          onUpdate({
+                            ...step,
+                            qualityCheck: {
+                              items: newItems
+                            }
+                          });
+                        }}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="例: ノギス"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
+              
+              <button
+                type="button"
+                onClick={() => {
+                  const newItems = [...(step.qualityCheck?.items || []), {
+                    checkPoint: '',
+                    tolerance: '',
+                    surfaceRoughness: '',
+                    inspectionTool: ''
+                  }];
+                  onUpdate({
+                    ...step,
+                    qualityCheck: {
+                      items: newItems
+                    }
+                  });
+                }}
+                className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+              >
+                + 確認項目を追加
+              </button>
             </div>
           </div>
 

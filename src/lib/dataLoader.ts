@@ -189,12 +189,17 @@ export interface CuttingConditions {
   stepOver?: string
 }
 
-// 品質チェック
-export interface QualityCheck {
-  checkPoints: string[]
+// 品質確認項目
+export interface QualityCheckItem {
+  checkPoint: string
   tolerance?: string
   surfaceRoughness?: string
-  inspectionTools?: string[]
+  inspectionTool?: string
+}
+
+// 品質チェック
+export interface QualityCheck {
+  items: QualityCheckItem[]
 }
 
 // 関連図番

@@ -167,9 +167,42 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       {step.qualityCheck && (
         <div className="quality-check mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
           <h4 className="text-lg font-semibold text-emerald-200 mb-4">品質確認</h4>
-                      <div className="text-emerald-100 text-sm space-y-2">
-              <div><span className="font-medium">確認項目:</span> {step.qualityCheck.checkPoints?.join(', ')}</div>
-              <div><span className="font-medium">検査工具:</span> {step.qualityCheck.inspectionTools?.join(', ')}            </div>
+          <div className="space-y-4">
+            {/* 新形式のデータ構造に対応 */}
+            {step.qualityCheck.items && step.qualityCheck.items.length > 0 ? (
+              step.qualityCheck.items.map((item, index) => (
+                <div key={index} className="bg-black/20 rounded-lg p-4 border border-emerald-500/10">
+                  <div className="text-emerald-100 space-y-2">
+                    <div className="text-base font-medium text-emerald-200">{item.checkPoint}</div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+                      {item.tolerance && (
+                        <div>
+                          <span className="text-emerald-300">公差:</span> {item.tolerance}
+                        </div>
+                      )}
+                      {item.surfaceRoughness && (
+                        <div>
+                          <span className="text-emerald-300">表面粗さ:</span> {item.surfaceRoughness}
+                        </div>
+                      )}
+                      {item.inspectionTool && (
+                        <div>
+                          <span className="text-emerald-300">検査工具:</span> {item.inspectionTool}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              /* 旧形式のデータ構造（後方互換性） */
+              step.qualityCheck.checkPoints && (
+                <div className="text-emerald-100 text-sm space-y-2">
+                  <div><span className="font-medium">確認項目:</span> {step.qualityCheck.checkPoints.join(', ')}</div>
+                  <div><span className="font-medium">検査工具:</span> {step.qualityCheck.inspectionTools?.join(', ')}</div>
+                </div>
+              )
+            )}
           </div>
           
           {/* プログラムファイル */}
