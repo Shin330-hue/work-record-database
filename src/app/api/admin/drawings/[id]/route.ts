@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { NearMissItem, WorkStep } from '@/lib/dataLoader'
 
 // 図番編集用の型定義
 interface UpdateDrawingData {
@@ -28,7 +29,8 @@ interface UpdateDrawingData {
     preparationTime: string
     processingTime: string
   }
-  workSteps: any[]
+  workSteps: WorkStep[]
+  nearMiss: NearMissItem[]
 }
 
 // データパス取得
@@ -94,7 +96,8 @@ export async function PUT(
       toolsRequired: updateData.toolsRequired,
       keywords: updateData.keywords,
       overview: updateData.overview,
-      workStepsCount: updateData.workSteps?.length || 0
+      workStepsCount: updateData.workSteps?.length || 0,
+      nearMissCount: updateData.nearMiss?.length || 0
     })
 
     const dataPath = getDataPath()
@@ -178,6 +181,11 @@ class UpdateTransaction {
     // 作業ステップ更新
     if (updateData.workSteps && updateData.workSteps.length > 0) {
       instruction.workSteps = updateData.workSteps
+    }
+
+    // ヒヤリハット事例更新
+    if (updateData.nearMiss) {
+      instruction.nearMiss = updateData.nearMiss
     }
 
     // ファイル書き込み

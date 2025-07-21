@@ -5,7 +5,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep } from '@/lib/dataLoader'
+import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 
 interface EditFormData {
@@ -30,8 +30,10 @@ interface EditFormData {
     warnings: string[]
     preparationTime: string
     processingTime: string
+    images: string[]
   }
   workSteps: WorkStep[]
+  nearMiss: NearMissItem[]
 }
 
 type TabType = 'basic' | 'workSteps' | 'quality' | 'related'
@@ -47,6 +49,14 @@ export default function DrawingEdit() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState<TabType>('basic')
+  const [uploadingFiles, setUploadingFiles] = useState<{[key: string]: boolean}>({})
+  const [actualFiles, setActualFiles] = useState<{
+    overview: { images: string[], videos: string[] },
+    steps: { [key: number]: { images: string[], videos: string[] } }
+  }>({
+    overview: { images: [], videos: [] },
+    steps: {}
+  })
 
   // 機械種別の選択肢（新規登録画面と統一）
   const machineTypes = ['マシニング', 'ターニング', '横中', 'ラジアル', 'フライス']
@@ -54,8 +64,8 @@ export default function DrawingEdit() {
   // タブ定義
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: 'basic', label: '基本情報', icon: '📋' },
-    { id: 'workSteps', label: '作業手順', icon: '🔧' },
     { id: 'quality', label: '品質・安全', icon: '⚠️' },
+    { id: 'workSteps', label: '作業手順', icon: '🔧' },
     { id: 'related', label: '関連情報', icon: '🔗' }
   ]
 
@@ -145,12 +155,19 @@ export default function DrawingEdit() {
           overview: {
             warnings: workInstruction.overview.warnings || [],
             preparationTime: workInstruction.overview.preparationTime?.replace('分', '') || '30',
-            processingTime: workInstruction.overview.processingTime?.replace('分', '') || '60'
+            processingTime: workInstruction.overview.processingTime?.replace('分', '') || '60',
+            images: []  // 実際のファイルはactualFilesで管理
           },
-          workSteps: workInstruction.workSteps || []
+          workSteps: workInstruction.workSteps?.map(step => ({
+            ...step,
+            images: step.images || [],
+            videos: step.videos || []
+          })) || [],
+          nearMiss: workInstruction.nearMiss || []
         }
 
         console.log('🎯 構築されたフォームデータ:', editData)
+        // 注: 画像・動画ファイルは別途actualFilesで管理されます
 
         setFormData(editData)
         setContributions(contributionsData)
@@ -164,6 +181,57 @@ export default function DrawingEdit() {
 
     loadEditData()
   }, [drawingNumber])
+
+  // formDataが設定されたらファイル一覧を取得
+  useEffect(() => {
+    if (formData && drawingNumber) {
+      loadActualFiles(drawingNumber)
+    }
+  }, [formData, drawingNumber])
+
+  // フォルダから実際のファイル一覧を取得する関数
+  const loadActualFiles = async (drawingNumber: string) => {
+    try {
+      // Overview画像を取得
+      const overviewImagesRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview`)
+      const overviewImagesData = await overviewImagesRes.json()
+      
+      // Overview動画を取得
+      const overviewVideosRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=overview`)
+      const overviewVideosData = await overviewVideosRes.json()
+
+      const newActualFiles: typeof actualFiles = {
+        overview: {
+          images: overviewImagesData.data?.files || overviewImagesData.files || [],
+          videos: overviewVideosData.data?.files || overviewVideosData.files || []
+        },
+        steps: {}
+      }
+
+      // 各ステップのファイルを取得（最大3ステップ分を取得）
+      for (let i = 0; i < 3; i++) {
+          const stepNum = String(i + 1).padStart(2, '0')
+          
+          // ステップ画像を取得
+          const stepImagesRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${stepNum}`)
+          const stepImagesData = await stepImagesRes.json()
+          
+          // ステップ動画を取得
+          const stepVideosRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${stepNum}`)
+          const stepVideosData = await stepVideosRes.json()
+
+        newActualFiles.steps[i] = {
+          images: stepImagesData.data?.files || stepImagesData.files || [],
+          videos: stepVideosData.data?.files || stepVideosData.files || []
+        }
+      }
+
+      setActualFiles(newActualFiles)
+      console.log('📁 実際のファイル一覧:', newActualFiles)
+    } catch (error) {
+      console.error('ファイル一覧取得エラー:', error)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -182,7 +250,8 @@ export default function DrawingEdit() {
           ...formData.overview,
           warnings: formData.overview.warnings.filter(w => w.trim())
         },
-        workSteps: formData.workSteps
+        workSteps: formData.workSteps,
+        nearMiss: formData.nearMiss
       }
 
       // デバッグ用ログ
@@ -295,6 +364,304 @@ export default function DrawingEdit() {
         overview: { ...prev.overview, warnings: newWarnings }
       }
     })
+  }
+
+  // 作業ステップ操作ハンドラー
+  const addWorkStep = () => {
+    if (!formData) return
+
+    const newStep: WorkStep = {
+      stepNumber: formData.workSteps.length + 1,
+      title: `ステップ ${formData.workSteps.length + 1}`,
+      description: '',
+      detailedInstructions: [],
+      images: [],
+      videos: [],
+      timeRequired: '30分',
+      warningLevel: 'normal',
+      qualityCheck: {
+        checkPoints: [],
+        inspectionTools: []
+      }
+    }
+
+    setFormData(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        workSteps: [...prev.workSteps, newStep]
+      }
+    })
+  }
+
+  const updateWorkStep = (index: number, updatedStep: WorkStep) => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      const newWorkSteps = [...prev.workSteps]
+      newWorkSteps[index] = updatedStep
+      return {
+        ...prev,
+        workSteps: newWorkSteps
+      }
+    })
+  }
+
+  const deleteWorkStep = (index: number) => {
+    if (!formData) return
+    
+    if (!confirm('このステップを削除しますか？')) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      const newWorkSteps = prev.workSteps.filter((_, i) => i !== index)
+      // ステップ番号を再調整
+      return {
+        ...prev,
+        workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+      }
+    })
+  }
+
+  const moveWorkStep = (fromIndex: number, toIndex: number) => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      const newWorkSteps = [...prev.workSteps]
+      const [movedStep] = newWorkSteps.splice(fromIndex, 1)
+      newWorkSteps.splice(toIndex, 0, movedStep)
+      // ステップ番号を再調整
+      return {
+        ...prev,
+        workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+      }
+    })
+  }
+
+  // ヒヤリハット事例操作ハンドラー
+  const handleNearMissChange = (index: number, field: keyof NearMissItem, value: string) => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      const newNearMiss = [...prev.nearMiss]
+      newNearMiss[index] = { ...newNearMiss[index], [field]: value }
+      return {
+        ...prev,
+        nearMiss: newNearMiss
+      }
+    })
+  }
+
+  const addNearMiss = () => {
+    if (!formData) return
+
+    const newNearMissItem: NearMissItem = {
+      title: '',
+      description: '',
+      cause: '',
+      prevention: '',
+      severity: 'medium'
+    }
+
+    setFormData(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        nearMiss: [...prev.nearMiss, newNearMissItem]
+      }
+    })
+  }
+
+  const removeNearMiss = (index: number) => {
+    if (!formData) return
+
+    setFormData(prev => {
+      if (!prev) return prev
+      const newNearMiss = prev.nearMiss.filter((_, i) => i !== index)
+      return {
+        ...prev,
+        nearMiss: newNearMiss
+      }
+    })
+  }
+
+  // ファイル操作ハンドラー
+  const handleFileUpload = async (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null) => {
+    if (!files || !formData) return
+
+    const uploadKey = `${stepIndex}-${fileType}`
+    setUploadingFiles(prev => ({ ...prev, [uploadKey]: true }))
+
+    const uploadedFiles: string[] = []
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const formDataUpload = new FormData()
+      formDataUpload.append('file', file)
+      formDataUpload.append('stepNumber', (stepIndex + 1).toString())
+      formDataUpload.append('fileType', fileType)
+
+      try {
+        const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
+          method: 'POST',
+          body: formDataUpload
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          uploadedFiles.push(result.fileName)
+        } else {
+          console.error('ファイルアップロードエラー:', file.name)
+        }
+      } catch (error) {
+        console.error('ファイルアップロード失敗:', error)
+      }
+    }
+
+    // 成功したファイルのみ状態に追加
+    if (uploadedFiles.length > 0) {
+      setActualFiles(prev => ({
+        ...prev,
+        steps: {
+          ...prev.steps,
+          [stepIndex]: {
+            ...prev.steps[stepIndex],
+            [fileType]: [...(prev.steps[stepIndex]?.[fileType] || []), ...uploadedFiles]
+          }
+        }
+      }))
+    }
+
+    setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }))
+  }
+
+  const removeStepFile = async (stepIndex: number, fileType: 'images' | 'videos', fileIndex: number) => {
+    if (!actualFiles.steps[stepIndex] || !actualFiles.steps[stepIndex][fileType][fileIndex]) return
+
+    const fileName = actualFiles.steps[stepIndex][fileType][fileIndex]
+    
+    if (!confirm(`${fileName} を削除しますか？`)) return
+
+    try {
+      const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileName,
+          stepNumber: stepIndex + 1,
+          fileType
+        })
+      })
+
+      if (response.ok) {
+        // 状態から削除
+        setActualFiles(prev => ({
+          ...prev,
+          steps: {
+            ...prev.steps,
+            [stepIndex]: {
+              ...prev.steps[stepIndex],
+              [fileType]: prev.steps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
+            }
+          }
+        }))
+      } else {
+        alert('ファイルの削除に失敗しました')
+      }
+    } catch (error) {
+      console.error('ファイル削除エラー:', error)
+      alert('ファイルの削除に失敗しました')
+    }
+  }
+
+  // 概要画像操作ハンドラー
+  const handleOverviewImageUpload = async (files: FileList | null) => {
+    if (!files || !formData) return
+
+    const uploadKey = 'overview-images'
+    setUploadingFiles(prev => ({ ...prev, [uploadKey]: true }))
+
+    const uploadedFiles: string[] = []
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const formDataUpload = new FormData()
+      formDataUpload.append('file', file)
+      formDataUpload.append('stepNumber', '0') // overview用
+      formDataUpload.append('fileType', 'images')
+
+      try {
+        const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
+          method: 'POST',
+          body: formDataUpload
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          uploadedFiles.push(result.fileName)
+        } else {
+          console.error('ファイルアップロードエラー:', file.name)
+        }
+      } catch (error) {
+        console.error('ファイルアップロード失敗:', error)
+      }
+    }
+
+    // 成功したファイルのみ状態に追加
+    if (uploadedFiles.length > 0) {
+      setActualFiles(prev => ({
+        ...prev,
+        overview: {
+          ...prev.overview,
+          images: [...prev.overview.images, ...uploadedFiles]
+        }
+      }))
+    }
+
+    setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }))
+  }
+
+  const removeOverviewImage = async (imageIndex: number) => {
+    if (!actualFiles.overview.images[imageIndex]) return
+
+    const fileName = actualFiles.overview.images[imageIndex]
+    
+    if (!confirm(`${fileName} を削除しますか？`)) return
+
+    try {
+      const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileName,
+          stepNumber: 0, // overview用
+          fileType: 'images'
+        })
+      })
+
+      if (response.ok) {
+        // 状態から削除
+        setActualFiles(prev => ({
+          ...prev,
+          overview: {
+            ...prev.overview,
+            images: prev.overview.images.filter((_, i) => i !== imageIndex)
+          }
+        }))
+      } else {
+        alert('ファイルの削除に失敗しました')
+      }
+    } catch (error) {
+      console.error('ファイル削除エラー:', error)
+      alert('ファイルの削除に失敗しました')
+    }
   }
 
   // 追記管理ハンドラー
@@ -625,7 +992,111 @@ export default function DrawingEdit() {
               </p>
             </div>
           </div>
+
+          {/* 概要画像セクション */}
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">概要画像</h2>
+            <div className="space-y-2">
+              {actualFiles.overview.images.length > 0 ? actualFiles.overview.images.map((image, imgIndex) => (
+                <div key={imgIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-700 font-medium">{image}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeOverviewImage(imgIndex)}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      削除
+                    </button>
+                  </div>
+                  <div className="aspect-video bg-gray-100 rounded overflow-hidden">
+                    <img
+                      src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`}
+                      alt={`概要画像 - ${image}`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                        const parent = e.currentTarget.parentElement
+                        if (parent && !parent.querySelector('.error-message')) {
+                          const errorDiv = document.createElement('div')
+                          errorDiv.className = 'error-message flex items-center justify-center h-full text-gray-400'
+                          errorDiv.innerHTML = '<span>画像を読み込めません</span>'
+                          parent.appendChild(errorDiv)
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+              )) : (
+                <div className="text-center py-4 text-gray-500">
+                  概要画像はありません
+                </div>
+              )}
+              
+              <div className="flex items-center space-x-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => handleOverviewImageUpload(e.target.files)}
+                  className="hidden"
+                  id="overview-image-upload"
+                />
+                <label
+                  htmlFor="overview-image-upload"
+                  className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
+                    uploadingFiles['overview-images']
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                  }`}
+                >
+                  {uploadingFiles['overview-images'] ? 'アップロード中...' : '+ 概要画像を追加'}
+                </label>
+              </div>
+            </div>
+          </div>
             </>
+          )}
+
+          {/* 品質・安全タブ */}
+          {activeTab === 'quality' && (
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">⚠️ 品質・安全</h2>
+              
+              {/* ヒヤリハット事例セクション */}
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    ヒヤリハット事例 ({formData.nearMiss.length}件)
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={addNearMiss}
+                    className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-medium"
+                  >
+                    + 事例追加
+                  </button>
+                </div>
+                
+                {formData.nearMiss.length > 0 ? (
+                  <div className="space-y-4">
+                    {formData.nearMiss.map((item, index) => (
+                      <NearMissEditor
+                        key={index}
+                        item={item}
+                        index={index}
+                        onChange={handleNearMissChange}
+                        onRemove={() => removeNearMiss(index)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    ヒヤリハット事例がありません。「+ 事例追加」ボタンで追加してください。
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
           {/* 作業手順タブ */}
@@ -683,7 +1154,7 @@ export default function DrawingEdit() {
 
                 <div className="mt-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    警告事項
+                    注意事項
                   </label>
                   <div className="space-y-2">
                     {formData.overview.warnings.map((warning, index) => (
@@ -693,7 +1164,7 @@ export default function DrawingEdit() {
                           value={warning}
                           onChange={(e) => handleWarningChange(index, e.target.value)}
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="警告事項を入力..."
+                          placeholder="注意事項を入力..."
                         />
                         <button
                           type="button"
@@ -709,7 +1180,7 @@ export default function DrawingEdit() {
                       onClick={addWarning}
                       className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
                     >
-                      + 警告事項を追加
+                      + 注意事項を追加
                     </button>
                   </div>
                 </div>
@@ -717,22 +1188,42 @@ export default function DrawingEdit() {
 
               {/* 作業ステップセクション */}
               <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  作業ステップ ({formData.workSteps.length}件)
-                </h3>
-                <div className="text-center py-8 text-gray-500">
-                  作業ステップの編集機能は実装中です
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    作業ステップ ({formData.workSteps.length}件)
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={addWorkStep}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+                  >
+                    + ステップ追加
+                  </button>
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* 品質・安全タブ */}
-          {activeTab === 'quality' && (
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">⚠️ 品質・安全</h2>
-              <div className="text-center py-8 text-gray-500">
-                品質・安全管理機能は実装中です
+                <div className="space-y-4">
+                  {formData.workSteps.map((step, index) => (
+                    <WorkStepEditor
+                      key={index}
+                      step={step}
+                      index={index}
+                      onUpdate={(updatedStep) => updateWorkStep(index, updatedStep)}
+                      onDelete={() => deleteWorkStep(index)}
+                      onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1) : undefined}
+                      onMoveDown={index < formData.workSteps.length - 1 ? () => moveWorkStep(index, index + 1) : undefined}
+                      uploadingFiles={uploadingFiles}
+                      onFileUpload={handleFileUpload}
+                      onFileRemove={removeStepFile}
+                      actualFiles={actualFiles}
+                    />
+                  ))}
+                  
+                  {formData.workSteps.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -850,6 +1341,468 @@ export default function DrawingEdit() {
           </div>
         </form>
       </main>
+    </div>
+  )
+}
+
+// 作業ステップエディタコンポーネント
+interface WorkStepEditorProps {
+  step: WorkStep
+  index: number
+  onUpdate: (step: WorkStep) => void
+  onDelete: () => void
+  onMoveUp?: () => void
+  onMoveDown?: () => void
+  uploadingFiles: {[key: string]: boolean}
+  onFileUpload: (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null) => void
+  onFileRemove: (stepIndex: number, fileType: 'images' | 'videos', fileIndex: number) => void
+  actualFiles: {
+    overview: { images: string[], videos: string[] },
+    steps: { [key: number]: { images: string[], videos: string[] } }
+  }
+}
+
+function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown, uploadingFiles, onFileUpload, onFileRemove, actualFiles }: WorkStepEditorProps) {
+  // 親コンポーネントから渡される図番を取得
+  const params = useParams()
+  const drawingNumber = params.id as string
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  const warningLevels = ['normal', 'caution', 'important', 'critical'] as const
+  const warningLevelLabels = {
+    normal: '通常',
+    caution: '注意',
+    important: '重要',
+    critical: '危険'
+  }
+
+  const handleDetailedInstructionChange = (instIndex: number, value: string) => {
+    const newInstructions = [...step.detailedInstructions]
+    newInstructions[instIndex] = value
+    onUpdate({ ...step, detailedInstructions: newInstructions })
+  }
+
+  const addDetailedInstruction = () => {
+    onUpdate({
+      ...step,
+      detailedInstructions: [...step.detailedInstructions, '']
+    })
+  }
+
+  const removeDetailedInstruction = (instIndex: number) => {
+    const newInstructions = step.detailedInstructions.filter((_, i) => i !== instIndex)
+    onUpdate({ ...step, detailedInstructions: newInstructions })
+  }
+
+  return (
+    <div className="border border-gray-200 rounded-lg">
+      {/* ヘッダー */}
+      <div className="bg-gray-50 px-4 py-3 flex justify-between items-center">
+        <button
+          type="button"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center space-x-2 text-left flex-1"
+        >
+          <span className="text-lg">
+            {isExpanded ? '▼' : '▶'}
+          </span>
+          <span className="font-medium text-gray-900">
+            ステップ {step.stepNumber}: {step.title}
+          </span>
+        </button>
+        
+        <div className="flex items-center space-x-2">
+          {onMoveUp && (
+            <button
+              type="button"
+              onClick={onMoveUp}
+              className="p-1 text-gray-500 hover:text-gray-700"
+              title="上に移動"
+            >
+              ↑
+            </button>
+          )}
+          {onMoveDown && (
+            <button
+              type="button"
+              onClick={onMoveDown}
+              className="p-1 text-gray-500 hover:text-gray-700"
+              title="下に移動"
+            >
+              ↓
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onDelete}
+            className="p-1 text-red-500 hover:text-red-700"
+            title="削除"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      {/* 詳細内容 */}
+      {isExpanded && (
+        <div className="p-4 space-y-4">
+          {/* 基本情報 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                ステップタイトル
+              </label>
+              <input
+                type="text"
+                value={step.title}
+                onChange={(e) => onUpdate({ ...step, title: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                所要時間
+              </label>
+              <input
+                type="text"
+                value={step.timeRequired}
+                onChange={(e) => onUpdate({ ...step, timeRequired: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="30分"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              ステップ説明
+            </label>
+            <textarea
+              value={step.description}
+              onChange={(e) => onUpdate({ ...step, description: e.target.value })}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="このステップの概要を入力..."
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              警告レベル
+            </label>
+            <select
+              value={step.warningLevel}
+              onChange={(e) => onUpdate({ ...step, warningLevel: e.target.value as WorkStep['warningLevel'] })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {warningLevels.map(level => (
+                <option key={level} value={level}>
+                  {warningLevelLabels[level]}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 詳細手順 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              詳細手順
+            </label>
+            <div className="space-y-2">
+              {step.detailedInstructions.map((instruction, instIndex) => (
+                <div key={instIndex} className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-500 w-6">{instIndex + 1}.</span>
+                  <input
+                    type="text"
+                    value={instruction}
+                    onChange={(e) => handleDetailedInstructionChange(instIndex, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="手順を入力..."
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeDetailedInstruction(instIndex)}
+                    className="px-2 py-1 text-red-600 hover:text-red-800"
+                  >
+                    削除
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addDetailedInstruction}
+                className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+              >
+                + 手順を追加
+              </button>
+            </div>
+          </div>
+
+          {/* 画像・動画セクション */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 画像セクション */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                画像 ({(actualFiles.steps[index]?.images || []).length}件)
+              </label>
+              <div className="space-y-2">
+                {(actualFiles.steps[index]?.images || []).map((image, imgIndex) => (
+                  <div key={imgIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-gray-700 font-medium">{image}</span>
+                      <button
+                        type="button"
+                        onClick={() => onFileRemove(index, 'images', imgIndex)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        削除
+                      </button>
+                    </div>
+                    <div className="aspect-video bg-gray-100 rounded overflow-hidden">
+                      <img
+                        src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(image)}`}
+                        alt={`ステップ画像 - ${image}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                          const parent = e.currentTarget.parentElement
+                          if (parent && !parent.querySelector('.error-message')) {
+                            const errorDiv = document.createElement('div')
+                            errorDiv.className = 'error-message flex items-center justify-center h-full text-gray-400'
+                            errorDiv.innerHTML = '<span>画像を読み込めません</span>'
+                            parent.appendChild(errorDiv)
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => onFileUpload(index, 'images', e.target.files)}
+                    className="hidden"
+                    id={`image-upload-${index}`}
+                  />
+                  <label
+                    htmlFor={`image-upload-${index}`}
+                    className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
+                      uploadingFiles[`${index}-images`]
+                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                        : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                    }`}
+                  >
+                    {uploadingFiles[`${index}-images`] ? 'アップロード中...' : '+ 画像を追加'}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* 動画セクション */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                動画 ({(actualFiles.steps[index]?.videos || []).length}件)
+              </label>
+              <div className="space-y-2">
+                {(actualFiles.steps[index]?.videos || []).map((video, vidIndex) => (
+                  <div key={vidIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-gray-700 font-medium">{video}</span>
+                      <button
+                        type="button"
+                        onClick={() => onFileRemove(index, 'videos', vidIndex)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        削除
+                      </button>
+                    </div>
+                    <div className="aspect-video bg-gray-100 rounded overflow-hidden">
+                      <video
+                        controls
+                        className="w-full h-full object-cover"
+                        key={video}
+                      >
+                        <source
+                          src={`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(video)}`}
+                          type="video/mp4"
+                        />
+                        お使いのブラウザは動画をサポートしていません。
+                      </video>
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="file"
+                    accept="video/*"
+                    multiple
+                    onChange={(e) => onFileUpload(index, 'videos', e.target.files)}
+                    className="hidden"
+                    id={`video-upload-${index}`}
+                  />
+                  <label
+                    htmlFor={`video-upload-${index}`}
+                    className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
+                      uploadingFiles[`${index}-videos`]
+                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                        : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                    }`}
+                  >
+                    {uploadingFiles[`${index}-videos`] ? 'アップロード中...' : '+ 動画を追加'}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ヒヤリハット事例エディタコンポーネント
+interface NearMissEditorProps {
+  item: NearMissItem
+  index: number
+  onChange: (index: number, field: keyof NearMissItem, value: string) => void
+  onRemove: () => void
+}
+
+function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  const severityOptions = ['low', 'medium', 'high', 'critical'] as const
+  const severityLabels = {
+    low: '低',
+    medium: '中',
+    high: '高',
+    critical: '危険'
+  }
+
+  return (
+    <div className="border border-gray-200 rounded-lg">
+      {/* ヘッダー */}
+      <div className="bg-gray-50 px-4 py-3 flex justify-between items-center">
+        <button
+          type="button"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center space-x-2 text-left flex-1"
+        >
+          <span className="text-lg">
+            {isExpanded ? '▼' : '▶'}
+          </span>
+          <span className="font-medium text-gray-900">
+            事例 {index + 1}: {item.title || '(未設定)'}
+          </span>
+        </button>
+        
+        <div className="flex items-center space-x-2">
+          <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+            item.severity === 'critical' 
+              ? 'bg-red-100 text-red-800' 
+              : item.severity === 'high'
+              ? 'bg-orange-100 text-orange-800'
+              : item.severity === 'medium'
+              ? 'bg-yellow-100 text-yellow-800'
+              : 'bg-green-100 text-green-800'
+          }`}>
+            {severityLabels[item.severity]}
+          </span>
+          <button
+            type="button"
+            onClick={onRemove}
+            className="p-1 text-red-500 hover:text-red-700"
+            title="削除"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      {/* 詳細内容 */}
+      {isExpanded && (
+        <div className="p-4 space-y-4">
+          {/* タイトルと重要度 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                タイトル <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={item.title}
+                onChange={(e) => onChange(index, 'title', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                placeholder="事例のタイトルを入力..."
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                重要度 <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={item.severity}
+                onChange={(e) => onChange(index, 'severity', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                {severityOptions.map(severity => (
+                  <option key={severity} value={severity}>
+                    {severityLabels[severity]}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* 内容 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              内容 <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={item.description}
+              onChange={(e) => onChange(index, 'description', e.target.value)}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="どのような事例が発生したかを詳しく説明..."
+            />
+          </div>
+
+          {/* 原因 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              原因 <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={item.cause}
+              onChange={(e) => onChange(index, 'cause', e.target.value)}
+              rows={2}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="事例が発生した原因を記入..."
+            />
+          </div>
+
+          {/* 予防策 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              予防策 <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={item.prevention}
+              onChange={(e) => onChange(index, 'prevention', e.target.value)}
+              rows={2}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="再発防止のための対策を記入..."
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

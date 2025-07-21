@@ -1,0 +1,236 @@
+// src/app/api/admin/drawings/[id]/files/route.ts - 図番ファイル管理API
+
+import { NextRequest, NextResponse } from 'next/server'
+import { promises as fs } from 'fs'
+import path from 'path'
+
+// データパス取得
+const getDataPath = (): string => {
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
+  }
+  
+  if (process.env.USE_NAS === 'true') {
+    return process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
+  }
+  
+  return process.env.DEV_DATA_ROOT_PATH || './public/data'
+}
+
+// ファイルアップロード
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: drawingNumber } = await params
+    
+    if (!drawingNumber) {
+      return NextResponse.json(
+        { success: false, error: '図番が指定されていません' },
+        { status: 400 }
+      )
+    }
+
+    const formData = await request.formData()
+    const file = formData.get('file') as File
+    const stepNumber = formData.get('stepNumber') as string
+    const fileType = formData.get('fileType') as string
+
+    if (!file || !stepNumber || !fileType) {
+      return NextResponse.json(
+        { success: false, error: '必要なパラメータが不足しています' },
+        { status: 400 }
+      )
+    }
+
+    // ファイル検証
+    const maxSize = 50 * 1024 * 1024 // 50MB
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { success: false, error: 'ファイルサイズが大きすぎます（50MB以下）' },
+        { status: 400 }
+      )
+    }
+
+    // ファイル名生成
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const fileName = `${timestamp}-${file.name}`
+    
+    // 保存先パス
+    const dataPath = getDataPath()
+    const targetDir = path.join(
+      dataPath,
+      'work-instructions',
+      `drawing-${drawingNumber}`,
+      fileType,
+      stepNumber === '0' ? 'overview' : `step_${stepNumber.padStart(2, '0')}`
+    )
+    
+    // ディレクトリ作成
+    await fs.mkdir(targetDir, { recursive: true })
+    
+    // ファイル保存
+    const filePath = path.join(targetDir, fileName)
+    const buffer = await file.arrayBuffer()
+    await fs.writeFile(filePath, Buffer.from(buffer))
+
+    // instruction.json更新
+    await updateInstructionFile(drawingNumber, stepNumber, fileType, fileName)
+
+    return NextResponse.json({
+      success: true,
+      fileName,
+      message: 'ファイルがアップロードされました'
+    })
+
+  } catch (error) {
+    console.error('ファイルアップロードエラー:', error)
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'アップロードに失敗しました' 
+      },
+      { status: 500 }
+    )
+  }
+}
+
+// ファイル削除
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id: drawingNumber } = await params
+    const { fileName, stepNumber, fileType } = await request.json()
+
+    if (!drawingNumber || !fileName || !stepNumber || !fileType) {
+      return NextResponse.json(
+        { success: false, error: '必要なパラメータが不足しています' },
+        { status: 400 }
+      )
+    }
+
+    // ファイル削除
+    const dataPath = getDataPath()
+    const filePath = path.join(
+      dataPath,
+      'work-instructions',
+      `drawing-${drawingNumber}`,
+      fileType,
+      stepNumber === '0' ? 'overview' : `step_${stepNumber.padStart(2, '0')}`,
+      fileName
+    )
+
+    try {
+      await fs.unlink(filePath)
+    } catch (error) {
+      console.warn('ファイルが見つかりませんでした:', filePath)
+    }
+
+    // instruction.json更新
+    await removeFromInstructionFile(drawingNumber, stepNumber, fileType, fileName)
+
+    return NextResponse.json({
+      success: true,
+      message: 'ファイルが削除されました'
+    })
+
+  } catch (error) {
+    console.error('ファイル削除エラー:', error)
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: error instanceof Error ? error.message : '削除に失敗しました' 
+      },
+      { status: 500 }
+    )
+  }
+}
+
+// instruction.jsonにファイルを追加
+async function updateInstructionFile(
+  drawingNumber: string, 
+  stepNumber: string, 
+  fileType: string, 
+  fileName: string
+) {
+  const dataPath = getDataPath()
+  const instructionPath = path.join(
+    dataPath,
+    'work-instructions',
+    `drawing-${drawingNumber}`,
+    'instruction.json'
+  )
+
+  try {
+    const data = await fs.readFile(instructionPath, 'utf-8')
+    const cleanData = data.replace(/^\uFEFF/, '') // BOM除去
+    const instruction = JSON.parse(cleanData)
+
+    if (stepNumber === '0') {
+      // overview画像の場合
+      if (!instruction.overview[fileType]) {
+        instruction.overview[fileType] = []
+      }
+      instruction.overview[fileType].push(fileName)
+    } else {
+      // ステップ画像の場合
+      const stepIndex = parseInt(stepNumber) - 1
+      if (instruction.workSteps && instruction.workSteps[stepIndex]) {
+        if (!instruction.workSteps[stepIndex][fileType]) {
+          instruction.workSteps[stepIndex][fileType] = []
+        }
+        instruction.workSteps[stepIndex][fileType].push(fileName)
+      }
+    }
+
+    await fs.writeFile(instructionPath, JSON.stringify(instruction, null, 2))
+  } catch (updateError) {
+    console.error('instruction.json更新エラー:', updateError)
+  }
+}
+
+// instruction.jsonからファイルを削除
+async function removeFromInstructionFile(
+  drawingNumber: string, 
+  stepNumber: string, 
+  fileType: string, 
+  fileName: string
+) {
+  const dataPath = getDataPath()
+  const instructionPath = path.join(
+    dataPath,
+    'work-instructions',
+    `drawing-${drawingNumber}`,
+    'instruction.json'
+  )
+
+  try {
+    const data = await fs.readFile(instructionPath, 'utf-8')
+    const cleanData = data.replace(/^\uFEFF/, '') // BOM除去
+    const instruction = JSON.parse(cleanData)
+
+    if (stepNumber === '0') {
+      // overview画像の場合
+      if (instruction.overview[fileType]) {
+        instruction.overview[fileType] = instruction.overview[fileType].filter(
+          (f: string) => f !== fileName
+        )
+      }
+    } else {
+      // ステップ画像の場合
+      const stepIndex = parseInt(stepNumber) - 1
+      if (instruction.workSteps && instruction.workSteps[stepIndex] && instruction.workSteps[stepIndex][fileType]) {
+        instruction.workSteps[stepIndex][fileType] = instruction.workSteps[stepIndex][fileType].filter(
+          (f: string) => f !== fileName
+        )
+      }
+    }
+
+    await fs.writeFile(instructionPath, JSON.stringify(instruction, null, 2))
+  } catch (updateError) {
+    console.error('instruction.json更新エラー:', updateError)
+  }
+}

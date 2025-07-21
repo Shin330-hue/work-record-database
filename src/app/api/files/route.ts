@@ -36,8 +36,49 @@ export async function GET(request: NextRequest) {
   
   // 追加投稿ファイル用のパラメータ
   const contributionFile = searchParams.get('contributionFile')
+  
+  // 単一ファイル配信用のパラメータ
+  const fileName = searchParams.get('fileName')
 
   try {
+    
+    // 単一ファイル配信（優先処理）
+    if (fileName && drawingNumber && folderType) {
+      const dataRoot = getDataRootPath()
+      const basePath = join(dataRoot, 'work-instructions', `drawing-${drawingNumber}`, folderType)
+      const safePath = fileName.replace(/\.\./g, '').replace(/[<>"|*?]/g, '')
+      const fullFilePath = subFolder 
+        ? join(basePath, subFolder, safePath)
+        : join(basePath, safePath)
+      
+      if (!existsSync(fullFilePath)) {
+        return NextResponse.json({ error: 'File not found' }, { status: 404 })
+      }
+
+      const { readFile } = await import('fs/promises')
+      const fileBuffer = await readFile(fullFilePath)
+      
+      // ファイル拡張子からMIMEタイプを判定
+      const ext = extname(fullFilePath).toLowerCase()
+      let mimeType = 'application/octet-stream'
+      
+      if (['.jpg', '.jpeg'].includes(ext)) mimeType = 'image/jpeg'
+      else if (ext === '.png') mimeType = 'image/png'
+      else if (ext === '.gif') mimeType = 'image/gif'
+      else if (ext === '.webp') mimeType = 'image/webp'
+      else if (ext === '.mp4') mimeType = 'video/mp4'
+      else if (ext === '.webm') mimeType = 'video/webm'
+      else if (ext === '.avi') mimeType = 'video/avi'
+      else if (ext === '.mov') mimeType = 'video/mov'
+      else if (ext === '.wmv') mimeType = 'video/wmv'
+
+      return new NextResponse(fileBuffer, {
+        headers: {
+          'Content-Type': mimeType,
+          'Cache-Control': 'public, max-age=3600'
+        }
+      })
+    }
 
     // 追加投稿ファイルの単一配信（優先処理）
     if (contributionFile) {

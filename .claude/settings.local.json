@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(move \"要件定義書.md\" \"bk\\要件定義書.md\")",
+      "Bash(mv:*)"
+    ],
+    "deny": []
+  }
+}
