@@ -1614,7 +1614,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                         <label className="block text-xs text-gray-700 mb-1">工具</label>
                         <input
                           type="text"
-                          value={(condition && typeof condition === 'object' && 'tool' in condition) ? condition.tool : ''}
+                          value={(condition && typeof condition === 'object' && 'tool' in condition) ? (condition.tool || '') : ''}
                           onChange={(e) => {
                             const newConditions = { ...conditions };
                             newConditions[key] = { ...(condition || {}), tool: e.target.value };
@@ -1629,7 +1629,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                         <label className="block text-xs text-gray-700 mb-1">主軸回転数</label>
                         <input
                           type="text"
-                          value={(condition && typeof condition === 'object' && 'spindleSpeed' in condition) ? condition.spindleSpeed : ''}
+                          value={(condition && typeof condition === 'object' && 'spindleSpeed' in condition) ? (condition.spindleSpeed || '') : ''}
                           onChange={(e) => {
                             const newConditions = { ...conditions };
                             newConditions[key] = { ...(condition || {}), spindleSpeed: e.target.value };
@@ -1644,7 +1644,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                         <label className="block text-xs text-gray-700 mb-1">送り速度</label>
                         <input
                           type="text"
-                          value={(condition && typeof condition === 'object' && 'feedRate' in condition) ? condition.feedRate : ''}
+                          value={(condition && typeof condition === 'object' && 'feedRate' in condition) ? (condition.feedRate || '') : ''}
                           onChange={(e) => {
                             const newConditions = { ...conditions };
                             newConditions[key] = { ...(condition || {}), feedRate: e.target.value };
@@ -1659,7 +1659,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                         <label className="block text-xs text-gray-700 mb-1">切込み深さ</label>
                         <input
                           type="text"
-                          value={(condition && typeof condition === 'object' && 'depthOfCut' in condition) ? condition.depthOfCut : ''}
+                          value={(condition && typeof condition === 'object' && 'depthOfCut' in condition) ? (condition.depthOfCut || '') : ''}
                           onChange={(e) => {
                             const newConditions = { ...conditions };
                             newConditions[key] = { ...(condition || {}), depthOfCut: e.target.value };
@@ -1674,7 +1674,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                         <label className="block text-xs text-gray-700 mb-1">ステップオーバー</label>
                         <input
                           type="text"
-                          value={(condition && typeof condition === 'object' && 'stepOver' in condition) ? condition.stepOver : ''}
+                          value={(condition && typeof condition === 'object' && 'stepOver' in condition) ? (condition.stepOver || '') : ''}
                           onChange={(e) => {
                             const newConditions = { ...conditions };
                             newConditions[key] = { ...(condition || {}), stepOver: e.target.value };
@@ -1707,6 +1707,186 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
               >
                 + 切削条件を追加
               </button>
+            </div>
+          </div>
+
+          {/* 品質確認セクション */}
+          <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+            <h4 className="text-sm font-medium text-gray-900 mb-3">品質確認</h4>
+            <div className="space-y-4">
+              {/* 確認項目 */}
+              <div>
+                <label className="block text-sm text-gray-700 mb-2">
+                  確認項目
+                </label>
+                <div className="space-y-2">
+                  {(step.qualityCheck?.checkPoints || []).map((point, pointIndex) => (
+                    <div key={pointIndex} className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500 w-6">{pointIndex + 1}.</span>
+                      <input
+                        type="text"
+                        value={point}
+                        onChange={(e) => {
+                          const newCheckPoints = [...(step.qualityCheck?.checkPoints || [])];
+                          newCheckPoints[pointIndex] = e.target.value;
+                          onUpdate({
+                            ...step,
+                            qualityCheck: {
+                              ...step.qualityCheck,
+                              checkPoints: newCheckPoints
+                            }
+                          });
+                        }}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="チェック項目を入力..."
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newCheckPoints = [...(step.qualityCheck?.checkPoints || [])];
+                          newCheckPoints.splice(pointIndex, 1);
+                          onUpdate({
+                            ...step,
+                            qualityCheck: {
+                              ...step.qualityCheck,
+                              checkPoints: newCheckPoints
+                            }
+                          });
+                        }}
+                        className="px-2 py-1 text-red-600 hover:text-red-800"
+                      >
+                        削除
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newCheckPoints = [...(step.qualityCheck?.checkPoints || []), ''];
+                      onUpdate({
+                        ...step,
+                        qualityCheck: {
+                          ...step.qualityCheck,
+                          checkPoints: newCheckPoints
+                        }
+                      });
+                    }}
+                    className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+                  >
+                    + 確認項目を追加
+                  </button>
+                </div>
+              </div>
+
+              {/* 公差・表面粗さ */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">
+                    公差
+                  </label>
+                  <input
+                    type="text"
+                    value={step.qualityCheck?.tolerance || ''}
+                    onChange={(e) => onUpdate({
+                      ...step,
+                      qualityCheck: {
+                        ...step.qualityCheck,
+                        checkPoints: step.qualityCheck?.checkPoints || [],
+                        tolerance: e.target.value
+                      }
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="例: 0.05"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">
+                    表面粗さ
+                  </label>
+                  <input
+                    type="text"
+                    value={step.qualityCheck?.surfaceRoughness || ''}
+                    onChange={(e) => onUpdate({
+                      ...step,
+                      qualityCheck: {
+                        ...step.qualityCheck,
+                        checkPoints: step.qualityCheck?.checkPoints || [],
+                        surfaceRoughness: e.target.value
+                      }
+                    })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="例: Ra3.2"
+                  />
+                </div>
+              </div>
+
+              {/* 検査工具 */}
+              <div>
+                <label className="block text-sm text-gray-700 mb-2">
+                  検査工具
+                </label>
+                <div className="space-y-2">
+                  {(step.qualityCheck?.inspectionTools || []).map((tool, toolIndex) => (
+                    <div key={toolIndex} className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-500 w-6">{toolIndex + 1}.</span>
+                      <input
+                        type="text"
+                        value={tool}
+                        onChange={(e) => {
+                          const newTools = [...(step.qualityCheck?.inspectionTools || [])];
+                          newTools[toolIndex] = e.target.value;
+                          onUpdate({
+                            ...step,
+                            qualityCheck: {
+                              ...step.qualityCheck,
+                              checkPoints: step.qualityCheck?.checkPoints || [],
+                              inspectionTools: newTools
+                            }
+                          });
+                        }}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="検査工具を入力..."
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newTools = [...(step.qualityCheck?.inspectionTools || [])];
+                          newTools.splice(toolIndex, 1);
+                          onUpdate({
+                            ...step,
+                            qualityCheck: {
+                              ...step.qualityCheck,
+                              checkPoints: step.qualityCheck?.checkPoints || [],
+                              inspectionTools: newTools
+                            }
+                          });
+                        }}
+                        className="px-2 py-1 text-red-600 hover:text-red-800"
+                      >
+                        削除
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newTools = [...(step.qualityCheck?.inspectionTools || []), ''];
+                      onUpdate({
+                        ...step,
+                        qualityCheck: {
+                          ...step.qualityCheck,
+                          checkPoints: step.qualityCheck?.checkPoints || [],
+                          inspectionTools: newTools
+                        }
+                      });
+                    }}
+                    className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+                  >
+                    + 検査工具を追加
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
