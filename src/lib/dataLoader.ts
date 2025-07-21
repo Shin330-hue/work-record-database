@@ -176,7 +176,7 @@ export interface WorkStep {
   tools?: string[]
   notes?: string[]
   warningLevel: 'normal' | 'caution' | 'important' | 'critical'
-  cuttingConditions?: CuttingConditions
+  cuttingConditions?: CuttingConditions | { [key: string]: CuttingConditions }
   qualityCheck?: QualityCheck
 }
 

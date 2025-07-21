@@ -1539,6 +1539,177 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
             </div>
           </div>
 
+          {/* 切削条件セクション */}
+          <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+            <h4 className="text-sm font-medium text-gray-900 mb-3">切削条件</h4>
+            <div className="space-y-4">
+              {(() => {
+                // 切削条件が単一のCuttingConditionsオブジェクトか、複数のオブジェクトかを判別
+                const conditions = step.cuttingConditions || {};
+                const isMultipleConditions = !('tool' in conditions) && typeof conditions === 'object';
+                
+                if (!isMultipleConditions) {
+                  // 単一の切削条件の場合（後方互換性のため）
+                  if (!conditions.tool && !conditions.spindleSpeed && !conditions.feedRate) {
+                    return (
+                      <div className="text-sm text-gray-500">
+                        切削条件が設定されていません
+                      </div>
+                    );
+                  }
+                  // 単一から複数への変換
+                  const newConditions = { 'condition_1': conditions as CuttingConditions };
+                  onUpdate({ ...step, cuttingConditions: newConditions });
+                  return null;
+                }
+                
+                const conditionEntries = Object.entries(conditions);
+                
+                if (conditionEntries.length === 0) {
+                  return (
+                    <div className="text-sm text-gray-500">
+                      切削条件が設定されていません
+                    </div>
+                  );
+                }
+                
+                return conditionEntries.map(([key, condition], index) => (
+                  <div key={`${index}-${key}`} className="border border-gray-300 rounded-md p-3 bg-white">
+                    <div className="flex items-center justify-between mb-2">
+                      <input
+                        type="text"
+                        defaultValue={key}
+                        onBlur={(e) => {
+                          const newKey = e.target.value;
+                          if (newKey !== key && newKey) {
+                            const newConditions: { [key: string]: CuttingConditions } = {};
+                            Object.entries(conditions).forEach(([k, v]) => {
+                              if (k === key) {
+                                newConditions[newKey] = v;
+                              } else {
+                                newConditions[k] = v;
+                              }
+                            });
+                            onUpdate({ ...step, cuttingConditions: newConditions });
+                          }
+                        }}
+                        className="text-sm font-medium px-2 py-1 border border-gray-300 rounded"
+                        placeholder="工程名（例: roughing_fullback）"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newConditions = { ...conditions };
+                          delete newConditions[key];
+                          onUpdate({ ...step, cuttingConditions: newConditions });
+                        }}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        削除
+                      </button>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-gray-700 mb-1">工具</label>
+                        <input
+                          type="text"
+                          value={(condition && typeof condition === 'object' && 'tool' in condition) ? condition.tool : ''}
+                          onChange={(e) => {
+                            const newConditions = { ...conditions };
+                            newConditions[key] = { ...(condition || {}), tool: e.target.value };
+                            onUpdate({ ...step, cuttingConditions: newConditions });
+                          }}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="例: φ10エンドミル"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-xs text-gray-700 mb-1">主軸回転数</label>
+                        <input
+                          type="text"
+                          value={(condition && typeof condition === 'object' && 'spindleSpeed' in condition) ? condition.spindleSpeed : ''}
+                          onChange={(e) => {
+                            const newConditions = { ...conditions };
+                            newConditions[key] = { ...(condition || {}), spindleSpeed: e.target.value };
+                            onUpdate({ ...step, cuttingConditions: newConditions });
+                          }}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="例: S3000"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-xs text-gray-700 mb-1">送り速度</label>
+                        <input
+                          type="text"
+                          value={(condition && typeof condition === 'object' && 'feedRate' in condition) ? condition.feedRate : ''}
+                          onChange={(e) => {
+                            const newConditions = { ...conditions };
+                            newConditions[key] = { ...(condition || {}), feedRate: e.target.value };
+                            onUpdate({ ...step, cuttingConditions: newConditions });
+                          }}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="例: F500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-xs text-gray-700 mb-1">切込み深さ</label>
+                        <input
+                          type="text"
+                          value={(condition && typeof condition === 'object' && 'depthOfCut' in condition) ? condition.depthOfCut : ''}
+                          onChange={(e) => {
+                            const newConditions = { ...conditions };
+                            newConditions[key] = { ...(condition || {}), depthOfCut: e.target.value };
+                            onUpdate({ ...step, cuttingConditions: newConditions });
+                          }}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="例: 2mm"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-xs text-gray-700 mb-1">ステップオーバー</label>
+                        <input
+                          type="text"
+                          value={(condition && typeof condition === 'object' && 'stepOver' in condition) ? condition.stepOver : ''}
+                          onChange={(e) => {
+                            const newConditions = { ...conditions };
+                            newConditions[key] = { ...(condition || {}), stepOver: e.target.value };
+                            onUpdate({ ...step, cuttingConditions: newConditions });
+                          }}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="例: 5mm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ));
+              })()}
+              
+              <button
+                type="button"
+                onClick={() => {
+                  const newConditions = { ...(step.cuttingConditions || {}) };
+                  const newKey = `condition_${Object.keys(newConditions).length + 1}`;
+                  newConditions[newKey] = {
+                    tool: '',
+                    spindleSpeed: '',
+                    feedRate: '',
+                    depthOfCut: '',
+                    stepOver: ''
+                  };
+                  onUpdate({ ...step, cuttingConditions: newConditions });
+                }}
+                className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+              >
+                + 切削条件を追加
+              </button>
+            </div>
+          </div>
+
           {/* 画像・動画セクション */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 画像セクション */}
