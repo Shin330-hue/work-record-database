@@ -8,8 +8,7 @@ import Link from 'next/link'
 import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
 import { ImageLightbox } from '@/components/ImageLightbox'
-import { getAuthHeadersForFormData, promptForPassword } from '@/lib/auth/client'
-import { AdminAuthCheck } from '@/components/AdminAuthCheck'
+import { getAuthHeadersForFormData } from '@/lib/auth/client'
 
 // 図番データ型
 interface DrawingFormData {
@@ -404,25 +403,10 @@ export default function NewDrawingPage() {
   }
 
   return (
-    <AdminAuthCheck>
-      <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              新規図番登録
-            </h1>
-            <Link 
-              href="/admin" 
-              className="text-blue-600 hover:text-blue-800 font-medium"
-            >
-              ← 管理画面に戻る
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50">
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">新規図番登録</h1>
         <form onSubmit={handleSubmit} className="space-y-8">
           {drawings.map((drawing, index) => (
             <div key={index} className="bg-white rounded-lg shadow p-6">
@@ -735,6 +719,5 @@ export default function NewDrawingPage() {
         </form>
       </main>
     </div>
-    </AdminAuthCheck>
   )
 }

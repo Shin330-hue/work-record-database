@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
-import { getAuthHeaders, getAuthHeadersForFormData, promptForPassword } from '@/lib/auth/client'
+import { getAuthHeaders, getAuthHeadersForFormData } from '@/lib/auth/client'
 
 interface EditFormData {
   drawingNumber: string
@@ -871,24 +871,12 @@ export default function DrawingEdit() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* ヘッダー */}
-      <header className="bg-white shadow">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              図番編集: {formData.drawingNumber}
-            </h1>
-            <Link 
-              href="/admin/drawings/list"
-              className="text-blue-600 hover:text-blue-800 font-medium"
-            >
-              ← 図番一覧に戻る
-            </Link>
-          </div>
-        </div>
-      </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          図番編集: {formData.drawingNumber}
+        </h1>
+        
         {/* タブナビゲーション */}
         <div className="bg-white rounded-lg shadow mb-6">
           <div className="border-b border-gray-200">

@@ -6,13 +6,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { loadSearchIndex, loadCompanies } from '@/lib/dataLoader'
 import { loadRecentContributions } from '@/lib/dataLoader'
-import { AdminAuthCheck } from '@/components/AdminAuthCheck'
-import { clearAuthInfo, getAuthInfo } from '@/lib/auth/client'
-import { useRouter } from 'next/navigation'
 
 export default function AdminDashboard() {
-  const router = useRouter()
-  const [userInfo, setUserInfo] = useState<any>(null)
   const [stats, setStats] = useState({
     totalDrawings: 0,
     totalCompanies: 0,
@@ -27,10 +22,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // ユーザー情報を取得
-    const authData = getAuthInfo()
-    setUserInfo(authData)
-
     const loadData = async () => {
       try {
         const [searchIndex, companies, contributions] = await Promise.all([
@@ -57,60 +48,24 @@ export default function AdminDashboard() {
     loadData()
   }, [])
 
-  const handleLogout = () => {
-    clearAuthInfo()
-    router.push('/admin/login')
-  }
-
   if (loading) {
     return (
-      <AdminAuthCheck>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">データを読み込んでいます...</p>
-          </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">データを読み込んでいます...</p>
         </div>
-      </AdminAuthCheck>
+      </div>
     )
   }
 
   return (
-    <AdminAuthCheck>
-      <div className="min-h-screen bg-gray-50">
-      {/* ヘッダー */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              管理画面
-            </h1>
-            <div className="flex items-center space-x-6">
-              {userInfo && (
-                <div className="text-sm text-gray-600">
-                  ログイン中: <span className="font-medium text-gray-900">{userInfo.name}</span>
-                </div>
-              )}
-              <Link 
-                href="/" 
-                className="text-blue-600 hover:text-blue-800 font-medium"
-              >
-                ← メインサイトに戻る
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="text-red-600 hover:text-red-800 font-medium"
-              >
-                ログアウト
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* ページタイトル */}
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">ダッシュボード</h1>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 統計情報 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* 統計情報 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">総図番数</h3>
             <p className="text-3xl font-bold text-blue-600">{stats.totalDrawings}</p>
@@ -211,8 +166,6 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
-      </main>
     </div>
-    </AdminAuthCheck>
   )
 }
