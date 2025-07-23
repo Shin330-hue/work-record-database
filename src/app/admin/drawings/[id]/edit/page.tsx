@@ -5,7 +5,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem } from '@/lib/dataLoader'
+import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
 
@@ -402,8 +402,7 @@ export default function DrawingEdit() {
       timeRequired: '30分',
       warningLevel: 'normal',
       qualityCheck: {
-        checkPoints: [],
-        inspectionTools: []
+        items: []
       }
     }
 
@@ -2037,7 +2036,20 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
               <button
                 type="button"
                 onClick={() => {
-                  const newConditions = { ...(step.cuttingConditions || {}) };
+                  // 既存の切削条件を取得（型安全に）
+                  let currentConditions: { [key: string]: CuttingConditions } = {};
+                  if (step.cuttingConditions) {
+                    // 単一形式か複数形式かを判定
+                    if ('tool' in step.cuttingConditions) {
+                      // 単一形式の場合は変換
+                      currentConditions = { 'condition_1': step.cuttingConditions as CuttingConditions };
+                    } else {
+                      // 複数形式の場合はそのまま使用
+                      currentConditions = step.cuttingConditions as { [key: string]: CuttingConditions };
+                    }
+                  }
+                  
+                  const newConditions = { ...currentConditions };
                   const newKey = `condition_${Object.keys(newConditions).length + 1}`;
                   newConditions[newKey] = {
                     tool: '',
