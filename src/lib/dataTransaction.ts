@@ -80,7 +80,13 @@ export class DataTransaction {
       return companyInput.id
     }
     
-    // 新規作成時のID生成
+    // 新規作成時は管理画面で入力されたIDを使用
+    if (companyInput.type === 'new' && companyInput.id) {
+      return companyInput.id
+    }
+    
+    // IDが指定されていない場合のみ自動生成（後方互換性のため残す）
+    console.warn(`会社IDが指定されていません。自動生成します: ${companyInput.name}`)
     return generateCompanyId(companyInput.name)
   }
   
@@ -99,6 +105,16 @@ export class DataTransaction {
     const companyId = await this.resolveCompanyId(inputData.company)
     const productId = await this.resolveProductId(inputData.product)
     
+    // keywordsを配列に変換（文字列の場合）
+    let keywords: string[] = []
+    if (inputData.keywords) {
+      if (Array.isArray(inputData.keywords)) {
+        keywords = inputData.keywords
+      } else if (typeof inputData.keywords === 'string') {
+        keywords = inputData.keywords.split(',').map(k => k.trim()).filter(k => k)
+      }
+    }
+    
     return {
       drawingNumber: inputData.drawingNumber,
       title: inputData.title,
@@ -112,7 +128,7 @@ export class DataTransaction {
       machineType: inputData.machineType,
       description: inputData.description,
       warnings: inputData.warnings,
-      keywords: inputData.keywords
+      keywords
     }
   }
   

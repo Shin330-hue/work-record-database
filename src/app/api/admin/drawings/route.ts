@@ -191,16 +191,72 @@ export async function POST(request: NextRequest) {
         // フォルダ階層作成
         await createDrawingDirectoryStructure(processedData.drawingNumber)
         
-        // PDFファイル処理
-        const pdfKey = `pdf_${processedData.drawingNumber}`
-        const pdfFile = formData.get(pdfKey) as File
+        // PDFファイル処理（複数対応）
+        const pdfFiles: File[] = []
+        let pdfIndex = 0
+        while (formData.has(`pdf_${processedData.drawingNumber}_${pdfIndex}`)) {
+          const pdfFile = formData.get(`pdf_${processedData.drawingNumber}_${pdfIndex}`) as File
+          if (pdfFile && pdfFile.size > 0) {
+            pdfFiles.push(pdfFile)
+          }
+          pdfIndex++
+        }
         
-        if (pdfFile && pdfFile.size > 0) {
-          await savePdfFile(processedData.drawingNumber, pdfFile)
+        // PDFファイルがある場合は新しい一括アップロードAPIを使用
+        if (pdfFiles.length > 0) {
+          const uploadFormData = new FormData()
+          uploadFormData.append('stepNumber', '0') // overview
+          pdfFiles.forEach(file => {
+            uploadFormData.append('files', file)
+          })
           
-          // 検索インデックスのPDFフラグ更新
-          const transaction = new DataTransaction()
-          await transaction.updateSearchIndexForPdf(processedData.drawingNumber)
+          // 内部的に一括アップロードAPIを呼び出し
+          const uploadResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/admin/drawings/${processedData.drawingNumber}/files/batch`,
+            {
+              method: 'POST',
+              body: uploadFormData
+            }
+          )
+          
+          if (uploadResponse.ok) {
+            // 検索インデックスのPDFフラグ更新
+            const transaction = new DataTransaction()
+            await transaction.updateSearchIndexForPdf(processedData.drawingNumber)
+          }
+        }
+        
+        // プログラムファイル処理（複数対応）
+        const programFiles: File[] = []
+        let programIndex = 0
+        while (formData.has(`program_${processedData.drawingNumber}_${programIndex}`)) {
+          const programFile = formData.get(`program_${processedData.drawingNumber}_${programIndex}`) as File
+          if (programFile && programFile.size > 0) {
+            programFiles.push(programFile)
+          }
+          programIndex++
+        }
+        
+        // プログラムファイルがある場合も一括アップロードAPIを使用
+        if (programFiles.length > 0) {
+          const uploadFormData = new FormData()
+          uploadFormData.append('stepNumber', '0') // overview
+          programFiles.forEach(file => {
+            uploadFormData.append('files', file)
+          })
+          
+          const uploadResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/admin/drawings/${processedData.drawingNumber}/files/batch`,
+            {
+              method: 'POST',
+              body: uploadFormData
+            }
+          )
+          
+          if (!uploadResponse.ok) {
+            console.error(`プログラムファイルアップロードエラー: ${processedData.drawingNumber}`)
+            // エラーでも処理は継続（PDFと同様の挙動）
+          }
         }
         
         // 基本的なinstruction.json作成

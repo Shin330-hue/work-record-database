@@ -28,7 +28,8 @@ interface DrawingFormData {
   machineType: string
   description?: string
   keywords?: string
-  pdfFile?: File
+  pdfFiles: File[]  // 複数ファイル対応に変更
+  programFiles: File[]  // プログラムファイル追加
 }
 
 // 会社選択コンポーネント
@@ -220,7 +221,9 @@ export default function NewDrawingPage() {
       estimatedTime: '180',
       machineType: 'マシニング',
       description: '',
-      keywords: ''
+      keywords: '',
+      pdfFiles: [],
+      programFiles: []
     }
   ])
   const [loading, setLoading] = useState(false)
@@ -249,7 +252,9 @@ export default function NewDrawingPage() {
       estimatedTime: '180',
       machineType: 'マシニング',
       description: '',
-      keywords: ''
+      keywords: '',
+      pdfFiles: [],
+      programFiles: []
     }])
   }
 
@@ -279,10 +284,17 @@ export default function NewDrawingPage() {
     setDrawings(newDrawings)
   }
 
-  // PDFファイルを更新
-  const updatePdfFile = (index: number, file: File | undefined) => {
+  // PDFファイルを更新（複数ファイル対応）
+  const updatePdfFiles = (index: number, files: FileList | null) => {
     const newDrawings = [...drawings]
-    newDrawings[index] = { ...newDrawings[index], pdfFile: file }
+    newDrawings[index] = { ...newDrawings[index], pdfFiles: files ? Array.from(files) : [] }
+    setDrawings(newDrawings)
+  }
+
+  // プログラムファイルを更新
+  const updateProgramFiles = (index: number, files: FileList | null) => {
+    const newDrawings = [...drawings]
+    newDrawings[index] = { ...newDrawings[index], programFiles: files ? Array.from(files) : [] }
     setDrawings(newDrawings)
   }
 
@@ -345,13 +357,26 @@ export default function NewDrawingPage() {
     
     try {
       const formData = new FormData()
-      formData.append('drawings', JSON.stringify(drawings))
+      // JSONデータからpdfFiles, programFilesを除外してシリアライズ
+      const drawingsData = drawings.map(d => ({
+        ...d,
+        pdfFiles: undefined,
+        programFiles: undefined
+      }))
+      formData.append('drawings', JSON.stringify(drawingsData))
       
-      // PDFファイルを追加
-      drawings.forEach((drawing) => {
-        if (drawing.pdfFile) {
-          formData.append(`pdf_${drawing.drawingNumber}`, drawing.pdfFile)
-        }
+      // PDFファイルを追加（複数対応）
+      drawings.forEach((drawing, drawingIndex) => {
+        drawing.pdfFiles.forEach((file, fileIndex) => {
+          formData.append(`pdf_${drawing.drawingNumber}_${fileIndex}`, file)
+        })
+      })
+      
+      // プログラムファイルを追加
+      drawings.forEach((drawing, drawingIndex) => {
+        drawing.programFiles.forEach((file, fileIndex) => {
+          formData.append(`program_${drawing.drawingNumber}_${fileIndex}`, file)
+        })
       })
       
       const response = await fetch('/api/admin/drawings', {
@@ -436,20 +461,48 @@ export default function NewDrawingPage() {
                   />
                 </div>
 
-                {/* 3. 図面PDF */}
+                {/* 3. 図面PDF（複数対応） */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    図面PDF
+                    図面PDF（複数可）
                   </label>
                   <input
                     type="file"
                     accept=".pdf"
-                    onChange={(e) => updatePdfFile(index, e.target.files?.[0])}
+                    multiple
+                    onChange={(e) => updatePdfFiles(index, e.target.files)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
+                  {drawing.pdfFiles.length > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      選択済み: {drawing.pdfFiles.map(f => f.name).join(', ')}
+                    </div>
+                  )}
                 </div>
 
-                {/* 4. 製品カテゴリ */}
+                {/* 4. プログラムファイル */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    プログラムファイル（複数可）
+                  </label>
+                  <input
+                    type="file"
+                    accept=".nc,.txt,.tap,.pgm,.mpf,.ptp,.gcode,.cnc,.min,.eia"
+                    multiple
+                    onChange={(e) => updateProgramFiles(index, e.target.files)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  {drawing.programFiles.length > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      選択済み: {drawing.programFiles.map(f => f.name).join(', ')}
+                    </div>
+                  )}
+                  <p className="mt-1 text-xs text-gray-500">
+                    NCプログラム、Gコード等の加工プログラムファイル
+                  </p>
+                </div>
+
+                {/* 5. 製品カテゴリ */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     製品カテゴリ <span className="text-red-500">*</span>

@@ -56,10 +56,10 @@ export default function DrawingEdit() {
   const [activeTab, setActiveTab] = useState<TabType>('basic')
   const [uploadingFiles, setUploadingFiles] = useState<{[key: string]: boolean}>({})
   const [actualFiles, setActualFiles] = useState<{
-    overview: { images: string[], videos: string[] },
+    overview: { images: string[], videos: string[], pdfs: string[], programs: string[] },
     steps: { [key: number]: { images: string[], videos: string[] } }
   }>({
-    overview: { images: [], videos: [] },
+    overview: { images: [], videos: [], pdfs: [], programs: [] },
     steps: {}
   })
 
@@ -206,10 +206,20 @@ export default function DrawingEdit() {
       const overviewVideosRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=overview`)
       const overviewVideosData = await overviewVideosRes.json()
 
+      // Overview PDFを取得
+      const overviewPdfsRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=pdfs&subFolder=overview`)
+      const overviewPdfsData = await overviewPdfsRes.json()
+      
+      // Overview プログラムファイルを取得
+      const overviewProgramsRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=programs&subFolder=overview`)
+      const overviewProgramsData = await overviewProgramsRes.json()
+
       const newActualFiles: typeof actualFiles = {
         overview: {
           images: overviewImagesData.data?.files || overviewImagesData.files || [],
-          videos: overviewVideosData.data?.files || overviewVideosData.files || []
+          videos: overviewVideosData.data?.files || overviewVideosData.files || [],
+          pdfs: overviewPdfsData.data?.files || overviewPdfsData.files || [],
+          programs: overviewProgramsData.data?.files || overviewProgramsData.files || []
         },
         steps: {}
       }
@@ -583,6 +593,80 @@ export default function DrawingEdit() {
     } catch (error) {
       console.error('ファイル削除エラー:', error)
       alert('ファイルの削除に失敗しました')
+    }
+  }
+
+  // PDF・プログラムファイルの削除処理
+  const removePdfOrProgramFile = async (fileName: string, fileType: 'pdfs' | 'programs') => {
+    if (!confirm(`${fileName} を削除しますか？`)) return
+
+    try {
+      const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fileName,
+          stepNumber: '0', // overview
+          fileType
+        })
+      })
+
+      if (response.ok) {
+        // ファイル一覧を再読み込み
+        await loadActualFiles(drawingNumber)
+      } else {
+        const errorData = await response.json()
+        alert(`削除に失敗しました: ${errorData.error || 'エラーが発生しました'}`)
+      }
+    } catch (error) {
+      console.error('ファイル削除エラー:', error)
+      alert('ファイルの削除に失敗しました')
+    }
+  }
+
+  // PDF・プログラムファイルの一括アップロード処理
+  const handleBatchFileUpload = async (files: FileList | null, fileType: 'pdf' | 'program') => {
+    if (!files || !formData || files.length === 0) return
+
+    const uploadKey = `overview-${fileType}s`
+    setUploadingFiles(prev => ({ ...prev, [uploadKey]: true }))
+
+    try {
+      const formDataUpload = new FormData()
+      formDataUpload.append('stepNumber', '0') // overview用
+
+      // 複数ファイルを追加
+      for (let i = 0; i < files.length; i++) {
+        formDataUpload.append('files', files[i])
+      }
+
+      const response = await fetch(`/api/admin/drawings/${drawingNumber}/files/batch`, {
+        method: 'POST',
+        body: formDataUpload
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        
+        // ファイル一覧を再読み込み
+        await loadActualFiles(drawingNumber)
+        
+        if (result.errors && result.errors.length > 0) {
+          // 部分的なエラーがある場合
+          const errorMessages = result.errors.map((e: any) => `${e.file}: ${e.error}`).join('\n')
+          alert(`一部のファイルでエラーが発生しました:\n${errorMessages}`)
+        }
+      } else {
+        const errorData = await response.json()
+        alert(`アップロードに失敗しました: ${errorData.error || 'エラーが発生しました'}`)
+      }
+    } catch (error) {
+      console.error('ファイルアップロードエラー:', error)
+      alert('ファイルのアップロードに失敗しました')
+    } finally {
+      setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }))
     }
   }
 
@@ -997,6 +1081,117 @@ export default function DrawingEdit() {
               <p className="text-xs text-gray-500 mt-1">
                 検索で見つけやすくするためのキーワードです
               </p>
+            </div>
+          </div>
+
+          {/* 図面PDFセクション */}
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">図面PDF</h2>
+            <div className="space-y-2">
+              {actualFiles.overview.pdfs.length > 0 ? actualFiles.overview.pdfs.map((pdf, pdfIndex) => (
+                <div key={pdfIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
+                  <div className="flex items-center justify-between">
+                    <a
+                      href={`/api/files?drawingNumber=${drawingNumber}&folderType=pdfs&subFolder=overview&fileName=${encodeURIComponent(pdf)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2"
+                    >
+                      📄 {pdf}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => removePdfOrProgramFile(pdf, 'pdfs')}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      削除
+                    </button>
+                  </div>
+                </div>
+              )) : (
+                <div className="text-center py-4 text-gray-500">
+                  図面PDFはありません
+                </div>
+              )}
+              
+              <div className="flex items-center space-x-2">
+                <input
+                  type="file"
+                  accept=".pdf"
+                  multiple
+                  onChange={(e) => handleBatchFileUpload(e.target.files, 'pdf')}
+                  disabled={uploadingFiles['overview-pdfs']}
+                  className="hidden"
+                  id="pdf-upload"
+                />
+                <label
+                  htmlFor="pdf-upload"
+                  className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
+                    uploadingFiles['overview-pdfs']
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                  }`}
+                >
+                  {uploadingFiles['overview-pdfs'] ? 'アップロード中...' : '+ PDFファイルを追加'}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* プログラムファイルセクション */}
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">プログラムファイル</h2>
+            <div className="space-y-2">
+              {actualFiles.overview.programs.length > 0 ? actualFiles.overview.programs.map((program, programIndex) => (
+                <div key={programIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
+                  <div className="flex items-center justify-between">
+                    <a
+                      href={`/api/files?drawingNumber=${drawingNumber}&folderType=programs&subFolder=overview&fileName=${encodeURIComponent(program)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2"
+                    >
+                      📝 {program}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => removePdfOrProgramFile(program, 'programs')}
+                      className="text-red-600 hover:text-red-800 text-sm"
+                    >
+                      削除
+                    </button>
+                  </div>
+                </div>
+              )) : (
+                <div className="text-center py-4 text-gray-500">
+                  プログラムファイルはありません
+                </div>
+              )}
+              
+              <div className="flex items-center space-x-2">
+                <input
+                  type="file"
+                  accept=".nc,.txt,.tap,.pgm,.mpf,.ptp,.gcode,.cnc,.min,.eia"
+                  multiple
+                  onChange={(e) => handleBatchFileUpload(e.target.files, 'program')}
+                  disabled={uploadingFiles['overview-programs']}
+                  className="hidden"
+                  id="program-upload"
+                />
+                <label
+                  htmlFor="program-upload"
+                  className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
+                    uploadingFiles['overview-programs']
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                  }`}
+                >
+                  {uploadingFiles['overview-programs'] ? 'アップロード中...' : '+ プログラムファイルを追加'}
+                </label>
+                <p className="text-xs text-gray-500">
+                  NCプログラム、Gコード等の加工プログラムファイル
+                </p>
+              </div>
             </div>
           </div>
 

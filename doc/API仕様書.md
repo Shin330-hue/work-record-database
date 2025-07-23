@@ -12,6 +12,7 @@
 | `/api/admin/drawings` | POST, GET | 図番の一括登録・一覧取得（管理者用） |
 | `/api/admin/drawings/[id]` | PUT | 図番詳細情報の更新（管理者用） |
 | `/api/admin/drawings/[id]/files` | POST, DELETE | 図番ファイルのアップロード・削除（管理者用） |
+| `/api/admin/drawings/[id]/files/batch` | POST | 図番ファイルの一括アップロード（管理者用） |
 
 ## API詳細仕様
 
@@ -324,6 +325,65 @@
 {
   "success": true,
   "message": "ファイルが削除されました"
+}
+```
+
+#### POST `/api/admin/drawings/[id]/files/batch`
+図番の複数ファイルを一括でアップロードします。画像、動画、PDF、プログラムファイルを自動判定して適切なフォルダに保存します。
+
+**認証**
+- Authorization: Bearer {ADMIN_TOKEN}
+
+**パスパラメータ**
+- `id`: 対象図番
+
+**リクエストボディ（FormData）**
+| フィールド | 型 | 必須 | 説明 |
+|---|---|---|---|
+| `files` | File[] | ○ | アップロードファイル（複数可） |
+| `stepNumber` | string | ○ | ステップ番号（0=概要、1以上=各ステップ） |
+
+**対応ファイル形式**
+- **画像**: jpg, jpeg, png, gif, webp
+- **動画**: mp4, avi, mov, wmv, webm
+- **PDF**: pdf
+- **プログラム**: nc, txt, tap, pgm, mpf, ptp, gcode, cnc, min, eia
+
+**制限事項**
+- 最大ファイル数: 20
+- 単一ファイルサイズ上限: 50MB
+- 合計ファイルサイズ上限: 100MB
+
+**ファイル名ポリシー**
+- **画像・動画**: タイムスタンプを付加（例: `2025-07-22T10-00-00-000Z-image.jpg`）
+- **PDF・プログラム**: オリジナルファイル名を保持（例: `ABC-123.pdf`、`O1234.nc`）
+- 重複時は番号を付加（例: `ABC-123_1.pdf`）
+
+**レスポンス例（成功）**
+```json
+{
+  "success": true,
+  "uploaded": [
+    "ABC-123.pdf",
+    "O1234.nc",
+    "2025-07-22T10-00-00-000Z-photo.jpg"
+  ],
+  "errors": []
+}
+```
+
+**レスポンス例（部分的エラー）**
+```json
+{
+  "success": true,
+  "uploaded": ["ABC-123.pdf"],
+  "errors": [
+    {
+      "file": "large-file.pdf",
+      "error": "ファイルサイズが制限を超えています（最大50MB）",
+      "code": "SIZE_EXCEEDED"
+    }
+  ]
 }
 ```
 
