@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { WorkInstruction, WorkStep as WorkStepType, getFrontendDataPath } from '@/lib/dataLoader'
+import { ImageLightbox } from './ImageLightbox'
 
 interface WorkStepProps {
   step: WorkStepType
@@ -35,6 +36,9 @@ const getPropertyText = (prop: string): string => {
 export default function WorkStep({ step, instruction, getStepFiles }: WorkStepProps) {
   const [stepFiles, setStepFiles] = useState<{ images: string[], videos: string[], programs: string[] }>({ images: [], videos: [], programs: [] })
   const [isLoading, setIsLoading] = useState(true)
+  // ライトボックス用の状態
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
     const loadStepFiles = async () => {
@@ -68,7 +72,8 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
   }
 
   return (
-    <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 shadow-lg">
+    <>
+      <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 shadow-lg">
       <div className="flex items-center gap-4 mb-4">
         <div className="text-lg font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-lg">ステップ {step.stepNumber}</div>
         <div className="text-xl font-semibold text-white">{step.title}</div>
@@ -97,7 +102,12 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* 画像ギャラリー */}
             {stepFiles.images.map((image, i) => (
-              <div key={`img-${i}`} className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
+              <div key={`img-${i}`} 
+                className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => {
+                  setCurrentImageIndex(i);
+                  setLightboxOpen(true);
+                }}>
                 <div className="p-3 text-xs text-emerald-200 bg-emerald-500/20">
                   {image}
                 </div>
@@ -242,6 +252,20 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
           </div>
         </div>
       )}
-    </div>
+      </div>
+
+      {/* 画像ライトボックス */}
+      {stepFiles.images.length > 0 && (
+        <ImageLightbox
+          images={stepFiles.images.map(image => 
+            `${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/step_0${step.stepNumber}/${image}`
+          )}
+          isOpen={lightboxOpen}
+          currentIndex={currentImageIndex}
+          onClose={() => setLightboxOpen(false)}
+          altText={`${instruction.metadata.title} - ステップ${step.stepNumber}画像`}
+        />
+      )}
+    </>
   )
 } 

@@ -975,3 +975,27 @@ a[href$=".pdf"]:visited {
   background: linear-gradient(to right, #2563eb, #1e40af);
   transform: scale(1.02);
 }
+
+/* ライトボックス用のカスタムスタイル */
+.yarl__root {
+  --yarl__color_backdrop: rgba(0, 0, 0, 0.9);
+  --yarl__color_button: rgba(255, 255, 255, 0.9);
+  --yarl__color_button_active: rgba(255, 255, 255, 1);
+}
+
+/* 画像ホバー時のカーソル表示 */
+.lightbox-trigger {
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.lightbox-trigger:hover {
+  opacity: 0.9;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .yarl__thumbnails_container {
+    display: none; /* モバイルではサムネイル非表示 */
+  }
+}

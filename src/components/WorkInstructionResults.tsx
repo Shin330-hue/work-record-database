@@ -8,6 +8,7 @@ import IdeaDisplay from './IdeaDisplay'
 import ContributionForm from './ContributionForm'
 import ContributionDisplay from './ContributionDisplay'
 import { getFrontendDataPath } from '../lib/dataLoader';
+import { ImageLightbox } from './ImageLightbox'
 
 interface WorkInstructionResultsProps {
   instruction: WorkInstruction
@@ -29,6 +30,9 @@ export default function WorkInstructionResults({ instruction, contributions, onB
     section: 'overview' | 'step' | 'general'
     stepNumber?: number
   }>({ section: 'general' })
+  // ライトボックス用の状態
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const dataRoot = useMemo(() => getFrontendDataPath(), []);
 
@@ -168,7 +172,11 @@ export default function WorkInstructionResults({ instruction, contributions, onB
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {overviewFiles.images.map((image, i) => (
                   <div key={`overview-img-${i}`}
-                    className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
+                    className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => {
+                      setCurrentImageIndex(i);
+                      setLightboxOpen(true);
+                    }}>
                     <Image
                       src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
                       alt={`概要 - ${image}`}
@@ -401,6 +409,19 @@ export default function WorkInstructionResults({ instruction, contributions, onB
             window.location.reload()
           }}
           onCancel={() => setShowContributionForm(false)}
+        />
+      )}
+
+      {/* 画像ライトボックス */}
+      {overviewFiles.images.length > 0 && (
+        <ImageLightbox
+          images={overviewFiles.images.map(image => 
+            `${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`
+          )}
+          isOpen={lightboxOpen}
+          currentIndex={currentImageIndex}
+          onClose={() => setLightboxOpen(false)}
+          altText={`${instruction.metadata.title} - 概要画像`}
         />
       )}
     </div>

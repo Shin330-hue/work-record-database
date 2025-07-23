@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
+import { ImageLightbox } from '@/components/ImageLightbox'
 
 // 図番データ型
 interface DrawingFormData {

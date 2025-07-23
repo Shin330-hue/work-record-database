@@ -7,6 +7,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
+import { ImageLightbox } from '@/components/ImageLightbox'
 
 interface EditFormData {
   drawingNumber: string
@@ -62,6 +63,10 @@ export default function DrawingEdit() {
     overview: { images: [], videos: [], pdfs: [], programs: [] },
     steps: {}
   })
+  // ライトボックス用の状態
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [currentImages, setCurrentImages] = useState<string[]>([])
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // 機械種別の選択肢（新規登録画面と統一）
   const machineTypes = ['マシニング', 'ターニング', '横中', 'ラジアル', 'フライス']
@@ -1211,7 +1216,16 @@ export default function DrawingEdit() {
                       削除
                     </button>
                   </div>
-                  <div className="aspect-video bg-gray-100 rounded overflow-hidden">
+                  <div className="aspect-video bg-gray-100 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => {
+                      const imageUrls = actualFiles.overview.images.map(img => 
+                        `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(img)}`
+                      );
+                      const currentIdx = actualFiles.overview.images.indexOf(image);
+                      setCurrentImages(imageUrls);
+                      setCurrentImageIndex(currentIdx);
+                      setLightboxOpen(true);
+                    }}>
                     <img
                       src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`}
                       alt={`概要画像 - ${image}`}
@@ -1417,6 +1431,11 @@ export default function DrawingEdit() {
                       onFileUpload={handleFileUpload}
                       onFileRemove={removeStepFile}
                       actualFiles={actualFiles}
+                      onImageClick={(images, currentIndex) => {
+                        setCurrentImages(images);
+                        setCurrentImageIndex(currentIndex);
+                        setLightboxOpen(true);
+                      }}
                     />
                   ))}
                   
@@ -1657,6 +1676,15 @@ export default function DrawingEdit() {
           </div>
         </form>
       </main>
+
+      {/* 画像ライトボックス */}
+      <ImageLightbox
+        images={currentImages}
+        isOpen={lightboxOpen}
+        currentIndex={currentImageIndex}
+        onClose={() => setLightboxOpen(false)}
+        altText="管理画面画像"
+      />
     </div>
   )
 }
@@ -1676,9 +1704,10 @@ interface WorkStepEditorProps {
     overview: { images: string[], videos: string[] },
     steps: { [key: number]: { images: string[], videos: string[] } }
   }
+  onImageClick: (images: string[], currentIndex: number) => void
 }
 
-function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown, uploadingFiles, onFileUpload, onFileRemove, actualFiles }: WorkStepEditorProps) {
+function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown, uploadingFiles, onFileUpload, onFileRemove, actualFiles, onImageClick }: WorkStepEditorProps) {
   // 親コンポーネントから渡される図番を取得
   const params = useParams()
   const drawingNumber = params.id as string
@@ -2188,7 +2217,15 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                         削除
                       </button>
                     </div>
-                    <div className="aspect-video bg-gray-100 rounded overflow-hidden">
+                    <div className="aspect-video bg-gray-100 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                      onClick={() => {
+                        const stepImages = actualFiles.steps[index]?.images || [];
+                        const imageUrls = stepImages.map(img => 
+                          `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(img)}`
+                        );
+                        const currentIdx = stepImages.indexOf(image);
+                        onImageClick(imageUrls, currentIdx);
+                      }}>
                       <img
                         src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(image)}`}
                         alt={`ステップ画像 - ${image}`}

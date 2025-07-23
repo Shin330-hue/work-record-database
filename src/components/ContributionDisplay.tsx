@@ -1,5 +1,7 @@
 'use client'
+import { useState } from 'react'
 import { ContributionData } from '@/types/contribution'
+import { ImageLightbox } from './ImageLightbox'
 
 interface ContributionDisplayProps {
   contributions: ContributionData[]
@@ -7,6 +9,10 @@ interface ContributionDisplayProps {
 }
 
 export default function ContributionDisplay({ contributions, drawingNumber }: ContributionDisplayProps) {
+  // ライトボックス用の状態
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [currentImages, setCurrentImages] = useState<string[]>([])
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ja-JP', {
@@ -45,10 +51,11 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
   }
 
   return (
-    <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-      <h4 className="text-sm font-semibold text-blue-900 mb-3 flex items-center gap-2">
-        👥 コミュニティ追記 ({contributions.length}件)
-      </h4>
+    <>
+      <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h4 className="text-sm font-semibold text-blue-900 mb-3 flex items-center gap-2">
+          👥 コミュニティ追記 ({contributions.length}件)
+        </h4>
       
       <div className="space-y-3">
         {contributions.map((contribution) => (
@@ -84,7 +91,20 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
                   {contribution.content.files.map((file, index) => (
                     <div key={index}>
                       {file.fileType === 'image' && (
-                        <div>
+                        <div 
+                          className="cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => {
+                            // この追記の全画像URLを収集
+                            const imageUrls = contribution.content.files
+                              .filter(f => f.fileType === 'image')
+                              .map(f => `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(f.filePath)}&v=${new Date(contribution.timestamp).getTime()}`);
+                            const currentIndex = contribution.content.files
+                              .filter(f => f.fileType === 'image')
+                              .findIndex(f => f.filePath === file.filePath);
+                            setCurrentImages(imageUrls);
+                            setCurrentImageIndex(currentIndex);
+                            setLightboxOpen(true);
+                          }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}&v=${new Date(contribution.timestamp).getTime()}`}
@@ -155,6 +175,16 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
           </div>
         ))}
       </div>
-    </div>
+      </div>
+
+      {/* 画像ライトボックス */}
+      <ImageLightbox
+        images={currentImages}
+        isOpen={lightboxOpen}
+        currentIndex={currentImageIndex}
+        onClose={() => setLightboxOpen(false)}
+        altText="追加投稿画像"
+      />
+    </>
   )
 }
