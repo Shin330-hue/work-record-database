@@ -206,12 +206,16 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
               ))
             ) : (
               /* 旧形式のデータ構造（後方互換性） */
-              step.qualityCheck.checkPoints && (
-                <div className="text-emerald-100 text-sm space-y-2">
-                  <div><span className="font-medium">確認項目:</span> {step.qualityCheck.checkPoints.join(', ')}</div>
-                  <div><span className="font-medium">検査工具:</span> {step.qualityCheck.inspectionTools?.join(', ')}</div>
-                </div>
-              )
+              (() => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const oldQualityCheck = step.qualityCheck as any;
+                return oldQualityCheck.checkPoints && (
+                  <div className="text-emerald-100 text-sm space-y-2">
+                    <div><span className="font-medium">確認項目:</span> {oldQualityCheck.checkPoints.join(', ')}</div>
+                    <div><span className="font-medium">検査工具:</span> {oldQualityCheck.inspectionTools?.join(', ')}</div>
+                  </div>
+                );
+              })()
             )}
           </div>
           

@@ -187,8 +187,11 @@ export function generateBasicInstruction(data: {
         timeRequired: `${prepTime}分`,
         warningLevel: "normal" as const,
         qualityCheck: {
-          checkPoints: ["材料の確認", "工具の状態確認", "機械の動作確認"],
-          inspectionTools: ["目視確認"]
+          items: [
+            { checkPoint: "材料の確認" },
+            { checkPoint: "工具の状態確認" },
+            { checkPoint: "機械の動作確認", inspectionTool: "目視確認" }
+          ]
         }
       },
       {
@@ -206,8 +209,11 @@ export function generateBasicInstruction(data: {
         timeRequired: `${Math.floor(processTime * 0.8)}分`,
         warningLevel: "important" as const,
         qualityCheck: {
-          checkPoints: ["加工寸法の確認", "表面状態の確認", "工具の状態確認"],
-          inspectionTools: ["ノギス", "マイクロメーター"]
+          items: [
+            { checkPoint: "加工寸法の確認", inspectionTool: "ノギス" },
+            { checkPoint: "表面状態の確認" },
+            { checkPoint: "工具の状態確認", inspectionTool: "マイクロメーター" }
+          ]
         }
       },
       {
@@ -225,8 +231,11 @@ export function generateBasicInstruction(data: {
         timeRequired: `${Math.ceil(processTime * 0.2)}分`,
         warningLevel: "normal" as const,
         qualityCheck: {
-          checkPoints: ["最終寸法", "表面仕上げ", "外観品質"],
-          inspectionTools: ["ノギス", "マイクロメーター", "表面粗さ計"]
+          items: [
+            { checkPoint: "最終寸法", inspectionTool: "ノギス" },
+            { checkPoint: "表面仕上げ", inspectionTool: "表面粗さ計" },
+            { checkPoint: "外観品質", inspectionTool: "マイクロメーター" }
+          ]
         }
       }
     ],

@@ -111,7 +111,7 @@ export class DataTransaction {
       if (Array.isArray(inputData.keywords)) {
         keywords = inputData.keywords
       } else if (typeof inputData.keywords === 'string') {
-        keywords = inputData.keywords.split(',').map(k => k.trim()).filter(k => k)
+        keywords = (inputData.keywords as string).split(',').map(k => k.trim()).filter(k => k)
       }
     }
     

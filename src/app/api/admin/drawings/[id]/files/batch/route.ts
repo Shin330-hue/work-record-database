@@ -182,8 +182,9 @@ async function updateInstructionFile(
   
   try {
     // 既存のinstruction.jsonを読み込み
-    // 動的なプロパティアクセスのため、型定義を緩和
-    let instruction: Record<string, unknown> = {}
+    // 動的なプロパティアクセスのため、anyを使用
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let instruction: any = {}
     if (existsSync(instructionPath)) {
       const content = await fs.readFile(instructionPath, 'utf-8')
       instruction = JSON.parse(content)
@@ -197,9 +198,9 @@ async function updateInstructionFile(
       if (!(instruction.overview as Record<string, unknown>)[fileType]) (instruction.overview as Record<string, unknown>)[fileType] = []
       
       // 既存のファイルリストに追加（重複を除く）
-      const existingFiles = new Set((instruction.overview as Record<string, string[]>)[fileType])
+      const existingFiles = new Set(instruction.overview[fileType])
       fileNames.forEach(fileName => existingFiles.add(fileName))
-      (instruction.overview as Record<string, string[]>)[fileType] = Array.from(existingFiles)
+      instruction.overview[fileType] = Array.from(existingFiles)
       
     } else {
       // workSteps の場合

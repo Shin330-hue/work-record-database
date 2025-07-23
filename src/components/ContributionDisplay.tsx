@@ -95,10 +95,10 @@ export default function ContributionDisplay({ contributions, drawingNumber }: Co
                           className="cursor-pointer hover:opacity-90 transition-opacity"
                           onClick={() => {
                             // この追記の全画像URLを収集
-                            const imageUrls = contribution.content.files
+                            const imageUrls = (contribution.content.files || [])
                               .filter(f => f.fileType === 'image')
                               .map(f => `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(f.filePath)}&v=${new Date(contribution.timestamp).getTime()}`);
-                            const currentIndex = contribution.content.files
+                            const currentIndex = (contribution.content.files || [])
                               .filter(f => f.fileType === 'image')
                               .findIndex(f => f.filePath === file.filePath);
                             setCurrentImages(imageUrls);
