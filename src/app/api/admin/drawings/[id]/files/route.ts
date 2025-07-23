@@ -125,7 +125,7 @@ export async function DELETE(
 
     try {
       await fs.unlink(filePath)
-    } catch (error) {
+    } catch {
       console.warn('ファイルが見つかりませんでした:', filePath)
     }
 

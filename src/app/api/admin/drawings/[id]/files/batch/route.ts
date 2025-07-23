@@ -182,24 +182,24 @@ async function updateInstructionFile(
   
   try {
     // 既存のinstruction.jsonを読み込み
-    let instruction: any = {}
+    // 動的なプロパティアクセスのため、型定義を緩和
+    let instruction: Record<string, unknown> = {}
     if (existsSync(instructionPath)) {
       const content = await fs.readFile(instructionPath, 'utf-8')
       instruction = JSON.parse(content)
     }
     
     // ファイルリストの更新
-    const stepKey = stepNumber === '0' ? 'overview' : `workSteps`
     
     if (stepNumber === '0') {
       // overview の場合
       if (!instruction.overview) instruction.overview = {}
-      if (!instruction.overview[fileType]) instruction.overview[fileType] = []
+      if (!(instruction.overview as Record<string, unknown>)[fileType]) (instruction.overview as Record<string, unknown>)[fileType] = []
       
       // 既存のファイルリストに追加（重複を除く）
-      const existingFiles = new Set(instruction.overview[fileType])
+      const existingFiles = new Set((instruction.overview as Record<string, string[]>)[fileType])
       fileNames.forEach(fileName => existingFiles.add(fileName))
-      instruction.overview[fileType] = Array.from(existingFiles)
+      (instruction.overview as Record<string, string[]>)[fileType] = Array.from(existingFiles)
       
     } else {
       // workSteps の場合

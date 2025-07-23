@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('')
@@ -41,7 +42,7 @@ export default function AdminLogin() {
       } else {
         setError('パスワードが正しくありません')
       }
-    } catch (err) {
+    } catch {
       setError('ログインエラーが発生しました')
     } finally {
       setIsLoading(false)
@@ -89,9 +90,9 @@ export default function AdminLogin() {
         </form>
         
         <div className="mt-6 text-center">
-          <a href="/" className="text-sm text-gray-600 hover:text-gray-800">
+          <Link href="/" className="text-sm text-gray-600 hover:text-gray-800">
             ← トップページに戻る
-          </a>
+          </Link>
         </div>
       </div>
     </div>

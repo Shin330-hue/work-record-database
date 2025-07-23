@@ -13,7 +13,7 @@ export default function AdminLayout({
 }) {
   const router = useRouter()
   const pathname = usePathname()
-  const [userInfo, setUserInfo] = useState<any>(null)
+  const [userInfo, setUserInfo] = useState<{ id: string; name: string } | null>(null)
 
   useEffect(() => {
     // ユーザー情報を取得

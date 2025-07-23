@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
-import { ImageLightbox } from '@/components/ImageLightbox'
 import { getAuthHeadersForFormData } from '@/lib/auth/client'
 
 // 図番データ型
@@ -368,14 +367,14 @@ export default function NewDrawingPage() {
       formData.append('drawings', JSON.stringify(drawingsData))
       
       // PDFファイルを追加（複数対応）
-      drawings.forEach((drawing, drawingIndex) => {
+      drawings.forEach((drawing) => {
         drawing.pdfFiles.forEach((file, fileIndex) => {
           formData.append(`pdf_${drawing.drawingNumber}_${fileIndex}`, file)
         })
       })
       
       // プログラムファイルを追加
-      drawings.forEach((drawing, drawingIndex) => {
+      drawings.forEach((drawing) => {
         drawing.programFiles.forEach((file, fileIndex) => {
           formData.append(`program_${drawing.drawingNumber}_${fileIndex}`, file)
         })

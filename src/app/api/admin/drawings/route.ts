@@ -3,7 +3,6 @@ import fs from 'fs'
 import path from 'path'
 import { 
   createDrawingDirectoryStructure, 
-  savePdfFile, 
   generateBasicInstruction, 
   saveInstructionFile,
   checkMultipleDrawingNumbers
@@ -15,7 +14,7 @@ import {
 } from '@/lib/dataTransaction'
 
 // 管理画面認証チェック
-export function checkAdminAuth(request: NextRequest): boolean {
+function checkAdminAuth(request: NextRequest): boolean {
   const adminEnabled = process.env.ADMIN_ENABLED === 'true'
   if (!adminEnabled) {
     return false
@@ -34,7 +33,7 @@ export function checkAdminAuth(request: NextRequest): boolean {
       const authFilePath = path.join(process.cwd(), process.env.AUTH_FILE_PATH || '')
       const authData = JSON.parse(fs.readFileSync(authFilePath, 'utf-8'))
       
-      return authData.passwords.some((user: any) => 
+      return authData.passwords.some((user: { password: string; enabled: boolean }) => 
         user.password === token && user.enabled
       )
     } catch (error) {

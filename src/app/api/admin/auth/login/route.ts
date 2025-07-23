@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         const authFilePath = path.join(process.cwd(), process.env.AUTH_FILE_PATH || '')
         const authData = JSON.parse(fs.readFileSync(authFilePath, 'utf-8'))
         
-        const user = authData.passwords.find((u: any) => 
+        const user = authData.passwords.find((u: { password: string; enabled: boolean; id: string; name: string }) => 
           u.password === password && u.enabled
         )
         

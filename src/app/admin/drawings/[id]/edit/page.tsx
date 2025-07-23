@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
-import { getAuthHeaders, getAuthHeadersForFormData } from '@/lib/auth/client'
 
 interface EditFormData {
   drawingNumber: string
@@ -199,6 +198,7 @@ export default function DrawingEdit() {
     if (formData && drawingNumber) {
       loadActualFiles(drawingNumber)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData, drawingNumber])
 
   // フォルダから実際のファイル一覧を取得する関数
@@ -660,7 +660,7 @@ export default function DrawingEdit() {
         
         if (result.errors && result.errors.length > 0) {
           // 部分的なエラーがある場合
-          const errorMessages = result.errors.map((e: any) => `${e.file}: ${e.error}`).join('\n')
+          const errorMessages = result.errors.map((e: { file: string; error: string }) => `${e.file}: ${e.error}`).join('\n')
           alert(`一部のファイルでエラーが発生しました:\n${errorMessages}`)
         }
       } else {
