@@ -8,6 +8,8 @@ import Link from 'next/link'
 import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
 import { ImageLightbox } from '@/components/ImageLightbox'
+import { getAuthHeadersForFormData, promptForPassword } from '@/lib/auth/client'
+import { AdminAuthCheck } from '@/components/AdminAuthCheck'
 
 // 図番データ型
 interface DrawingFormData {
@@ -382,9 +384,7 @@ export default function NewDrawingPage() {
       
       const response = await fetch('/api/admin/drawings', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123'}`
-        },
+        headers: getAuthHeadersForFormData(),
         body: formData
       })
       
@@ -404,7 +404,8 @@ export default function NewDrawingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <AdminAuthCheck>
+      <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
@@ -734,5 +735,6 @@ export default function NewDrawingPage() {
         </form>
       </main>
     </div>
+    </AdminAuthCheck>
   )
 }

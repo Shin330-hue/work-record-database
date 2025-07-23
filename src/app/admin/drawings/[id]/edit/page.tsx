@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
+import { getAuthHeaders, getAuthHeadersForFormData, promptForPassword } from '@/lib/auth/client'
 
 interface EditFormData {
   drawingNumber: string

@@ -6,8 +6,13 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { loadSearchIndex, loadCompanies } from '@/lib/dataLoader'
 import { loadRecentContributions } from '@/lib/dataLoader'
+import { AdminAuthCheck } from '@/components/AdminAuthCheck'
+import { clearAuthInfo, getAuthInfo } from '@/lib/auth/client'
+import { useRouter } from 'next/navigation'
 
 export default function AdminDashboard() {
+  const router = useRouter()
+  const [userInfo, setUserInfo] = useState<any>(null)
   const [stats, setStats] = useState({
     totalDrawings: 0,
     totalCompanies: 0,
@@ -22,6 +27,10 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // ユーザー情報を取得
+    const authData = getAuthInfo()
+    setUserInfo(authData)
+
     const loadData = async () => {
       try {
         const [searchIndex, companies, contributions] = await Promise.all([
@@ -48,19 +57,27 @@ export default function AdminDashboard() {
     loadData()
   }, [])
 
+  const handleLogout = () => {
+    clearAuthInfo()
+    router.push('/admin/login')
+  }
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">データを読み込んでいます...</p>
+      <AdminAuthCheck>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">データを読み込んでいます...</p>
+          </div>
         </div>
-      </div>
+      </AdminAuthCheck>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <AdminAuthCheck>
+      <div className="min-h-screen bg-gray-50">
       {/* ヘッダー */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,12 +85,25 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-bold text-gray-900">
               管理画面
             </h1>
-            <Link 
-              href="/" 
-              className="text-blue-600 hover:text-blue-800 font-medium"
-            >
-              ← メインサイトに戻る
-            </Link>
+            <div className="flex items-center space-x-6">
+              {userInfo && (
+                <div className="text-sm text-gray-600">
+                  ログイン中: <span className="font-medium text-gray-900">{userInfo.name}</span>
+                </div>
+              )}
+              <Link 
+                href="/" 
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                ← メインサイトに戻る
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="text-red-600 hover:text-red-800 font-medium"
+              >
+                ログアウト
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -183,5 +213,6 @@ export default function AdminDashboard() {
         )}
       </main>
     </div>
+    </AdminAuthCheck>
   )
 }

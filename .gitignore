@@ -64,6 +64,7 @@ nas-config.env
 # 認証情報を含むファイル
 **/credentials/
 **/secrets/
+public/data/auth/passwords.json
 
 # IPアドレスや設定情報を含むファイル
 **/config/production/

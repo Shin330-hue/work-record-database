@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
+import path from 'path'
 import { 
   createDrawingDirectoryStructure, 
   savePdfFile, 
@@ -13,21 +15,36 @@ import {
 } from '@/lib/dataTransaction'
 
 // 管理画面認証チェック
-function checkAdminAuth(request: NextRequest): boolean {
-  const adminPassword = process.env.ADMIN_PASSWORD
+export function checkAdminAuth(request: NextRequest): boolean {
   const adminEnabled = process.env.ADMIN_ENABLED === 'true'
-  
   if (!adminEnabled) {
     return false
   }
-  
-  // 簡単な認証チェック（将来的にはセッション管理等に変更）
+
   const authHeader = request.headers.get('authorization')
-  if (!authHeader || !adminPassword) {
+  if (!authHeader) {
     return false
   }
-  
+
   const token = authHeader.replace('Bearer ', '')
+  
+  // 外部ファイル認証を使用する場合
+  if (process.env.USE_FILE_AUTH === 'true') {
+    try {
+      const authFilePath = path.join(process.cwd(), process.env.AUTH_FILE_PATH || '')
+      const authData = JSON.parse(fs.readFileSync(authFilePath, 'utf-8'))
+      
+      return authData.passwords.some((user: any) => 
+        user.password === token && user.enabled
+      )
+    } catch (error) {
+      console.error('認証ファイル読み込みエラー:', error)
+      return false
+    }
+  }
+  
+  // 従来の環境変数認証
+  const adminPassword = process.env.ADMIN_PASSWORD
   return token === adminPassword
 }
 
