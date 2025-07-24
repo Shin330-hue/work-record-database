@@ -839,6 +839,8 @@ a[href$=".pdf"]:visited {
   touch-action: manipulation;
   user-select: none;
   text-decoration: none; /* リンク対応 */
+  width: auto;
+  max-width: 640px;
 }
 
 .custom-rect-button:hover {
@@ -886,6 +888,7 @@ a[href$=".pdf"]:visited {
 /* カスタムフォーム要素 */
 .custom-form-textarea {
   width: 100%;
+  max-width: 640px;
   padding: 20px;
   border: 2px solid #d1d5db;
   border-radius: 12px;
@@ -904,6 +907,7 @@ a[href$=".pdf"]:visited {
 
 .custom-form-input {
   width: 100%;
+  max-width: 640px;
   padding: 16px 20px;
   border: 2px solid #d1d5db;
   border-radius: 12px;
@@ -919,6 +923,7 @@ a[href$=".pdf"]:visited {
 
 .custom-form-select {
   width: 100%;
+  max-width: 640px;
   padding: 16px 20px;
   border: 2px solid #d1d5db;
   border-radius: 12px;
@@ -936,6 +941,7 @@ a[href$=".pdf"]:visited {
 /* ファイル選択ボタン */
 .custom-file-input {
   width: 100%;
+  max-width: 640px;
   padding: 16px 20px;
   border: 2px dashed #3b82f6;
   border-radius: 12px;
@@ -974,6 +980,59 @@ a[href$=".pdf"]:visited {
 .custom-file-input::file-selector-button:hover {
   background: linear-gradient(to right, #2563eb, #1e40af);
   transform: scale(1.02);
+}
+
+/* フォームラベルのカスタムスタイル */
+.custom-form-label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 8px;
+}
+
+/* カスタムドロップダウン */
+.custom-dropdown {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  max-width: 640px;
+  margin-top: 4px;
+  background-color: #1f2937;
+  border: 2px solid #374151;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.custom-dropdown-item {
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
+  color: white;
+  font-size: 1.1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.custom-dropdown-item:hover {
+  background-color: #374151;
+}
+
+.custom-dropdown-item:focus {
+  background-color: #374151;
+  outline: none;
+}
+
+.custom-dropdown-divider {
+  border-top: 1px solid #4b5563;
+}
+
+.custom-dropdown-item.highlight {
+  color: #60a5fa;
 }
 
 /* ライトボックス用のカスタムスタイル */

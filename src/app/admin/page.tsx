@@ -3,11 +3,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { loadSearchIndex, loadCompanies } from '@/lib/dataLoader'
 import { loadRecentContributions } from '@/lib/dataLoader'
+import { LoadingSpinner } from '@/components/admin/feedback'
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const [stats, setStats] = useState({
     totalDrawings: 0,
     totalCompanies: 0,
@@ -51,36 +53,33 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">データを読み込んでいます...</p>
-        </div>
+        <LoadingSpinner size="large" message="データを読み込んでいます..." />
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* ページタイトル */}
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">ダッシュボード</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">【管理画面ダッシュボード】</h1>
 
       {/* 統計情報 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">総図番数</h3>
-            <p className="text-3xl font-bold text-blue-600">{stats.totalDrawings}</p>
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow text-center border-2 border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">【総図番数】</h3>
+            <p className="text-3xl font-bold text-blue-600">{stats.totalDrawings.toLocaleString()}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">会社数</h3>
-            <p className="text-3xl font-bold text-green-600">{stats.totalCompanies}</p>
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow text-center border-2 border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">【会社数】</h3>
+            <p className="text-3xl font-bold text-green-600">{stats.totalCompanies.toLocaleString()}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">製品数</h3>
-            <p className="text-3xl font-bold text-yellow-600">{stats.totalProducts}</p>
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow text-center border-2 border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">【製品数】</h3>
+            <p className="text-3xl font-bold text-yellow-600">{stats.totalProducts.toLocaleString()}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">最新追記</h3>
-            <p className="text-3xl font-bold text-purple-600">{stats.totalContributions}</p>
+          <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow text-center border-2 border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">【最新追記】</h3>
+            <p className="text-3xl font-bold text-purple-600">{stats.totalContributions.toLocaleString()}</p>
           </div>
         </div>
 
@@ -89,20 +88,20 @@ export default function AdminDashboard() {
           {/* 図番管理 */}
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">図番管理</h2>
-              <div className="space-y-3">
-                <Link 
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">【図番管理】</h2>
+              <div className="space-y-4 flex flex-col items-center">
+                <a 
                   href="/admin/drawings/new"
-                  className="block w-full bg-blue-600 text-white text-center py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="custom-rect-button blue"
                 >
-                  📋 新規図番登録
-                </Link>
-                <Link 
+                  <span>新規図番登録</span>
+                </a>
+                <a 
                   href="/admin/drawings/list"
-                  className="block w-full bg-gray-600 text-white text-center py-3 px-4 rounded-lg hover:bg-gray-700 transition-colors font-medium"
+                  className="custom-rect-button gray"
                 >
-                  📚 図番一覧・編集
-                </Link>
+                  <span>図番一覧・編集</span>
+                </a>
               </div>
             </div>
           </div>
@@ -110,26 +109,26 @@ export default function AdminDashboard() {
           {/* データ管理 */}
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">データ管理</h2>
-              <div className="space-y-3">
-                <Link 
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">【データ管理】</h2>
+              <div className="space-y-4 flex flex-col items-center">
+                <a 
                   href="/admin/companies"
-                  className="block w-full bg-green-600 text-white text-center py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium"
+                  className="custom-rect-button emerald"
                 >
-                  🏢 会社・製品管理
-                </Link>
-                <Link 
+                  <span>会社・製品管理</span>
+                </a>
+                <a 
                   href="/admin/contributions"
-                  className="block w-full bg-purple-600 text-white text-center py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                  className="custom-rect-button purple"
                 >
-                  💬 追記管理
-                </Link>
-                <Link 
+                  <span>追記管理</span>
+                </a>
+                <a 
                   href="/admin/tools/validate"
-                  className="block w-full bg-yellow-600 text-white text-center py-3 px-4 rounded-lg hover:bg-yellow-700 transition-colors font-medium"
+                  className="custom-rect-button gray"
                 >
-                  🔍 データ整合性チェック
-                </Link>
+                  <span>データ整合性チェック</span>
+                </a>
               </div>
             </div>
           </div>
@@ -137,31 +136,74 @@ export default function AdminDashboard() {
 
         {/* 最新追記 */}
         {recentContributions.length > 0 && (
-          <div className="mt-8 bg-white rounded-lg shadow">
-            <div className="p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">最新追記</h2>
+          <div className="mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-emerald-500/20">
+            <div>
+              <h2 className="text-xl font-bold text-emerald-100 mb-4 flex items-center justify-center gap-2">
+                📋 【最新の追記】
+                <span className="text-sm font-normal text-emerald-200/70">({recentContributions.length}件)</span>
+              </h2>
               <div className="space-y-3">
                 {recentContributions.map((item, index) => (
-                  <div key={index} className="border-l-4 border-blue-500 pl-4 py-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <Link 
-                          href={`/instruction/${item.drawingNumber}`}
-                          className="text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                          {item.drawingNumber}
-                        </Link>
-                        <p className="text-sm text-gray-600">{item.drawingTitle}</p>
+                  <div 
+                    key={index}
+                    className="bg-black/40 rounded-xl p-4 border border-emerald-500/30 hover:bg-black/50 transition-colors cursor-pointer"
+                    onClick={() => router.push(`/instruction/${item.drawingNumber}`)}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg">
+                          {item.contribution.type === 'comment' ? '💬' :
+                           item.contribution.type === 'image' ? '📷' :
+                           item.contribution.type === 'video' ? '🎥' :
+                           item.contribution.type === 'nearmiss' ? '⚠️' :
+                           item.contribution.type === 'troubleshoot' ? '🔧' : '📝'}
+                        </span>
+                        <div>
+                          <div className="text-emerald-300 font-mono text-sm">
+                            {item.drawingNumber}
+                          </div>
+                          {item.drawingTitle && (
+                            <div className="text-emerald-200/80 text-xs">
+                              {item.drawingTitle}
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">{item.contribution.userName}</p>
-                        <p className="text-xs text-gray-400">
-                          {new Date(item.contribution.timestamp).toLocaleDateString()}
-                        </p>
+                        <div className="text-xs text-emerald-400 font-medium">
+                          {item.contribution.type === 'comment' ? 'コメント' :
+                           item.contribution.type === 'image' ? '画像追加' :
+                           item.contribution.type === 'video' ? '動画追加' :
+                           item.contribution.type === 'nearmiss' ? 'ヒヤリハット' :
+                           item.contribution.type === 'troubleshoot' ? 'トラブル対策' : '追記'}
+                        </div>
+                        <div className="text-xs text-emerald-200/60">
+                          {new Date(item.contribution.timestamp).toLocaleDateString('ja-JP')}
+                        </div>
                       </div>
                     </div>
+                    <div className="text-emerald-100 text-sm mb-1">
+                      by {item.contribution.userName}
+                    </div>
+                    {item.contribution.content?.text && (
+                      <div className="text-emerald-200/80 text-sm line-clamp-2">
+                        {item.contribution.content.text}
+                      </div>
+                    )}
+                    {item.contribution.targetSection === 'step' && item.contribution.stepNumber && (
+                      <div className="text-emerald-300/60 text-xs mt-1">
+                        ステップ {item.contribution.stepNumber} への追記
+                      </div>
+                    )}
                   </div>
                 ))}
+              </div>
+              
+              <div className="mt-6 text-center">
+                <a href="/admin/contributions" className="custom-rect-button blue">
+                  <span>全ての追記を見る</span>
+                  <span>→</span>
+                </a>
               </div>
             </div>
           </div>

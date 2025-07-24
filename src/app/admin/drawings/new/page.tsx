@@ -4,10 +4,10 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
 import { getAuthHeadersForFormData } from '@/lib/auth/client'
+import { FormButton, FormTextarea, FormSelect } from '@/components/admin/forms'
 
 // 図番データ型
 interface DrawingFormData {
@@ -73,7 +73,7 @@ function CompanySelector({
 
   return (
     <div className="relative">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="custom-form-label">
         会社名 <span className="text-red-500">*</span>
       </label>
       <div className="relative">
@@ -91,20 +91,21 @@ function CompanySelector({
           }}
           onFocus={() => !isNewMode && setShowDropdown(true)}
           onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
-          placeholder="会社名を入力または選択"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="会社名を選択または新規作成"
+          className="custom-form-input"
         />
-        
+      </div>
+      
+      <div className="mt-3">
         {!isNewMode && (
           <button
             type="button"
             onClick={() => setIsNewMode(true)}
-            className="absolute right-2 top-2 text-sm text-blue-600 hover:text-blue-800"
+            className="custom-rect-button emerald small"
           >
-            新規作成
+            <span>+ 新規会社を作成</span>
           </button>
         )}
-        
         {isNewMode && (
           <button
             type="button"
@@ -113,21 +114,21 @@ function CompanySelector({
               setSearchTerm('')
               setShowDropdown(true)
             }}
-            className="absolute right-2 top-2 text-sm text-gray-600 hover:text-gray-800"
+            className="custom-rect-button gray small"
           >
-            既存選択
+            <span>既存会社を選択</span>
           </button>
         )}
       </div>
 
       {showDropdown && !isNewMode && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+        <div className="custom-dropdown">
           {filteredCompanies.map((company) => (
             <button
               key={company.id}
               type="button"
               onClick={() => handleCompanySelect(company)}
-              className="w-full text-left px-3 py-2 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+              className="custom-dropdown-item"
             >
               {company.name}
             </button>
@@ -137,7 +138,7 @@ function CompanySelector({
             <button
               type="button"
               onClick={handleNewCompany}
-              className="w-full text-left px-3 py-2 text-blue-600 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none border-t border-gray-200"
+              className="custom-dropdown-item highlight custom-dropdown-divider"
             >
               + 「{searchTerm}」を新規作成
             </button>
@@ -148,7 +149,7 @@ function CompanySelector({
       {isNewMode && (
         <div className="mt-3 space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="custom-form-label">
               会社ID <span className="text-red-500">*</span>
             </label>
             <input
@@ -157,13 +158,13 @@ function CompanySelector({
               onChange={(e) => onChange({ ...value, id: e.target.value })}
               placeholder="例: kouwa-engineering"
               pattern="^[a-z0-9-]+$"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="custom-form-input"
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-400">
               英数字とハイフンのみ使用可能（例: kouwa-engineering）
             </p>
           </div>
-          <p className="text-sm text-blue-600">
+          <p className="text-sm text-blue-400">
             新規会社として登録されます
           </p>
         </div>
@@ -403,15 +404,15 @@ export default function NewDrawingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">新規図番登録</h1>
+      <main className="flex justify-center px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-full max-w-2xl">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">【新規図番登録】</h1>
         <form onSubmit={handleSubmit} className="space-y-8">
           {drawings.map((drawing, index) => (
-            <div key={index} className="bg-white rounded-lg shadow p-6">
+            <div key={index} className="bg-white rounded-lg shadow p-6 border-2 border-gray-200">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  図番 {index + 1}
+                  ＜図番 {index + 1}＞
                 </h2>
                 {drawings.length > 1 && (
                   <button
@@ -424,17 +425,19 @@ export default function NewDrawingPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
                 {/* 1. 会社名 */}
-                <CompanySelector
-                  companies={companies}
-                  value={drawing.company}
-                  onChange={(company) => updateDrawingCompany(index, company)}
-                />
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <CompanySelector
+                    companies={companies}
+                    value={drawing.company}
+                    onChange={(company) => updateDrawingCompany(index, company)}
+                  />
+                </div>
 
                 {/* 2. 図番 */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     図番 <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -442,13 +445,13 @@ export default function NewDrawingPage() {
                     value={drawing.drawingNumber}
                     onChange={(e) => updateDrawing(index, 'drawingNumber', e.target.value)}
                     placeholder="ABC123"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="custom-form-input"
                   />
                 </div>
 
                 {/* 3. 図面PDF（複数対応） */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     図面PDF（複数可）
                   </label>
                   <input
@@ -456,7 +459,7 @@ export default function NewDrawingPage() {
                     accept=".pdf"
                     multiple
                     onChange={(e) => updatePdfFiles(index, e.target.files)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="custom-file-input"
                   />
                   {drawing.pdfFiles.length > 0 && (
                     <div className="mt-2 text-sm text-gray-600">
@@ -466,16 +469,16 @@ export default function NewDrawingPage() {
                 </div>
 
                 {/* 4. プログラムファイル */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     プログラムファイル（複数可）
                   </label>
                   <input
                     type="file"
-                    accept=".nc,.txt,.tap,.pgm,.mpf,.ptp,.gcode,.cnc,.min,.eia"
+                    accept=".nc,.min,.dxf,.dwg,.mcam,.txt"
                     multiple
                     onChange={(e) => updateProgramFiles(index, e.target.files)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="custom-file-input"
                   />
                   {drawing.programFiles.length > 0 && (
                     <div className="mt-2 text-sm text-gray-600">
@@ -483,13 +486,13 @@ export default function NewDrawingPage() {
                     </div>
                   )}
                   <p className="mt-1 text-xs text-gray-500">
-                    NCプログラム、Gコード等の加工プログラムファイル
+                    NCプログラム、dxfファイルなど図面データ
                   </p>
                 </div>
 
                 {/* 5. 製品カテゴリ */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     製品カテゴリ <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -498,7 +501,7 @@ export default function NewDrawingPage() {
                       value={drawing.product.category}
                       onChange={(e) => updateDrawingProduct(index, { ...drawing.product, category: e.target.value })}
                       placeholder="ブラケット、カバー、シャフト等"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="custom-form-input"
                       list="categories-list"
                     />
                     <datalist id="categories-list">
@@ -514,8 +517,8 @@ export default function NewDrawingPage() {
                 </div>
 
                 {/* 5. 製品名（名称やあだ名） */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     製品名 <span className="text-red-500">*</span>
                     <span className="text-sm text-gray-500">（名称やあだ名）</span>
                   </label>
@@ -523,14 +526,14 @@ export default function NewDrawingPage() {
                     type="text"
                     value={drawing.product.name}
                     onChange={(e) => updateDrawingProduct(index, { ...drawing.product, name: e.target.value })}
-                    placeholder="チェーンソー、カバー、シャフト等"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="チェーンソー、ステンレスケーシング、スタンド（L or R）等"
+                    className="custom-form-input"
                   />
                 </div>
 
                 {/* 6. 作業手順タイトル */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     作業手順タイトル <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -538,7 +541,7 @@ export default function NewDrawingPage() {
                     value={drawing.title}
                     onChange={(e) => updateDrawing(index, 'title', e.target.value)}
                     placeholder="例：ブラケット（チェーンソー）加工手順"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="custom-form-input"
                   />
                   <p className="mt-1 text-sm text-gray-500">
                     自動生成: {drawing.product.category && drawing.product.name ? 
@@ -560,24 +563,24 @@ export default function NewDrawingPage() {
                 </div>
 
                 {/* 7. 難易度 */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     難易度 <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <FormSelect
                     value={drawing.difficulty}
                     onChange={(e) => updateDrawing(index, 'difficulty', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="初級">初級</option>
-                    <option value="中級">中級</option>
-                    <option value="上級">上級</option>
-                  </select>
+                    options={[
+                      { value: '初級', label: '初級' },
+                      { value: '中級', label: '中級' },
+                      { value: '上級', label: '上級' }
+                    ]}
+                  />
                 </div>
 
                 {/* 8. 推定時間 */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     推定時間 <span className="text-red-500">*</span>
                   </label>
                   <div className="flex items-center space-x-2">
@@ -586,24 +589,24 @@ export default function NewDrawingPage() {
                       value={drawing.estimatedTime}
                       onChange={(e) => updateDrawing(index, 'estimatedTime', e.target.value)}
                       min="1"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="custom-form-input"
                     />
                     <span className="text-gray-500">分</span>
                   </div>
                 </div>
 
                 {/* 9. 機械種別 */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
                     機械種別 <span className="text-red-500">*</span>
                   </label>
-                  <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+                  <div className="flex flex-wrap gap-4">
                     {['マシニング', 'ターニング', '横中', 'ラジアル', 'フライス'].map((machine) => {
                       const machineTypes = drawing.machineType.split(',').map(s => s.trim()).filter(s => s)
                       const isChecked = machineTypes.includes(machine)
                       
                       return (
-                        <label key={machine} className="flex items-center">
+                        <label key={machine} className="flex items-center cursor-pointer">
                           <input
                             type="checkbox"
                             checked={isChecked}
@@ -619,9 +622,9 @@ export default function NewDrawingPage() {
                               
                               updateDrawing(index, 'machineType', newTypes.join(','))
                             }}
-                            className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            className="mr-2 h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
                           />
-                          <span className="text-sm text-gray-700">{machine}</span>
+                          <span style={{ fontSize: '1.25rem' }} className="font-medium text-white">{machine}</span>
                         </label>
                       )
                     })}
@@ -635,30 +638,30 @@ export default function NewDrawingPage() {
               {/* 説明・キーワード */}
               <div className="mt-6 space-y-4">
                 {/* 10. 説明 */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2">
+                  <label className="custom-form-label">
                     説明（任意）
                   </label>
-                  <textarea
-                    value={drawing.description}
+                  <FormTextarea
+                    value={drawing.description || ''}
                     onChange={(e) => updateDrawing(index, 'description', e.target.value)}
                     rows={3}
                     placeholder="作業の概要や注意点など"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    name={`description-${index}`}
                   />
                 </div>
 
                 {/* 11. 検索キーワード */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="space-y-2">
+                  <label className="custom-form-label">
                     検索キーワード（任意）
                   </label>
                   <input
                     type="text"
-                    value={drawing.keywords}
+                    value={drawing.keywords || ''}
                     onChange={(e) => updateDrawing(index, 'keywords', e.target.value)}
                     placeholder="カンマ区切りでキーワードを入力"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="custom-form-input"
                   />
                   <p className="mt-1 text-sm text-gray-500">
                     自動生成: {generateAutoKeywords(drawing, companies)}
@@ -686,9 +689,9 @@ export default function NewDrawingPage() {
             <button
               type="button"
               onClick={addDrawing}
-              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
+              className="custom-rect-button emerald"
             >
-              + 図番を追加
+              <span>+ 図番を追加</span>
             </button>
           </div>
 
@@ -701,21 +704,23 @@ export default function NewDrawingPage() {
 
           {/* 登録ボタン */}
           <div className="flex justify-center space-x-4">
-            <Link
+            <a
               href="/admin"
-              className="bg-gray-500 text-white px-8 py-3 rounded-lg hover:bg-gray-600 transition-colors font-medium"
+              className="custom-rect-button gray"
             >
-              キャンセル
-            </Link>
-            <button
+              <span>キャンセル</span>
+            </a>
+            <FormButton
               type="submit"
               disabled={loading}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              loading={loading}
+              variant="blue"
             >
               {loading ? '登録中...' : `${drawings.length}件の図番を登録`}
-            </button>
+            </FormButton>
           </div>
         </form>
+        </div>
       </main>
     </div>
   )
