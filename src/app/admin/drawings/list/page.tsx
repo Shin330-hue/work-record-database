@@ -5,6 +5,10 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { loadSearchIndex, loadContributions } from '@/lib/dataLoader'
+import { FormInput } from '@/components/admin/forms/FormInput'
+import { FormButton } from '@/components/admin/forms/FormButton'
+import { FormSelect } from '@/components/admin/forms/FormSelect'
+import { LoadingSpinner } from '@/components/admin/feedback/LoadingSpinner'
 
 interface DrawingWithContributions {
   drawingNumber: string
@@ -157,10 +161,7 @@ export default function DrawingsList() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">図番データを読み込んでいます...</p>
-        </div>
+        <LoadingSpinner size="large" message="図番データを読み込んでいます..." />
       </div>
     )
   }
@@ -170,10 +171,10 @@ export default function DrawingsList() {
     if (!hasSearched) {
       // 検索前の状態
       return (
-        <div className="bg-white rounded-lg shadow p-4 text-center">
+        <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
           <div className="text-gray-500">
-            <h3 className="text-base font-medium text-gray-900 mb-2">検索条件を指定してください</h3>
-            <p className="text-sm text-gray-600">図番・製品名または会社を選択して検索ボタンを押してください。<br />Enterキーでも検索できます。</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-3">検索条件を指定してください</h3>
+            <p className="text-base text-gray-600">図番・製品名または会社を選択して検索ボタンを押してください。<br />Enterキーでも検索できます。</p>
           </div>
         </div>
       )
@@ -182,10 +183,10 @@ export default function DrawingsList() {
     if (filteredDrawings.length === 0) {
       // 検索結果が0件の場合
       return (
-        <div className="bg-white rounded-lg shadow p-4 text-center">
+        <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
           <div className="text-gray-500">
-            <h3 className="text-base font-medium text-gray-900 mb-2">検索結果が見つかりませんでした</h3>
-            <p className="text-sm text-gray-600">別の検索条件で再度お試しください。</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-3">検索結果が見つかりませんでした</h3>
+            <p className="text-base text-gray-600">別の検索条件で再度お試しください。</p>
           </div>
         </div>
       )
@@ -193,38 +194,38 @@ export default function DrawingsList() {
 
     // 検索結果がある場合のテーブル表示
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-white">
         <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
+          <table className="min-w-full border-collapse border border-white">
+            <thead className="bg-gray-50 border-b-2 border-white">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
                   図番
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
                   会社・製品
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
                   難易度
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
                   時間
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
                   機械種別
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
                   追記情報
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
                   操作
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-white">
               {currentDrawings.map((drawing) => (
-                <tr key={drawing.drawingNumber} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <tr key={drawing.drawingNumber} className="hover:bg-gray-50 border-b border-white">
+                  <td className="px-6 py-4 whitespace-nowrap border-r border-white">
                     <div className="text-sm font-medium text-gray-900">
                       {drawing.drawingNumber}
                     </div>
@@ -232,7 +233,7 @@ export default function DrawingsList() {
                       {drawing.title}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap border-r border-white">
                     <div className="text-sm text-gray-900">
                       {drawing.companyName}
                     </div>
@@ -240,8 +241,8 @@ export default function DrawingsList() {
                       {drawing.category} - {drawing.productName}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                  <td className="px-6 py-4 whitespace-nowrap border-r border-white">
+                    <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-lg ${
                       drawing.difficulty === '初級' ? 'bg-green-100 text-green-800' :
                       drawing.difficulty === '中級' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-red-100 text-red-800'
@@ -249,15 +250,15 @@ export default function DrawingsList() {
                       {drawing.difficulty}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-r border-white">
                     {drawing.estimatedTime}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-r border-white">
                     <div className="max-w-32 truncate" title={drawing.machineType}>
                       {drawing.machineType.split(',').map(type => type.trim()).join(', ')}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap border-r border-white">
                     <div className="text-sm text-gray-900">
                       {drawing.contributionsCount > 0 ? (
                         <div>
@@ -282,13 +283,13 @@ export default function DrawingsList() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                     <Link
                       href={`/instruction/${drawing.drawingNumber}`}
-                      className="text-blue-600 hover:text-blue-900"
+                      className="text-blue-600 hover:text-blue-900 font-medium"
                     >
                       表示
                     </Link>
                     <Link
                       href={`/admin/drawings/${drawing.drawingNumber}/edit`}
-                      className="text-indigo-600 hover:text-indigo-900"
+                      className="text-indigo-600 hover:text-indigo-900 font-medium"
                     >
                       編集
                     </Link>
@@ -303,20 +304,22 @@ export default function DrawingsList() {
         {totalPages > 1 && (
           <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200">
             <div className="flex-1 flex justify-between sm:hidden">
-              <button
+              <FormButton
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                variant="gray"
+                size="small"
               >
                 前へ
-              </button>
-              <button
+              </FormButton>
+              <FormButton
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                variant="gray"
+                size="small"
               >
                 次へ
-              </button>
+              </FormButton>
             </div>
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
@@ -331,13 +334,14 @@ export default function DrawingsList() {
               </div>
               <div>
                 <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                  <button
+                  <FormButton
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
-                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                    variant="gray"
+                    size="small"
                   >
                     前へ
-                  </button>
+                  </FormButton>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                     <button
                       key={page}
@@ -351,13 +355,14 @@ export default function DrawingsList() {
                       {page}
                     </button>
                   ))}
-                  <button
+                  <FormButton
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
-                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                    variant="gray"
+                    size="small"
                   >
                     次へ
-                  </button>
+                  </FormButton>
                 </nav>
               </div>
             </div>
@@ -368,74 +373,52 @@ export default function DrawingsList() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ヘッダー */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              図番一覧管理
-            </h1>
-            <div className="flex space-x-4">
-              <Link 
-                href="/admin/drawings/new"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium"
-              >
-                📋 新規図番登録
-              </Link>
-              <Link 
-                href="/admin" 
-                className="text-blue-600 hover:text-blue-800 font-medium"
-              >
-                ← 管理画面に戻る
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 検索・フィルタエリア */}
-        <div className="bg-white p-6 rounded-lg shadow mb-6">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* ページタイトル */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">図番一覧管理</h1>
+      </div>
+      
+      {/* 検索・フィルタエリア */}
+      <div className="bg-white p-6 rounded-2xl shadow-sm mb-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                図番・製品名検索
-              </label>
-              <input
-                type="text"
+              <FormInput
+                label="図番・製品名検索"
+                name="search"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="図番または製品名を入力..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={searching}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                会社フィルタ
-              </label>
-              <select
+              <FormSelect
+                label="会社フィルタ"
+                name="company"
                 value={companyFilter}
                 onChange={(e) => setCompanyFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={searching}
-              >
-                <option value="">すべての会社</option>
-                {companies.map(company => (
-                  <option key={company} value={company}>{company}</option>
-                ))}
-              </select>
+                options={[
+                  { value: '', label: 'すべての会社' },
+                  ...companies.map(company => ({
+                    value: company,
+                    label: company
+                  }))
+                ]}
+              />
             </div>
             <div className="flex items-end">
-              <button
+              <FormButton
                 onClick={executeSearch}
                 disabled={searching}
-                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
+                loading={searching}
+                variant="blue"
+                fullWidth
               >
                 {searching ? '検索中...' : '🔍 検索実行'}
-              </button>
+              </FormButton>
             </div>
             <div className="flex items-end">
               <div className="text-sm text-gray-600">
@@ -453,9 +436,8 @@ export default function DrawingsList() {
           </div>
         </div>
 
-        {/* 図番一覧テーブル */}
-        {renderContent()}
-      </main>
+      {/* 図番一覧テーブル */}
+      {renderContent()}
     </div>
   )
 }

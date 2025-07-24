@@ -8,6 +8,7 @@ interface FormInputProps {
   type?: 'text' | 'email' | 'password' | 'number'
   value: string | number
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   placeholder?: string
   error?: string
   required?: boolean
@@ -25,6 +26,7 @@ export const FormInput: React.FC<FormInputProps> = ({
   type = 'text',
   value,
   onChange,
+  onKeyPress,
   placeholder,
   error,
   required = false,
@@ -49,6 +51,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         type={type}
         value={value}
         onChange={onChange}
+        onKeyPress={onKeyPress}
         placeholder={placeholder}
         required={required}
         disabled={disabled}

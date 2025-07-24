@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { AdminAuthCheck } from '@/components/AdminAuthCheck'
 import { getAuthInfo, clearAuthInfo } from '@/lib/auth/client'
+import { FormButton } from '@/components/admin/forms/FormButton'
 
 export default function AdminLayout({
   children,
@@ -36,12 +37,12 @@ export default function AdminLayout({
       <div className="min-h-screen bg-gray-50">
         {/* 共通ヘッダー */}
         <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div className="flex items-center space-x-6">
                 <Link 
                   href="/admin"
-                  className="text-xl font-bold text-gray-900 hover:text-gray-700"
+                  className="custom-rect-button gray !text-xl !font-bold !text-gray-900 hover:!text-gray-700"
                 >
                   管理画面
                 </Link>
@@ -50,20 +51,20 @@ export default function AdminLayout({
                 <nav className="hidden md:flex space-x-4">
                   <Link
                     href="/admin/drawings/new"
-                    className={`text-sm font-medium ${
+                    className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
                       pathname === '/admin/drawings/new' 
-                        ? 'text-blue-600' 
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-blue-100 text-blue-700' 
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
                     新規登録
                   </Link>
                   <Link
                     href="/admin/drawings/list"
-                    className={`text-sm font-medium ${
+                    className={`text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
                       pathname === '/admin/drawings/list' 
-                        ? 'text-blue-600' 
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-blue-100 text-blue-700' 
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
                     図番一覧
@@ -71,24 +72,27 @@ export default function AdminLayout({
                 </nav>
               </div>
 
-              <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-4">
                 {userInfo && (
                   <div className="text-sm text-gray-600">
                     ログイン中: <span className="font-medium text-gray-900">{userInfo.name}</span>
                   </div>
                 )}
-                <Link 
-                  href="/" 
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                <FormButton
+                  onClick={() => router.push('/')}
+                  variant="gray"
+                  size="small"
                 >
                   ← メインサイト
-                </Link>
-                <button
+                </FormButton>
+                <FormButton
                   onClick={handleLogout}
-                  className="text-sm text-red-600 hover:text-red-800 font-medium"
+                  variant="gray"
+                  size="small"
+                  className="!bg-red-600 hover:!bg-red-700"
                 >
                   ログアウト
-                </button>
+                </FormButton>
               </div>
             </div>
           </div>
