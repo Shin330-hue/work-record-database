@@ -13,39 +13,6 @@ import {
   NewDrawingData
 } from '@/lib/dataTransaction'
 
-// 管理画面認証チェック
-function checkAdminAuth(request: NextRequest): boolean {
-  const adminEnabled = process.env.ADMIN_ENABLED === 'true'
-  if (!adminEnabled) {
-    return false
-  }
-
-  const authHeader = request.headers.get('authorization')
-  if (!authHeader) {
-    return false
-  }
-
-  const token = authHeader.replace('Bearer ', '')
-  
-  // 外部ファイル認証を使用する場合
-  if (process.env.USE_FILE_AUTH === 'true') {
-    try {
-      const authFilePath = path.join(process.cwd(), process.env.AUTH_FILE_PATH || '')
-      const authData = JSON.parse(fs.readFileSync(authFilePath, 'utf-8'))
-      
-      return authData.passwords.some((user: { password: string; enabled: boolean }) => 
-        user.password === token && user.enabled
-      )
-    } catch (error) {
-      console.error('認証ファイル読み込みエラー:', error)
-      return false
-    }
-  }
-  
-  // 従来の環境変数認証
-  const adminPassword = process.env.ADMIN_PASSWORD
-  return token === adminPassword
-}
 
 // 入力データバリデーション
 function validateDrawingData(data: NewDrawingData): { valid: boolean; errors: string[] } {
@@ -134,13 +101,7 @@ function validateMultipleDrawingInputs(drawings: NewDrawingData[]): { valid: boo
 // POST: 新規図番登録
 export async function POST(request: NextRequest) {
   try {
-    // 管理画面認証チェック
-    if (!checkAdminAuth(request)) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      )
-    }
+    // 認証チェックは画面側で実施済みのため、API側では不要
     
     const formData = await request.formData()
     const drawingsDataStr = formData.get('drawings') as string
@@ -239,6 +200,15 @@ export async function POST(request: NextRequest) {
             // 検索インデックスのPDFフラグ更新
             const transaction = new DataTransaction()
             await transaction.updateSearchIndexForPdf(processedData.drawingNumber)
+          } else {
+            // エラーの詳細をログ出力
+            const errorText = await uploadResponse.text()
+            console.error(`PDFアップロードエラー: ${processedData.drawingNumber}`, {
+              status: uploadResponse.status,
+              statusText: uploadResponse.statusText,
+              error: errorText
+            })
+            // エラーでも処理は継続（部分的な成功を許可）
           }
         }
         
@@ -270,7 +240,12 @@ export async function POST(request: NextRequest) {
           )
           
           if (!uploadResponse.ok) {
-            console.error(`プログラムファイルアップロードエラー: ${processedData.drawingNumber}`)
+            const errorText = await uploadResponse.text()
+            console.error(`プログラムファイルアップロードエラー: ${processedData.drawingNumber}`, {
+              status: uploadResponse.status,
+              statusText: uploadResponse.statusText,
+              error: errorText
+            })
             // エラーでも処理は継続（PDFと同様の挙動）
           }
         }
@@ -343,13 +318,7 @@ export async function POST(request: NextRequest) {
 // GET: 図番一覧取得（管理画面用）
 export async function GET(request: NextRequest) {
   try {
-    // 管理画面認証チェック
-    if (!checkAdminAuth(request)) {
-      return NextResponse.json(
-        { error: '認証が必要です' },
-        { status: 401 }
-      )
-    }
+    // 認証チェックは画面側で実施済みのため、API側では不要
     
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')

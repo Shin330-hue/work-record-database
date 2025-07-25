@@ -3,19 +3,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { getDataPath, sanitizeFileName, generateTimestampedFileName } from '@/lib/admin/utils'
 
-// データパス取得
-const getDataPath = (): string => {
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
-  }
-  
-  if (process.env.USE_NAS === 'true') {
-    return process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
-  }
-  
-  return process.env.DEV_DATA_ROOT_PATH || './public/data'
-}
 
 // ファイルアップロード
 export async function POST(

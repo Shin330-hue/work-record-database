@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { NearMissItem, WorkStep } from '@/lib/dataLoader'
+import { getDataPath } from '@/lib/admin/utils'
 
 // 図番編集用の型定義
 interface UpdateDrawingData {
@@ -38,18 +39,6 @@ interface UpdateDrawingData {
   }>
 }
 
-// データパス取得
-const getDataPath = (): string => {
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
-  }
-  
-  if (process.env.USE_NAS === 'true') {
-    return process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
-  }
-  
-  return process.env.DEV_DATA_ROOT_PATH || './public/data'
-}
 
 // 図番データ更新
 export async function PUT(

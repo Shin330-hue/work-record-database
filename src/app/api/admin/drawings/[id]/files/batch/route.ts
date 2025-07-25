@@ -4,43 +4,22 @@ import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { existsSync } from 'fs'
+import { 
+  getDataPath, 
+  sanitizeFileName, 
+  generateTimestampedFileName,
+  PROGRAM_EXTENSIONS,
+  determineFileType 
+} from '@/lib/admin/utils'
 
-// データパス取得
-const getDataPath = (): string => {
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.DATA_ROOT_PATH || '/mnt/nas/project-data'
+
+// ファイルタイプ判定（共通ユーティリティのラッパー）
+function determineFileTypeForBatch(file: File): 'images' | 'videos' | 'pdfs' | 'programs' {
+  const fileType = determineFileType(file.name, file.type)
+  if (fileType === 'unknown') {
+    throw new Error(`サポートされていないファイル形式: ${file.name}`)
   }
-  
-  if (process.env.USE_NAS === 'true') {
-    return process.env.DATA_ROOT_PATH || '/mnt/project-nas/project-data'
-  }
-  
-  return process.env.DEV_DATA_ROOT_PATH || './public/data'
-}
-
-// プログラムファイルの拡張子
-const programExtensions = [
-  '.nc', '.txt', '.tap', '.pgm', '.mpf', 
-  '.ptp', '.gcode', '.cnc', '.min', '.eia'
-]
-
-// ファイルタイプ判定
-function determineFileType(file: File): 'images' | 'videos' | 'pdfs' | 'programs' {
-  const fileName = file.name.toLowerCase()
-  const mimeType = file.type
-  
-  // PDF判定
-  if (mimeType.includes('pdf')) return 'pdfs'
-  
-  // プログラムファイル判定
-  if (programExtensions.some(ext => fileName.endsWith(ext))) return 'programs'
-  if (mimeType === 'text/plain' && programExtensions.some(ext => fileName.endsWith(ext))) return 'programs'
-  
-  // 画像・動画判定
-  if (mimeType.startsWith('image/')) return 'images'
-  if (mimeType.startsWith('video/')) return 'videos'
-  
-  throw new Error(`サポートされていないファイル形式: ${file.name}`)
+  return fileType
 }
 
 // ファイル検証
@@ -61,7 +40,7 @@ function validateFile(file: File): { valid: boolean; error?: string } {
   
   // ファイルタイプ別の追加検証
   try {
-    const fileType = determineFileType(file)
+    const fileType = determineFileTypeForBatch(file)
     
     switch (fileType) {
       case 'images':
@@ -298,7 +277,7 @@ export async function POST(
     // ファイルタイプ判定とグループ化
     for (const file of files) {
       try {
-        const fileType = determineFileType(file)
+        const fileType = determineFileTypeForBatch(file)
         filesByType[fileType].push({ file })
       } catch (error) {
         results.errors.push({

@@ -79,37 +79,40 @@ export default function DrawingEdit() {
     { id: 'related', label: '関連情報', icon: '🔗' }
   ]
 
-  useEffect(() => {
-    const loadEditData = async () => {
-      try {
-        if (!drawingNumber) {
-          setError('図番が指定されていません')
-          return
-        }
+  // データ読み込み関数を外部に定義
+  const loadEditData = async () => {
+    try {
+      if (!drawingNumber) {
+        setError('図番が指定されていません')
+        return
+      }
 
-        // 並列でデータ読み込み
-        const [workInstruction, searchIndex, companiesData, contributionsData] = await Promise.all([
-          loadWorkInstruction(drawingNumber),
-          loadSearchIndex(),
-          loadCompanies(),
-          loadContributions(drawingNumber)
-        ])
+      setLoading(true)
+      setError('')
 
-        if (!workInstruction) {
-          setError('図番データが見つかりません')
-          return
-        }
+      // 並列でデータ読み込み
+      const [workInstruction, searchIndex, companiesData, contributionsData] = await Promise.all([
+        loadWorkInstruction(drawingNumber),
+        loadSearchIndex(),
+        loadCompanies(),
+        loadContributions(drawingNumber)
+      ])
 
-        // 検索インデックスから基本情報取得
-        const searchItem = searchIndex.drawings.find(d => d.drawingNumber === drawingNumber)
-        if (!searchItem) {
-          setError('検索インデックスにデータが見つかりません')
-          return
-        }
+      if (!workInstruction) {
+        setError('図番データが見つかりません')
+        return
+      }
 
-        // 会社・製品情報の解決
-        let companyInfo = { id: '', name: '' }
-        let productInfo = { id: '', name: '', category: '' }
+      // 検索インデックスから基本情報取得
+      const searchItem = searchIndex.drawings.find(d => d.drawingNumber === drawingNumber)
+      if (!searchItem) {
+        setError('検索インデックスにデータが見つかりません')
+        return
+      }
+
+      // 会社・製品情報の解決
+      let companyInfo = { id: '', name: '' }
+      let productInfo = { id: '', name: '', category: '' }
 
         for (const company of companiesData) {
           for (const product of company.products) {
@@ -182,14 +185,16 @@ export default function DrawingEdit() {
 
         setFormData(editData)
         setContributions(contributionsData)
-      } catch (error) {
-        console.error('編集データ読み込みエラー:', error)
-        setError('データの読み込みに失敗しました')
-      } finally {
-        setLoading(false)
-      }
+    } catch (error) {
+      console.error('編集データ読み込みエラー:', error)
+      setError('データの読み込みに失敗しました')
+    } finally {
+      setLoading(false)
     }
+  }
 
+  // 初回読み込み用のuseEffect
+  useEffect(() => {
     loadEditData()
   }, [drawingNumber])
 
@@ -296,7 +301,8 @@ export default function DrawingEdit() {
       
       if (result.success) {
         alert('図番情報が正常に更新されました')
-        router.push('/admin/drawings/list')
+        // データを再読み込みして編集画面に留まる
+        await loadEditData()
       } else {
         throw new Error(result.error || '更新に失敗しました')
       }

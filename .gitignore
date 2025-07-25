@@ -85,3 +85,6 @@ __pycache__/
 
 # Claude Code project memory
 CLAUDE.md 
+
+# Claude一時作業ファイル（セッション間の引き継ぎ用）
+doc/doc_for_claude/

@@ -40,12 +40,13 @@ export default function AdminLayout({
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div className="flex items-center space-x-6">
-                <Link 
-                  href="/admin"
-                  className="custom-rect-button gray !text-xl !font-bold !text-gray-900 hover:!text-gray-700"
+                <FormButton
+                  onClick={() => router.push('/admin')}
+                  variant="gray"
+                  className="!text-xl !font-bold !text-gray-900 hover:!text-gray-700"
                 >
                   管理画面
-                </Link>
+                </FormButton>
                 
                 {/* ナビゲーション */}
                 <nav className="hidden md:flex space-x-4">
