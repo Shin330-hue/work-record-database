@@ -66,6 +66,8 @@ export async function GET(request: NextRequest) {
       else if (ext === '.png') mimeType = 'image/png'
       else if (ext === '.gif') mimeType = 'image/gif'
       else if (ext === '.webp') mimeType = 'image/webp'
+      else if (['.tif', '.tiff'].includes(ext)) mimeType = 'image/tiff'
+      else if (ext === '.jfif') mimeType = 'image/jpeg'
       else if (ext === '.mp4') mimeType = 'video/mp4'
       else if (ext === '.webm') mimeType = 'video/webm'
       else if (ext === '.avi') mimeType = 'video/avi'
@@ -107,6 +109,8 @@ export async function GET(request: NextRequest) {
       else if (ext === '.png') mimeType = 'image/png'
       else if (ext === '.gif') mimeType = 'image/gif'
       else if (ext === '.webp') mimeType = 'image/webp'
+      else if (['.tif', '.tiff'].includes(ext)) mimeType = 'image/tiff'
+      else if (ext === '.jfif') mimeType = 'image/jpeg'
       else if (ext === '.mp4') mimeType = 'video/mp4'
       else if (ext === '.webm') mimeType = 'video/webm'
       else if (ext === '.avi') mimeType = 'video/avi'
@@ -179,7 +183,7 @@ export async function GET(request: NextRequest) {
       const extension = file.toLowerCase().split('.').pop()
       switch (folderType) {
         case 'images':
-          return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension || '')
+          return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'tif', 'tiff', 'jfif'].includes(extension || '')
         case 'videos':
           return ['mp4', 'webm', 'avi', 'mov'].includes(extension || '')
         case 'pdfs':

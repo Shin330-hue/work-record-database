@@ -743,7 +743,7 @@ export default function DrawingEdit() {
         },
         body: JSON.stringify({
           fileName,
-          stepNumber: 0, // overview用
+          stepNumber: '0', // overview用（文字列として送信）
           fileType: 'images'
         })
       })
@@ -758,7 +758,9 @@ export default function DrawingEdit() {
           }
         }))
       } else {
-        alert('ファイルの削除に失敗しました')
+        const errorData = await response.json()
+        console.error('削除エラー詳細:', errorData)
+        alert(`ファイルの削除に失敗しました: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('ファイル削除エラー:', error)

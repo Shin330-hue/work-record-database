@@ -20,7 +20,7 @@ function validateFile(file: File): { valid: boolean; error?: string } {
   
   // MIMEタイプチェック
   const allowedTypes = [
-    'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+    'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/tiff',
     'video/mp4', 'video/webm', 'video/avi', 'video/mov'
   ]
   if (!allowedTypes.includes(file.type)) {

@@ -80,7 +80,7 @@ export const PROGRAM_EXTENSIONS = [
  * 画像ファイルの拡張子リスト
  */
 export const IMAGE_EXTENSIONS = [
-  '.jpg', '.jpeg', '.png', '.gif', '.webp'
+  '.jpg', '.jpeg', '.png', '.gif', '.webp', '.tif', '.tiff', '.jfif'
 ] as const
 
 /**

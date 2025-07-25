@@ -94,7 +94,9 @@ export async function DELETE(
     const { id: drawingNumber } = await params
     const { fileName, stepNumber, fileType } = await request.json()
 
-    if (!drawingNumber || !fileName || !stepNumber || !fileType) {
+    console.log('削除リクエスト:', { drawingNumber, fileName, stepNumber, fileType })
+
+    if (!drawingNumber || !fileName || stepNumber === undefined || !fileType) {
       return NextResponse.json(
         { success: false, error: '必要なパラメータが不足しています' },
         { status: 400 }
@@ -108,14 +110,18 @@ export async function DELETE(
       'work-instructions',
       `drawing-${drawingNumber}`,
       fileType,
-      stepNumber === '0' ? 'overview' : `step_${stepNumber.padStart(2, '0')}`,
+      stepNumber === '0' || stepNumber === 0 ? 'overview' : `step_${String(stepNumber).padStart(2, '0')}`,
       fileName
     )
 
+    console.log('削除対象ファイルパス:', filePath)
+
     try {
       await fs.unlink(filePath)
-    } catch {
-      console.warn('ファイルが見つかりませんでした:', filePath)
+      console.log('ファイル削除成功')
+    } catch (unlinkError) {
+      console.warn('ファイル削除エラー:', unlinkError)
+      console.warn('ファイルパス:', filePath)
     }
 
     // instruction.json更新
