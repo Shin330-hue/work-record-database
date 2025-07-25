@@ -283,15 +283,15 @@ export default function DrawingsList() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                     <Link
                       href={`/instruction/${drawing.drawingNumber}`}
-                      className="text-blue-600 hover:text-blue-900 font-medium"
+                      className="custom-rect-button blue small"
                     >
-                      表示
+                      <span>表示</span>
                     </Link>
                     <Link
                       href={`/admin/drawings/${drawing.drawingNumber}/edit`}
-                      className="text-indigo-600 hover:text-indigo-900 font-medium"
+                      className="custom-rect-button purple small"
                     >
-                      編集
+                      <span>編集</span>
                     </Link>
                   </td>
                 </tr>

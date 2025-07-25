@@ -622,7 +622,7 @@ export default function NewDrawingPage() {
                               
                               updateDrawing(index, 'machineType', newTypes.join(','))
                             }}
-                            className="mr-2 h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                            className="custom-checkbox mr-3"
                           />
                           <span style={{ fontSize: '1.25rem' }} className="font-medium text-white">{machine}</span>
                         </label>

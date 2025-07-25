@@ -881,8 +881,8 @@ export default function DrawingEdit() {
     <div className="min-h-screen bg-gray-50">
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          図番編集: {formData.drawingNumber}
+        <h1 className="text-3xl font-bold text-white mb-8 text-center">
+          【図番編集】 {formData.drawingNumber}
         </h1>
         
         {/* タブナビゲーション */}
@@ -894,14 +894,11 @@ export default function DrawingEdit() {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
-                    activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  className={`custom-rect-button small ${
+                    activeTab === tab.id ? 'emerald' : 'gray'
                   }`}
                 >
-                  <span>{tab.icon}</span>
-                  <span>{tab.label}</span>
+                  <span>{tab.icon} {tab.label}</span>
                 </button>
               ))}
             </nav>
@@ -913,31 +910,32 @@ export default function DrawingEdit() {
           {activeTab === 'basic' && (
             <>
               {/* 基本情報 */}
-              <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">基本情報</h2>
+              <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+            <h2 className="text-xl font-semibold text-white mb-6">基本情報</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="custom-form-label">
                   図番 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.drawingNumber}
                   disabled
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500"
+                  className="custom-form-input cursor-not-allowed"
+                  style={{ backgroundColor: '#1f2937', color: '#e5e7eb' }}
                 />
                 <p className="text-xs text-gray-500 mt-1">図番は変更できません</p>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="custom-form-label">
                   作業手順タイトル <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData(prev => prev ? { ...prev, title: e.target.value } : prev)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="custom-form-input"
                   required
                 />
               </div>
@@ -945,43 +943,47 @@ export default function DrawingEdit() {
           </div>
 
           {/* 会社・製品情報 */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">会社・製品情報</h2>
+          <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+            <h2 className="text-xl font-semibold text-white mb-6">会社・製品情報</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="custom-form-label">
                   会社名
                 </label>
                 <input
                   type="text"
                   value={formData.company.name}
                   disabled
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500"
+                  className="custom-form-input cursor-not-allowed"
+                  style={{ backgroundColor: '#1f2937', color: '#e5e7eb' }}
                 />
                 <p className="text-xs text-gray-500 mt-1">会社情報は変更できません</p>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="custom-form-label">
                   製品名
                 </label>
                 <input
                   type="text"
                   value={formData.product.name}
-                  disabled
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-500"
+                  onChange={(e) => setFormData(prev => prev ? { 
+                    ...prev, 
+                    product: { ...prev.product, name: e.target.value }
+                  } : prev)}
+                  className="custom-form-input"
                 />
-                <p className="text-xs text-gray-500 mt-1">製品情報は変更できません</p>
+                <p className="text-xs text-gray-500 mt-1">製品IDは変更されません</p>
               </div>
             </div>
           </div>
 
           {/* 作業詳細 */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">作業詳細</h2>
+          <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+            <h2 className="text-xl font-semibold text-white mb-6">作業詳細</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="custom-form-label">
                   難易度 <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -990,7 +992,7 @@ export default function DrawingEdit() {
                     ...prev, 
                     difficulty: e.target.value as '初級' | '中級' | '上級' 
                   } : prev)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="custom-form-input"
                   required
                 >
                   <option value="初級">初級</option>
@@ -1000,7 +1002,7 @@ export default function DrawingEdit() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="custom-form-label">
                   推定時間 <span className="text-red-500">*</span>
                 </label>
                 <div className="flex">
@@ -1008,7 +1010,7 @@ export default function DrawingEdit() {
                     type="number"
                     value={formData.estimatedTime}
                     onChange={(e) => setFormData(prev => prev ? { ...prev, estimatedTime: e.target.value } : prev)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="custom-form-input rounded-r-none"
                     min="1"
                     max="9999"
                     required
@@ -1021,19 +1023,19 @@ export default function DrawingEdit() {
             </div>
 
             <div className="mt-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="custom-form-label mb-3">
                 機械種別 <span className="text-red-500">*</span>
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="flex flex-wrap gap-4">
                 {machineTypes.map(machine => (
-                  <label key={machine} className="flex items-center">
+                  <label key={machine} className="flex items-center cursor-pointer hover:opacity-80">
                     <input
                       type="checkbox"
                       checked={formData.machineType.includes(machine)}
                       onChange={(e) => handleMachineTypeChange(machine, e.target.checked)}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="custom-checkbox mr-3"
                     />
-                    <span className="text-sm text-gray-700">{machine}</span>
+                    <span className="text-white font-medium" style={{ fontSize: '1.125rem' }}>{machine}</span>
                   </label>
                 ))}
               </div>
@@ -1047,7 +1049,7 @@ export default function DrawingEdit() {
                 type="text"
                 value={formData.toolsRequired.join(', ')}
                 onChange={(e) => handleToolsRequiredChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="custom-form-input"
                 placeholder="必要工具をカンマ区切りで入力..."
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -1063,7 +1065,7 @@ export default function DrawingEdit() {
                 value={formData.description}
                 onChange={(e) => setFormData(prev => prev ? { ...prev, description: e.target.value } : prev)}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="custom-form-textarea"
                 placeholder="作業の概要や注意点を入力してください..."
               />
             </div>
@@ -1076,7 +1078,7 @@ export default function DrawingEdit() {
                 type="text"
                 value={formData.keywords.join(', ')}
                 onChange={(e) => handleKeywordsChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="custom-form-input"
                 placeholder="キーワードをカンマ区切りで入力..."
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -1086,8 +1088,8 @@ export default function DrawingEdit() {
           </div>
 
           {/* 図面PDFセクション */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">図面PDF</h2>
+          <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+            <h2 className="text-xl font-semibold text-white mb-6">図面PDF</h2>
             <div className="space-y-2">
               {actualFiles.overview.pdfs.length > 0 ? actualFiles.overview.pdfs.map((pdf, pdfIndex) => (
                 <div key={pdfIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
@@ -1103,7 +1105,7 @@ export default function DrawingEdit() {
                     <button
                       type="button"
                       onClick={() => removePdfOrProgramFile(pdf, 'pdfs')}
-                      className="text-red-600 hover:text-red-800 text-sm"
+                      className="custom-rect-button red tiny"
                     >
                       削除
                     </button>
@@ -1127,21 +1129,19 @@ export default function DrawingEdit() {
                 />
                 <label
                   htmlFor="pdf-upload"
-                  className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
-                    uploadingFiles['overview-pdfs']
-                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                  className={`custom-file-input ${
+                    uploadingFiles['overview-pdfs'] ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  {uploadingFiles['overview-pdfs'] ? 'アップロード中...' : '+ PDFファイルを追加'}
+                  <span>{uploadingFiles['overview-pdfs'] ? 'アップロード中...' : '+ PDFファイルを追加'}</span>
                 </label>
               </div>
             </div>
           </div>
 
           {/* プログラムファイルセクション */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">プログラムファイル</h2>
+          <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+            <h2 className="text-xl font-semibold text-white mb-6">プログラムファイル</h2>
             <div className="space-y-2">
               {actualFiles.overview.programs.length > 0 ? actualFiles.overview.programs.map((program, programIndex) => (
                 <div key={programIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
@@ -1157,7 +1157,7 @@ export default function DrawingEdit() {
                     <button
                       type="button"
                       onClick={() => removePdfOrProgramFile(program, 'programs')}
-                      className="text-red-600 hover:text-red-800 text-sm"
+                      className="custom-rect-button red tiny"
                     >
                       削除
                     </button>
@@ -1181,13 +1181,11 @@ export default function DrawingEdit() {
                 />
                 <label
                   htmlFor="program-upload"
-                  className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
-                    uploadingFiles['overview-programs']
-                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                  className={`custom-file-input ${
+                    uploadingFiles['overview-programs'] ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  {uploadingFiles['overview-programs'] ? 'アップロード中...' : '+ プログラムファイルを追加'}
+                  <span>{uploadingFiles['overview-programs'] ? 'アップロード中...' : '+ プログラムファイルを追加'}</span>
                 </label>
                 <p className="text-xs text-gray-500">
                   NCプログラム、Gコード等の加工プログラムファイル
@@ -1197,8 +1195,8 @@ export default function DrawingEdit() {
           </div>
 
           {/* 概要画像セクション */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">概要画像</h2>
+          <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+            <h2 className="text-xl font-semibold text-white mb-6">概要画像</h2>
             <div className="space-y-2">
               {actualFiles.overview.images.length > 0 ? actualFiles.overview.images.map((image, imgIndex) => (
                 <div key={imgIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
@@ -1207,7 +1205,7 @@ export default function DrawingEdit() {
                     <button
                       type="button"
                       onClick={() => removeOverviewImage(imgIndex)}
-                      className="text-red-600 hover:text-red-800 text-sm"
+                      className="custom-rect-button red tiny"
                     >
                       削除
                     </button>
@@ -1256,13 +1254,11 @@ export default function DrawingEdit() {
                 />
                 <label
                   htmlFor="overview-image-upload"
-                  className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
-                    uploadingFiles['overview-images']
-                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                  className={`custom-file-input ${
+                    uploadingFiles['overview-images'] ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
-                  {uploadingFiles['overview-images'] ? 'アップロード中...' : '+ 概要画像を追加'}
+                  <span>{uploadingFiles['overview-images'] ? 'アップロード中...' : '+ 概要画像を追加'}</span>
                 </label>
               </div>
             </div>
@@ -1272,21 +1268,21 @@ export default function DrawingEdit() {
 
           {/* 品質・安全タブ */}
           {activeTab === 'quality' && (
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">⚠️ 品質・安全</h2>
+            <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+              <h2 className="text-xl font-semibold text-white mb-6">⚠️ 品質・安全</h2>
               
               {/* ヒヤリハット事例セクション */}
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-white">
                     ヒヤリハット事例 ({formData.nearMiss.length}件)
                   </h3>
                   <button
                     type="button"
                     onClick={addNearMiss}
-                    className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-medium"
+                    className="custom-rect-button emerald small"
                   >
-                    + 事例追加
+                    <span>+ 事例追加</span>
                   </button>
                 </div>
                 
@@ -1315,12 +1311,12 @@ export default function DrawingEdit() {
           {activeTab === 'workSteps' && (
             <div className="space-y-6">
               {/* 概要セクション */}
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">🔧 作業手順概要</h2>
+              <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                <h2 className="text-xl font-semibold text-white mb-6">🔧 作業手順概要</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="custom-form-label">
                       準備時間
                     </label>
                     <div className="flex">
@@ -1331,7 +1327,7 @@ export default function DrawingEdit() {
                           ...prev,
                           overview: { ...prev.overview, preparationTime: e.target.value }
                         } : prev)}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="custom-form-input rounded-r-none"
                         min="0"
                         max="9999"
                       />
@@ -1342,7 +1338,7 @@ export default function DrawingEdit() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="custom-form-label">
                       加工時間
                     </label>
                     <div className="flex">
@@ -1353,7 +1349,7 @@ export default function DrawingEdit() {
                           ...prev,
                           overview: { ...prev.overview, processingTime: e.target.value }
                         } : prev)}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="custom-form-input rounded-r-none"
                         min="0"
                         max="9999"
                       />
@@ -1365,7 +1361,7 @@ export default function DrawingEdit() {
                 </div>
 
                 <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="custom-form-label">
                     注意事項
                   </label>
                   <div className="space-y-2">
@@ -1375,13 +1371,13 @@ export default function DrawingEdit() {
                           type="text"
                           value={warning}
                           onChange={(e) => handleWarningChange(index, e.target.value)}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="custom-form-input"
                           placeholder="注意事項を入力..."
                         />
                         <button
                           type="button"
                           onClick={() => removeWarning(index)}
-                          className="px-3 py-2 text-red-600 hover:text-red-800 font-medium"
+                          className="custom-rect-button red tiny"
                         >
                           削除
                         </button>
@@ -1390,26 +1386,26 @@ export default function DrawingEdit() {
                     <button
                       type="button"
                       onClick={addWarning}
-                      className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+                      className="custom-rect-button emerald small"
                     >
-                      + 注意事項を追加
+                      <span>+ 注意事項を追加</span>
                     </button>
                   </div>
                 </div>
               </div>
 
               {/* 作業ステップセクション */}
-              <div className="bg-white p-6 rounded-lg shadow">
+              <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-white">
                     作業ステップ ({formData.workSteps.length}件)
                   </h3>
                   <button
                     type="button"
                     onClick={addWorkStep}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+                    className="custom-rect-button emerald small"
                   >
-                    + ステップ追加
+                    <span>+ ステップ追加</span>
                   </button>
                 </div>
 
@@ -1449,12 +1445,12 @@ export default function DrawingEdit() {
           {activeTab === 'related' && (
             <div className="space-y-6">
               {/* 関連図番セクション */}
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">📋 関連図番</h2>
+              <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                <h2 className="text-xl font-semibold text-white mb-6">📋 関連図番</h2>
                 
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-white">
                       関連図番一覧 ({formData.relatedDrawings.length}件)
                     </h3>
                     <button
@@ -1472,9 +1468,9 @@ export default function DrawingEdit() {
                           }
                         })
                       }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium"
+                      className="custom-rect-button emerald small"
                     >
-                      + 関連図番を追加
+                      <span>+ 関連図番を追加</span>
                     </button>
                   </div>
                   
@@ -1495,7 +1491,7 @@ export default function DrawingEdit() {
                                   }
                                 })
                               }}
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="custom-rect-button red tiny"
                             >
                               削除
                             </button>
@@ -1503,7 +1499,7 @@ export default function DrawingEdit() {
                           
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <label className="custom-form-label">
                                 図番 <span className="text-red-500">*</span>
                               </label>
                               <input
@@ -1520,14 +1516,14 @@ export default function DrawingEdit() {
                                     relatedDrawings: newRelatedDrawings
                                   } : prev)
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="custom-form-input"
                                 placeholder="例: DRAW-2024-001"
                                 required
                               />
                             </div>
                             
                             <div className="md:col-span-1">
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                              <label className="custom-form-label">
                                 説明
                               </label>
                               <input
@@ -1544,7 +1540,7 @@ export default function DrawingEdit() {
                                     relatedDrawings: newRelatedDrawings
                                   } : prev)
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="custom-form-input"
                                 placeholder="この図番との関係性を説明..."
                               />
                             </div>
@@ -1561,8 +1557,8 @@ export default function DrawingEdit() {
               </div>
               
               {/* 追記管理セクション */}
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">💬 追記情報</h2>
+              <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                <h2 className="text-xl font-semibold text-white mb-6">💬 追記情報</h2>
                 
                 <div className="mb-8">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -1628,7 +1624,7 @@ export default function DrawingEdit() {
                       )}
                       <button
                         type="button"
-                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        className="custom-rect-button red tiny"
                         onClick={() => handleDeleteContribution(index)}
                       >
                         削除
@@ -1658,16 +1654,16 @@ export default function DrawingEdit() {
           <div className="flex justify-end space-x-4">
             <Link
               href="/admin/drawings/list"
-              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium"
+              className="custom-rect-button gray"
             >
-              キャンセル
+              <span>キャンセル</span>
             </Link>
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-wait"
+              className="custom-rect-button blue"
             >
-              {saving ? '更新中...' : '更新する'}
+              <span>{saving ? '更新中...' : '更新する'}</span>
             </button>
           </div>
         </form>
@@ -1736,18 +1732,23 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg">
+    <div className="border border-gray-600 rounded-lg bg-gray-800">
       {/* ヘッダー */}
-      <div className="bg-gray-50 px-4 py-3 flex justify-between items-center">
+      <div className="px-5 py-4 flex justify-between items-center rounded-t-lg border-b-2 border-emerald-500 shadow-lg" style={{ background: 'linear-gradient(to right, #1f2937, #111827)' }}>
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center space-x-2 text-left flex-1"
+          className="flex items-center space-x-3 text-left flex-1"
         >
-          <span className="text-lg">
-            {isExpanded ? '▼' : '▶'}
-          </span>
-          <span className="font-medium text-gray-900">
+          <div className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300" 
+               style={{ 
+                 backgroundColor: isExpanded ? '#10b981' : 'transparent',
+                 transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                 boxShadow: isExpanded ? '0 0 10px rgba(16, 185, 129, 0.5)' : 'none'
+               }}>
+            <span className="text-white font-bold" style={{ fontSize: '1.5rem' }}>▶</span>
+          </div>
+          <span className="font-bold text-white" style={{ fontSize: '1.75rem' }}>
             ステップ {step.stepNumber}: {step.title}
           </span>
         </button>
@@ -1776,10 +1777,10 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           <button
             type="button"
             onClick={onDelete}
-            className="p-1 text-red-500 hover:text-red-700"
+            className="custom-rect-button red tiny"
             title="削除"
           >
-            ×
+            削除
           </button>
         </div>
       </div>
@@ -1797,7 +1798,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                 type="text"
                 value={step.title}
                 onChange={(e) => onUpdate({ ...step, title: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="custom-form-input"
               />
             </div>
             
@@ -1809,7 +1810,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                 type="text"
                 value={step.timeRequired}
                 onChange={(e) => onUpdate({ ...step, timeRequired: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="custom-form-input"
                 placeholder="30分"
               />
             </div>
@@ -1823,7 +1824,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
               value={step.description}
               onChange={(e) => onUpdate({ ...step, description: e.target.value })}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="custom-form-textarea"
               placeholder="このステップの概要を入力..."
             />
           </div>
@@ -1835,7 +1836,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
             <select
               value={step.warningLevel}
               onChange={(e) => onUpdate({ ...step, warningLevel: e.target.value as WorkStep['warningLevel'] })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="custom-form-input"
             >
               {warningLevels.map(level => (
                 <option key={level} value={level}>
@@ -1858,13 +1859,13 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                     type="text"
                     value={instruction}
                     onChange={(e) => handleDetailedInstructionChange(instIndex, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="custom-form-input"
                     placeholder="手順を入力..."
                   />
                   <button
                     type="button"
                     onClick={() => removeDetailedInstruction(instIndex)}
-                    className="px-2 py-1 text-red-600 hover:text-red-800"
+                    className="custom-rect-button red tiny"
                   >
                     削除
                   </button>
@@ -1873,9 +1874,9 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
               <button
                 type="button"
                 onClick={addDetailedInstruction}
-                className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+                className="custom-rect-button emerald small"
               >
-                + 手順を追加
+                <span>+ 手順を追加</span>
               </button>
             </div>
           </div>
@@ -1944,7 +1945,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                           delete newConditions[key];
                           onUpdate({ ...step, cuttingConditions: newConditions });
                         }}
-                        className="text-red-600 hover:text-red-800 text-sm"
+                        className="custom-rect-button red tiny"
                       >
                         削除
                       </button>
@@ -2057,9 +2058,9 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                   };
                   onUpdate({ ...step, cuttingConditions: newConditions });
                 }}
-                className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+                className="custom-rect-button emerald small"
               >
-                + 切削条件を追加
+                <span>+ 切削条件を追加</span>
               </button>
             </div>
           </div>
@@ -2085,7 +2086,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                           }
                         });
                       }}
-                      className="text-red-600 hover:text-red-800 text-sm"
+                      className="custom-rect-button red tiny"
                     >
                       削除
                     </button>
@@ -2109,7 +2110,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                             }
                           });
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="custom-form-input"
                         placeholder="例: 寸法確認"
                       />
                     </div>
@@ -2131,7 +2132,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                             }
                           });
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="custom-form-input"
                         placeholder="例: ±0.05"
                       />
                     </div>
@@ -2153,7 +2154,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                             }
                           });
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="custom-form-input"
                         placeholder="例: Ra3.2"
                       />
                     </div>
@@ -2175,7 +2176,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                             }
                           });
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="custom-form-input"
                         placeholder="例: ノギス"
                       />
                     </div>
@@ -2221,7 +2222,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                       <button
                         type="button"
                         onClick={() => onFileRemove(index, 'images', imgIndex)}
-                        className="text-red-600 hover:text-red-800 text-sm"
+                        className="custom-rect-button red tiny"
                       >
                         削除
                       </button>
@@ -2290,7 +2291,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                       <button
                         type="button"
                         onClick={() => onFileRemove(index, 'videos', vidIndex)}
-                        className="text-red-600 hover:text-red-800 text-sm"
+                        className="custom-rect-button red tiny"
                       >
                         削除
                       </button>
@@ -2360,18 +2361,23 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg">
+    <div className="border border-gray-600 rounded-lg bg-gray-800">
       {/* ヘッダー */}
-      <div className="bg-gray-50 px-4 py-3 flex justify-between items-center">
+      <div className="px-5 py-4 flex justify-between items-center rounded-t-lg border-b-2 border-emerald-500 shadow-lg" style={{ background: 'linear-gradient(to right, #1f2937, #111827)' }}>
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center space-x-2 text-left flex-1"
+          className="flex items-center space-x-3 text-left flex-1"
         >
-          <span className="text-lg">
-            {isExpanded ? '▼' : '▶'}
-          </span>
-          <span className="font-medium text-gray-900">
+          <div className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300" 
+               style={{ 
+                 backgroundColor: isExpanded ? '#10b981' : 'transparent',
+                 transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+                 boxShadow: isExpanded ? '0 0 10px rgba(16, 185, 129, 0.5)' : 'none'
+               }}>
+            <span className="text-white font-bold" style={{ fontSize: '1.5rem' }}>▶</span>
+          </div>
+          <span className="font-bold text-white" style={{ fontSize: '1.75rem' }}>
             事例 {index + 1}: {item.title || '(未設定)'}
           </span>
         </button>
@@ -2391,10 +2397,10 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
           <button
             type="button"
             onClick={onRemove}
-            className="p-1 text-red-500 hover:text-red-700"
+            className="custom-rect-button red tiny"
             title="削除"
           >
-            ×
+            削除
           </button>
         </div>
       </div>
@@ -2412,7 +2418,7 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
                 type="text"
                 value={item.title}
                 onChange={(e) => onChange(index, 'title', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="custom-form-input"
                 placeholder="事例のタイトルを入力..."
               />
             </div>
@@ -2424,7 +2430,7 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
               <select
                 value={item.severity}
                 onChange={(e) => onChange(index, 'severity', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="custom-form-input"
               >
                 {severityOptions.map(severity => (
                   <option key={severity} value={severity}>
@@ -2444,7 +2450,7 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
               value={item.description}
               onChange={(e) => onChange(index, 'description', e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="custom-form-textarea"
               placeholder="どのような事例が発生したかを詳しく説明..."
             />
           </div>
@@ -2458,7 +2464,7 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
               value={item.cause}
               onChange={(e) => onChange(index, 'cause', e.target.value)}
               rows={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="custom-form-textarea"
               placeholder="事例が発生した原因を記入..."
             />
           </div>
@@ -2472,7 +2478,7 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
               value={item.prevention}
               onChange={(e) => onChange(index, 'prevention', e.target.value)}
               rows={2}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="custom-form-textarea"
               placeholder="再発防止のための対策を記入..."
             />
           </div>

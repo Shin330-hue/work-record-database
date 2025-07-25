@@ -879,10 +879,36 @@ a[href$=".pdf"]:visited {
   background: linear-gradient(to right, #7c3aed, #6d28d9);
 }
 
+/* 色バリエーション - レッド（削除用） */
+.custom-rect-button.red {
+  background: linear-gradient(to right, #dc2626, #b91c1c);
+}
+.custom-rect-button.red:hover {
+  background: linear-gradient(to right, #b91c1c, #991b1b);
+}
+
 /* 小さめサイズ（ファイルダウンロード用） */
 .custom-rect-button.small {
   padding: 12px 24px;
   font-size: 0.9rem;
+}
+
+/* 極小サイズ（削除ボタン用） */
+.custom-rect-button.tiny {
+  padding: 6px 12px;
+  font-size: 0.75rem;
+}
+
+/* カスタムチェックボックス */
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.custom-checkbox:checked {
+  accent-color: #10b981;
 }
 
 /* カスタムフォーム要素 */
