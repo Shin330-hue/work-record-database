@@ -155,7 +155,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           border: '1px solid rgba(250, 204, 21, 0.3)',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
         }}>
-          <h3 className="font-bold text-yellow-300 mb-6" style={{ fontSize: '1.5rem' }}>【❤️あなたのためのヒヤリハット】</h3>
+          <h3 className="font-bold text-yellow-300 mb-6" style={{ fontSize: '1.5rem' }}>【❤️あなたのヒヤリハット】</h3>
           <div className="relative">
             {/* 縦線 */}
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-yellow-500/30"></div>
@@ -231,7 +231,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           padding: '32px',
           border: '1px solid rgba(16, 185, 129, 0.2)'
         }}>
-          <h2 className="text-4xl font-bold text-white mb-8">【📂図面とプログラムと画像とか】</h2>
+          <h2 className="text-4xl font-bold text-white mb-8">【📂図面とかプログラム】</h2>
           {/* PDF */}
           {overviewFiles.pdfs.length > 0 && (
             <div className="mb-6 bg-white rounded-xl p-4">

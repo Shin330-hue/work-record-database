@@ -154,13 +154,14 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
               return (
                 <div key={key} className="border border-emerald-500/20 rounded-lg overflow-hidden">
                   <button
-                    className="w-full flex items-center justify-between p-3 bg-black/20 hover:bg-black/30 transition-colors"
+                    className="w-full flex items-center justify-between bg-black/20 hover:bg-black/30 transition-colors"
+                    style={{ padding: '14px 16px' }}
                     onClick={() => setExpandedConditions(prev => ({ ...prev, [key]: !prev[key] }))}
                   >
-                    <span className="font-semibold text-emerald-300 text-sm">
+                    <span className="font-semibold text-emerald-300" style={{ fontSize: '1.1rem' }}>
                       {key.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-emerald-400 text-lg">
+                    <span className="text-emerald-400" style={{ fontSize: '1.25rem' }}>
                       {isExpanded ? '−' : '+'}
                     </span>
                   </button>

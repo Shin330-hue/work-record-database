@@ -490,7 +490,74 @@ body {
    - カスタムCSSを使う場合は、その要素専用のクラス名を使用
    - または、Tailwindの`@apply`ディレクティブを使用してカスタムクラスを作成
 
-### 9. 作業詳細ページの画像サイズ最適化
+### 9. Tailwindクラスが効かない場合の対処法
+
+#### 実施日: 2025年1月26日
+
+#### 問題
+Tailwindのユーティリティクラス（`p-4`, `text-base`など）を適用しても、実際の表示に反映されない場合がある。
+
+#### 原因
+1. **Tailwindの設定や読み込みの問題**
+2. **他のCSSとの競合**
+3. **動的に生成されるクラス名の問題**
+4. **開発環境のキャッシュ**
+
+#### 解決策：インラインスタイルの使用
+
+##### 基本的な対処法
+```jsx
+// ❌ Tailwindクラスが効かない場合
+<button className="p-4 text-base">
+
+// ✅ インラインスタイルで確実に適用
+<button style={{ padding: '20px', fontSize: '1.25rem' }}>
+```
+
+##### 実際の使用例（WorkStep.tsx）
+```jsx
+// 切削条件のトグルボタン
+<button
+  className="w-full flex items-center justify-between bg-black/20 hover:bg-black/30 transition-colors"
+  style={{ padding: '20px' }}  // Tailwindのp-4が効かなかったため
+  onClick={() => setExpandedConditions(prev => ({ ...prev, [key]: !prev[key] }))}
+>
+  <span className="font-semibold text-emerald-300" style={{ fontSize: '1.25rem' }}>
+    {key.replace(/_/g, ' ')}
+  </span>
+  <span className="text-emerald-400" style={{ fontSize: '1.5rem' }}>
+    {isExpanded ? '−' : '+'}
+  </span>
+</button>
+```
+
+##### よく使うインラインスタイルの対応表
+| Tailwindクラス | インラインスタイル |
+|---------------|-------------------|
+| `p-3` | `style={{ padding: '12px' }}` |
+| `p-4` | `style={{ padding: '16px' }}` |
+| `p-5` | `style={{ padding: '20px' }}` |
+| `text-sm` | `style={{ fontSize: '0.875rem' }}` |
+| `text-base` | `style={{ fontSize: '1rem' }}` |
+| `text-lg` | `style={{ fontSize: '1.125rem' }}` |
+| `text-xl` | `style={{ fontSize: '1.25rem' }}` |
+
+#### 重要なポイント
+1. **他のプロジェクトファイルを確認**
+   - 多くの箇所で同じパターンが使われている
+   - 特にフォントサイズやパディングでインラインスタイルが多用されている
+
+2. **デバッグ方法**
+   - 開発者ツールでElementsを確認
+   - Computedスタイルで実際に適用されている値を確認
+   - Tailwindクラスが適用されているか確認
+
+3. **使い分けの指針**
+   - 基本的にはTailwindクラスを使用
+   - 効かない場合は即座にインラインスタイルに切り替え
+   - 時間をかけてデバッグするより、確実に動く方法を選択
+
+### 10. 作業詳細ページの画像サイズ最適化
 
 #### 実施日: 2025年1月26日
 
