@@ -146,7 +146,15 @@ export default function WorkInstructionResults({ instruction, contributions, onB
 
       {/* ヒヤリハット（Near Miss）表示 - タイムライン形式 */}
       {instruction.nearMiss && instruction.nearMiss.length > 0 && (
-        <div className="bg-yellow-100/10 backdrop-blur-md rounded-2xl p-6 border border-yellow-400/30 shadow-2xl" style={{ marginBottom: '50px' }}>
+        <div style={{ 
+          marginBottom: '50px',
+          backgroundColor: 'rgba(254, 240, 138, 0.1)',
+          backdropFilter: 'blur(12px)',
+          borderRadius: '16px',
+          padding: '24px',
+          border: '1px solid rgba(250, 204, 21, 0.3)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+        }}>
           <h3 className="font-bold text-yellow-300 mb-6" style={{ fontSize: '1.5rem' }}>【❤️あなたのためのヒヤリハット】</h3>
           <div className="relative">
             {/* 縦線 */}
@@ -215,12 +223,19 @@ export default function WorkInstructionResults({ instruction, contributions, onB
 
       {/* overviewメディア群 */}
       {(overviewFiles.pdfs.length > 0 || overviewFiles.images.length > 0 || overviewFiles.videos.length > 0 || overviewFiles.programs.length > 0) && (
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mb-8">
-          <h2 className="text-2xl font-bold text-emerald-100 mb-4">概要メディア</h2>
+        <div style={{ 
+          marginBottom: '50px',
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(12px)',
+          borderRadius: '16px',
+          padding: '32px',
+          border: '1px solid rgba(16, 185, 129, 0.2)'
+        }}>
+          <h2 className="text-4xl font-bold text-white mb-8">【📂図面とプログラムと画像とか】</h2>
           {/* PDF */}
           {overviewFiles.pdfs.length > 0 && (
             <div className="mb-6 bg-white rounded-xl p-4">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">PDF</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">《図面PDF》</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {overviewFiles.pdfs.map((pdf, i) => (
                   <a
@@ -237,14 +252,32 @@ export default function WorkInstructionResults({ instruction, contributions, onB
               </div>
             </div>
           )}
+          {/* プログラムファイル */}
+          {overviewFiles.programs.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-emerald-200 mb-3">《プログラムファイル》</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {overviewFiles.programs.map((program, i) => (
+                    <button
+                      key={`overview-program-${i}`}
+                      onClick={() => downloadFile(program, 'programs', 'overview')}
+                      className="custom-rect-button purple small"
+                    >
+                      <span>📁</span>
+                      <span>{program}</span>
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
           {/* Images */}
           {overviewFiles.images.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-emerald-200 mb-3">画像</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <h3 className="text-lg font-semibold text-emerald-200 mb-3">《画像》</h3>
+              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {overviewFiles.images.map((image, i) => (
                   <div key={`overview-img-${i}`}
-                    className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+                    className="media-item bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
                     onClick={() => {
                       setCurrentImageIndex(i);
                       setLightboxOpen(true);
@@ -252,7 +285,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                     <Image
                       src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
                       alt={`概要 - ${image}`}
-                      width={300}
+                      width={200}
                       height={200}
                       className="w-full h-full object-cover"
                     />
@@ -264,7 +297,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           {/* Videos */}
           {overviewFiles.videos.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-emerald-200 mb-3">動画</h3>
+              <h3 className="text-lg font-semibold text-emerald-200 mb-3">《動画》</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {overviewFiles.videos.map((video, i) => (
                   <div key={`overview-vid-${i}`}
@@ -274,26 +307,6 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                     </video>
                   </div>
                 ))}
-              </div>
-            </div>
-          )}
-          {/* プログラムファイル */}
-          {overviewFiles.programs.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-emerald-200 mb-3">プログラムファイル</h3>
-              <div className="bg-black/30 rounded-xl p-4 border border-emerald-500/20">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                  {overviewFiles.programs.map((program, i) => (
-                    <button
-                      key={`overview-program-${i}`}
-                      onClick={() => downloadFile(program, 'programs', 'overview')}
-                      className="custom-rect-button purple small"
-                    >
-                      <span>📁</span>
-                      <span>{program}</span>
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
           )}
