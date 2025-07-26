@@ -39,6 +39,8 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
   // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  // 切削条件の展開状態
+  const [expandedConditions, setExpandedConditions] = useState<{ [key: string]: boolean }>({})
 
   useEffect(() => {
     const loadStepFiles = async () => {
@@ -97,26 +99,23 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       
       {/* 画像・動画・プログラムファイル */}
       {!isLoading && (stepFiles.images.length > 0 || stepFiles.videos.length > 0 || stepFiles.programs.length > 0) && (
-        <div className="media-gallery mt-6">
-          <h4 className="text-lg font-semibold text-emerald-200 mb-4">メディア</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mt-6" style={{ display: 'block' }}>
+          <h4 className="text-lg font-semibold text-emerald-200 mb-4 block">メディア</h4>
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {/* 画像ギャラリー */}
             {stepFiles.images.map((image, i) => (
               <div key={`img-${i}`} 
-                className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
+                className="media-item bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => {
                   setCurrentImageIndex(i);
                   setLightboxOpen(true);
                 }}>
-                <div className="p-3 text-xs text-emerald-200 bg-emerald-500/20">
-                  {image}
-                </div>
                 <Image
                   src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/step_0${step.stepNumber}/${image}`}
                   alt={`ステップ${step.stepNumber} - ${image}`}
-                  width={300}
-                  height={192}
-                  className="w-full h-48 object-cover"
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover"
                 />
               </div>
             ))}
@@ -147,28 +146,43 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       
       {/* 切削条件 */}
       {step.cuttingConditions && (
-        <div className="cutting-conditions mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
-          <h4 className="text-lg font-semibold text-emerald-200 mb-4">切削条件</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {Object.entries(step.cuttingConditions).map(([key, condition]) => (
-              <div key={key} className="bg-black/40 rounded-xl p-4 border border-emerald-500/30">
-                <div className="font-semibold text-emerald-300 mb-3 capitalize">
-                  {key.replace(/_/g, ' ')}
+        <div className="cutting-conditions mt-6 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
+          <h4 className="text-lg font-semibold text-emerald-200 mb-3">《切削条件》</h4>
+          <div className="space-y-2">
+            {Object.entries(step.cuttingConditions).map(([key, condition]) => {
+              const isExpanded = expandedConditions[key] ?? false;
+              return (
+                <div key={key} className="border border-emerald-500/20 rounded-lg overflow-hidden">
+                  <button
+                    className="w-full flex items-center justify-between p-3 bg-black/20 hover:bg-black/30 transition-colors"
+                    onClick={() => setExpandedConditions(prev => ({ ...prev, [key]: !prev[key] }))}
+                  >
+                    <span className="font-semibold text-emerald-300 text-sm">
+                      {key.replace(/_/g, ' ')}
+                    </span>
+                    <span className="text-emerald-400 text-lg">
+                      {isExpanded ? '−' : '+'}
+                    </span>
+                  </button>
+                  {isExpanded && (
+                    <div className="p-3 bg-black/10">
+                      {typeof condition === 'object' && condition !== null ? (
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
+                          {Object.entries(condition).map(([prop, value]) => (
+                            <div key={prop} className="flex items-center gap-2">
+                              <span className="text-emerald-200/70">{getPropertyText(prop)}:</span>
+                              <span className="text-white font-medium">{String(value)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-white font-medium text-sm">{String(condition)}</div>
+                      )}
+                    </div>
+                  )}
                 </div>
-                {typeof condition === 'object' && condition !== null ? (
-                  <div className="space-y-2 text-sm">
-                    {Object.entries(condition).map(([prop, value]) => (
-                      <div key={prop} className="flex justify-between">
-                        <span className="text-emerald-200">{getPropertyText(prop)}:</span>
-                        <span className="text-white font-medium">{String(value)}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-white font-medium">{String(condition)}</div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

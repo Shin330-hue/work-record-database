@@ -314,22 +314,50 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       )}
 
       {/* 概要 */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 mb-8">
-        <h2 className="text-2xl font-bold text-emerald-100 mb-2">概要</h2>
-        <p className="text-white mb-2 whitespace-pre-line">{instruction.overview.description}</p>
+      <div style={{ 
+        marginBottom: '0',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(12px)',
+        borderTopLeftRadius: '16px',
+        borderTopRightRadius: '16px',
+        borderBottomLeftRadius: '0',
+        borderBottomRightRadius: '0',
+        padding: '32px',
+        borderTop: '1px solid rgba(16, 185, 129, 0.2)',
+        borderLeft: '1px solid rgba(16, 185, 129, 0.2)',
+        borderRight: '1px solid rgba(16, 185, 129, 0.2)',
+        borderBottom: 'none'
+      }}>
+        <h2 className="text-4xl font-bold text-white mb-8">【🤝みんなの作業手順】</h2>
+        <p style={{ 
+          fontSize: '1.5rem', 
+          color: 'white', 
+          marginTop: '12px',
+          marginBottom: '12px', 
+          whiteSpace: 'pre-line',
+          borderLeft: '4px solid rgba(16, 185, 129, 0.8)',
+          paddingLeft: '16px',
+          paddingTop: '4px',
+          paddingBottom: '4px'
+        }}>
+          {instruction.overview.description}
+        </p>
         {instruction.overview.warnings && instruction.overview.warnings.length > 0 && (
           <div className="mb-2">
-            <h4 className="text-lg font-semibold text-emerald-300 mb-1">注意事項</h4>
-            <ul className="list-disc pl-6 text-emerald-200">
+            <h4 className="text-lg font-semibold text-emerald-300 mb-1">《注意事項》</h4>
+            <ul className="list-none space-y-1 text-emerald-200">
               {instruction.overview.warnings.map((w, i) => (
-                <li key={i}>{w}</li>
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-red-500 mt-0.5">❗</span>
+                  <span>{w}</span>
+                </li>
               ))}
             </ul>
           </div>
         )}
         <div className="flex flex-wrap gap-6 text-emerald-200/80 text-sm mt-2">
-          <span>準備時間: {instruction.overview.preparationTime}</span>
-          <span>加工時間: {instruction.overview.processingTime}</span>
+          <span style={{ fontWeight: 600 }}>《準備時間》 {instruction.overview.preparationTime}</span>
+          <span style={{ fontWeight: 600 }}>《加工時間》 {instruction.overview.processingTime}</span>
         </div>
         
         {/* 概要への追記表示 */}
@@ -341,7 +369,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
         )}
         
         {/* 概要追記ボタン */}
-        <div className="mt-6">
+        <div style={{ marginTop: '40px' }}>
           <button
             onClick={() => {
               setContributionTarget({ section: 'overview' })
@@ -361,7 +389,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
             "
           >
             <span className="text-xl font-black">✚</span>
-            <span className="font-bold tracking-wider">概要に追記</span>
+            <span className="font-bold tracking-wider">手順に追記する</span>
           </button>
         </div>
       </div>
@@ -371,18 +399,21 @@ export default function WorkInstructionResults({ instruction, contributions, onB
         <button
           className={`custom-rect-button ${activeTab === 'steps' ? 'emerald' : 'gray'}`}
           onClick={() => setActiveTab('steps')}
+          style={{ borderRadius: '0' }}
         >
           作業ステップ
         </button>
         <button
           className={`custom-rect-button ${activeTab === 'related' ? 'emerald' : 'gray'}`}
           onClick={() => setActiveTab('related')}
+          style={{ borderRadius: '0' }}
         >
           関連図番
         </button>
         <button
           className={`custom-rect-button ${activeTab === 'ideas' ? 'emerald' : 'gray'}`}
           onClick={() => setActiveTab('ideas')}
+          style={{ borderRadius: '0' }}
         >
           加工アイデア
         </button>
