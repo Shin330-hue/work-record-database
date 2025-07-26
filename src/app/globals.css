@@ -584,11 +584,11 @@ body::before {
 }
 
 .instruction-header {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(16, 185, 129, 0.4); /* エメラルド色 40%透明度 */
   border-radius: 20px;
   padding: 30px;
   margin-bottom: 30px;
-  border: 1px solid rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.5); /* エメラルド色のボーダー */
 }
 
 .work-step {

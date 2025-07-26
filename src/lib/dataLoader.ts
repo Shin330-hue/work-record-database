@@ -147,6 +147,8 @@ export interface InstructionMetadata {
   title: string
   companyId: string
   productId: string
+  companyName?: string
+  productName?: string
   createdDate: string
   updatedDate: string
   author: string
@@ -345,7 +347,23 @@ export const loadWorkInstruction = async (drawingNumber: string): Promise<WorkIn
     if (!response.ok) {
       throw new Error(`図番 ${drawingNumber} の作業手順が見つかりません`);
     }
-    return await response.json();
+    const workInstruction: WorkInstruction = await response.json();
+    
+    // 検索インデックスから会社名と製品名を取得
+    try {
+      const searchIndex = await loadSearchIndex();
+      const companies = await loadCompanies();
+      const drawingSearchItem = searchIndex.drawings.find(d => d.drawingNumber === drawingNumber);
+      
+      if (drawingSearchItem) {
+        workInstruction.metadata.companyName = drawingSearchItem.companyName;
+        workInstruction.metadata.productName = drawingSearchItem.productName;
+      }
+    } catch (error) {
+      console.error('会社名・製品名の取得に失敗:', error);
+    }
+    
+    return workInstruction;
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error(`作業手順の読み込みに失敗 (${drawingNumber}):`, error);

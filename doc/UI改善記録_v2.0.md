@@ -424,8 +424,74 @@ body {
    - グレー系の色は明度を上げて調整
    - ボーダー色も `border-gray-600` で統一
 
+### 8. CSSクラスの優先順位問題と解決策
+
+#### 実施日: 2025年1月26日
+
+#### 発見された問題
+作業詳細ページ（WorkInstructionResults.tsx）でTailwindのユーティリティクラス（`bg-emerald-600`など）が効かない問題が発生。
+
+#### 原因の特定プロセス
+1. **HTML要素の確認**
+   - 開発者ツールでclass属性を確認 → Tailwindクラスは正しく適用されていた
+   
+2. **スタイルの確認**
+   - Stylesパネルで実際の背景色を確認
+   - 結果：`background: #ffffff08`（ほぼ透明な白）が適用されていた
+   
+3. **原因の特定**
+   - globals.cssに`.instruction-header`クラスが定義されていた
+   - このカスタムCSSがTailwindクラスより優先されていた
+
+#### 問題のコード
+```css
+/* globals.css */
+.instruction-header {
+  background: rgba(255, 255, 255, 0.03); /* これがbg-emerald-600を上書き */
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 215, 0, 0.1);
+}
+```
+
+#### 解決方法
+1. **影響範囲の確認**
+   - grepで`instruction-header`の使用箇所を検索
+   - 結果：WorkInstructionResults.tsxの1箇所のみで使用
+   
+2. **修正の実施**
+   - globals.cssの背景色を変更
+   - 不要なTailwindクラスを削除してCSSの競合を回避
+
+```css
+/* 修正後 */
+.instruction-header {
+  background: rgba(16, 185, 129, 0.4); /* エメラルド色 40%透明度 */
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(16, 185, 129, 0.5); /* エメラルド色のボーダー */
+}
+```
+
+#### 学んだ教訓
+1. **CSSの優先順位**
+   - カスタムCSSクラスはTailwindユーティリティクラスより優先される
+   - 同じ要素に両方を適用すると予期しない結果になる可能性がある
+   
+2. **デバッグのベストプラクティス**
+   - 開発者ツールでComputedスタイルを確認
+   - CSSの出所（どのファイル・ルールから来ているか）を特定
+   - grepで影響範囲を事前に確認
+   
+3. **設計の推奨事項**
+   - カスタムCSSクラスとTailwindクラスの混在は避ける
+   - カスタムCSSを使う場合は、その要素専用のクラス名を使用
+   - または、Tailwindの`@apply`ディレクティブを使用してカスタムクラスを作成
+
 ---
 
-**最終更新**: 2025年7月24日  
+**最終更新**: 2025年1月26日  
 **更新者**: Claude Code  
 **次回見直し**: 必要に応じて  

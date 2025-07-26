@@ -33,6 +33,8 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  // アコーディオン用の状態
+  const [openAccordions, setOpenAccordions] = useState<number[]>([0])
 
   const dataRoot = useMemo(() => getFrontendDataPath(), []);
 
@@ -116,30 +118,100 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   return (
     <div className="work-instruction-container">
       {/* 戻るボタン */}
-      <button onClick={onBack} className="custom-rect-button gray mb-6">
+      <button onClick={onBack} className="custom-rect-button gray" style={{ marginBottom: '40px' }}>
         <span>←</span>
         <span>検索に戻る</span>
       </button>
 
       {/* ヘッダー */}
-      <div className="instruction-header mb-8 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20">
+      <div className="instruction-header" style={{ marginBottom: '50px' }}>
+        <h1 className="text-4xl font-bold text-white mb-6">【🙋ざっくり説明】</h1>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <div className="text-2xl font-bold text-emerald-300 mb-2">{instruction.metadata.drawingNumber}</div>
-            <div className="text-xl font-semibold text-white mb-1">{instruction.metadata.title}</div>
-            <div className="text-emerald-200/80 text-sm mb-2">作成者: {instruction.metadata.author}</div>
+            <div className="text-2xl font-bold text-emerald-300 mb-2">《図番》 {instruction.metadata.drawingNumber}</div>
+            <div className="text-lg font-medium text-white mb-1">《会社》 {instruction.metadata.companyName || '-'}</div>
+            <div className="text-lg font-medium text-white mb-2">《製品》 {instruction.metadata.productName || '-'}</div>
             <div className="flex flex-col gap-2 text-emerald-200/70 text-sm mt-2">
-              <span>所要時間: {instruction.metadata.estimatedTime}</span>
-              <span>使用機械: {
+              <span>《所要時間》 {instruction.metadata.estimatedTime}</span>
+              <span>《使用機械》 {
                 Array.isArray(instruction.metadata.machineType) 
                   ? instruction.metadata.machineType.join(', ')
                   : instruction.metadata.machineType?.split(',').map(type => type.trim()).join(', ') || ''
               }</span>
-              <span>必要工具: {instruction.metadata.toolsRequired?.join(', ')}</span>
+              <span>《推奨工具》 {instruction.metadata.toolsRequired?.join(', ')}</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* ヒヤリハット（Near Miss）表示 - タイムライン形式 */}
+      {instruction.nearMiss && instruction.nearMiss.length > 0 && (
+        <div className="bg-yellow-100/10 backdrop-blur-md rounded-2xl p-6 border border-yellow-400/30 shadow-2xl" style={{ marginBottom: '50px' }}>
+          <h3 className="font-bold text-yellow-300 mb-6" style={{ fontSize: '1.5rem' }}>【❤️あなたのためのヒヤリハット】</h3>
+          <div className="relative">
+            {/* 縦線 */}
+            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-yellow-500/30"></div>
+            
+            {instruction.nearMiss.map((item, idx) => (
+              <div key={idx} className="relative flex gap-6 mb-8 last:mb-0">
+                {/* 左側のインジケーター */}
+                <div className="flex-shrink-0 w-16">
+                  <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${
+                    item.severity === 'critical' ? 'bg-red-600' :
+                    item.severity === 'high' ? 'bg-orange-600' :
+                    item.severity === 'medium' ? 'bg-yellow-600' :
+                    'bg-yellow-500/50'
+                  }`}>
+                    <span className="text-2xl">
+                      {item.severity === 'critical' ? '🚨' :
+                       item.severity === 'high' ? '⚠️' :
+                       item.severity === 'medium' ? '⚡' : '💡'}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* 右側のコンテンツ */}
+                <div 
+                  className={`flex-1 rounded-xl p-5 border-2 shadow-md ${
+                    item.severity === 'critical' ? 'border-red-500' :
+                    item.severity === 'high' ? 'border-orange-500' :
+                    item.severity === 'medium' ? 'border-yellow-500' :
+                    'border-yellow-400'
+                  }`}
+                  style={{
+                    backgroundColor: 
+                      item.severity === 'critical' ? 'rgba(220, 38, 38, 0.3)' : // 赤
+                      item.severity === 'high' ? 'rgba(251, 146, 60, 0.3)' :    // オレンジ
+                      item.severity === 'medium' ? 'rgba(250, 204, 21, 0.3)' :  // 黄
+                      'rgba(250, 204, 21, 0.15)'                                // 薄黄
+                  }}
+                >
+                  <div className="mb-3">
+                    <h4 className="font-bold text-yellow-100 text-lg">{item.title}</h4>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <span className="text-yellow-300 font-semibold text-sm whitespace-nowrap">📋 内容：</span>
+                      <p className="text-yellow-100 text-sm">{item.description}</p>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <span className="text-yellow-300 font-semibold text-sm whitespace-nowrap">🔍 原因：</span>
+                      <p className="text-yellow-200/80 text-sm">{item.cause}</p>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <span className="text-yellow-300 font-semibold text-sm whitespace-nowrap">✅ 対策：</span>
+                      <p className="text-yellow-200/80 text-sm">{item.prevention}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* overviewメディア群 */}
       {(overviewFiles.pdfs.length > 0 || overviewFiles.images.length > 0 || overviewFiles.videos.length > 0 || overviewFiles.programs.length > 0) && (
@@ -225,28 +297,6 @@ export default function WorkInstructionResults({ instruction, contributions, onB
               </div>
             </div>
           )}
-        </div>
-      )}
-
-      {/* ヒヤリハット（Near Miss）表示 */}
-      {instruction.nearMiss && instruction.nearMiss.length > 0 && (
-        <div className="bg-yellow-100/10 backdrop-blur-md rounded-2xl p-6 border border-yellow-400/30 mb-8">
-          <h3 className="text-xl font-bold text-yellow-300 mb-3">⚠️ ヒヤリハット事例</h3>
-          <ul className="space-y-4">
-            {instruction.nearMiss.map((item, idx) => (
-              <li key={idx} className="bg-yellow-900/20 rounded-xl p-4 border border-yellow-400/20">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-1">
-                  <span className="font-semibold text-yellow-200">{item.title}</span>
-                  <span className={`text-xs px-2 py-1 rounded ${item.severity === 'high' || item.severity === 'critical' ? 'bg-red-500/60 text-white' : 'bg-yellow-500/40 text-yellow-900'}`}>
-                    重大度: {item.severity === 'critical' ? '最重要' : item.severity === 'high' ? '高' : item.severity === 'medium' ? '中' : '低'}
-                  </span>
-                </div>
-                <div className="text-yellow-100 mb-1">内容: {item.description}</div>
-                <div className="text-yellow-200/80 mb-1">原因: {item.cause}</div>
-                <div className="text-yellow-200/80">対策: {item.prevention}</div>
-              </li>
-            ))}
-          </ul>
         </div>
       )}
 
