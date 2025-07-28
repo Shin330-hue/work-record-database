@@ -264,12 +264,27 @@ export function generateBasicInstruction(data: {
 
 // instruction.json保存
 export async function saveInstructionFile(drawingNumber: string, instruction: WorkInstruction): Promise<void> {
-  const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber)
-  const basePath = path.join(getDataPath(), 'work-instructions', `drawing-${safeDrawingNumber}`)
-  const filePath = path.join(basePath, 'instruction.json')
-  
-  await writeFile(filePath, JSON.stringify(instruction, null, 2))
-  console.log(`✅ instruction.json保存完了: drawing-${safeDrawingNumber}`)
+  try {
+    const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber)
+    const basePath = path.join(getDataPath(), 'work-instructions', `drawing-${safeDrawingNumber}`)
+    const filePath = path.join(basePath, 'instruction.json')
+    
+    console.log(`📝 instruction.json保存開始: ${filePath}`)
+    
+    // フォルダが存在するか確認
+    try {
+      await access(basePath)
+    } catch {
+      console.error(`❌ フォルダが存在しません: ${basePath}`)
+      throw new Error(`フォルダが存在しません: drawing-${safeDrawingNumber}`)
+    }
+    
+    await writeFile(filePath, JSON.stringify(instruction, null, 2))
+    console.log(`✅ instruction.json保存完了: drawing-${safeDrawingNumber}`)
+  } catch (error) {
+    console.error(`❌ instruction.json保存エラー:`, error)
+    throw error
+  }
 }
 
 // データ整合性チェック

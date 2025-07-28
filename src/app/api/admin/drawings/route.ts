@@ -269,6 +269,7 @@ export async function POST(request: NextRequest) {
         })
         
       } catch (error) {
+        console.error(`図番処理エラー (${processedData.drawingNumber}):`, error)
         processResults.push({
           drawingNumber: processedData.drawingNumber,
           success: false,

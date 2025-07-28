@@ -1171,7 +1171,7 @@ export default function DrawingEdit() {
               <div className="flex items-center space-x-2">
                 <input
                   type="file"
-                  accept=".nc,.txt,.tap,.pgm,.mpf,.ptp,.gcode,.cnc,.min,.eia"
+                  accept=".nc,.txt,.tap,.pgm,.mpf,.ptp,.gcode,.cnc,.min,.eia,.dxf,.dwg,.mcam"
                   multiple
                   onChange={(e) => handleBatchFileUpload(e.target.files, 'program')}
                   disabled={uploadingFiles['overview-programs']}

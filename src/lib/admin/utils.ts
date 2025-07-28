@@ -73,7 +73,8 @@ export const generateTimestampedFileName = (originalName: string, extension: str
  */
 export const PROGRAM_EXTENSIONS = [
   '.nc', '.txt', '.tap', '.pgm', '.mpf', 
-  '.ptp', '.gcode', '.cnc', '.min', '.eia'
+  '.ptp', '.gcode', '.cnc', '.min', '.eia',
+  '.dxf', '.dwg', '.mcam'
 ] as const
 
 /**
