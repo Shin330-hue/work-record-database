@@ -352,7 +352,6 @@ export const loadWorkInstruction = async (drawingNumber: string): Promise<WorkIn
     // 検索インデックスから会社名と製品名を取得
     try {
       const searchIndex = await loadSearchIndex();
-      const companies = await loadCompanies();
       const drawingSearchItem = searchIndex.drawings.find(d => d.drawingNumber === drawingNumber);
       
       if (drawingSearchItem) {

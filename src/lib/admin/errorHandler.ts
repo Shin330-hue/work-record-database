@@ -6,6 +6,7 @@ import { ApiResponse, ApiError } from '@/types/admin-api'
 /**
  * 成功レスポンスを生成
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function successResponse<T = any>(
   data: T, 
   status: number = 200
@@ -25,6 +26,7 @@ export function successResponse<T = any>(
 export function errorResponse(
   error: string | Error | ApiError,
   status: number = 500,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   details?: any
 ): NextResponse {
   let errorMessage: string
@@ -57,7 +59,8 @@ export function errorResponse(
 /**
  * 非同期ハンドラーのエラーハンドリングラッパー
  */
-export function withErrorHandling<T extends any[], R>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function withErrorHandling<T extends any[]>(
   handler: (...args: T) => Promise<NextResponse>
 ): (...args: T) => Promise<NextResponse> {
   return async (...args: T) => {

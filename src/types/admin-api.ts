@@ -3,10 +3,12 @@
 /**
  * API共通レスポンス型
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ApiResponse<T = any> {
   success: boolean
   data?: T
   error?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   details?: any
   timestamp?: string
 }
@@ -17,6 +19,7 @@ export interface ApiResponse<T = any> {
 export interface ApiError {
   code: string
   message: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   details?: any
   statusCode?: number
 }
@@ -45,6 +48,7 @@ export interface FileUploadResponse {
 /**
  * バッチ処理レスポンス
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface BatchResponse<T = any> {
   success: boolean
   summary: {

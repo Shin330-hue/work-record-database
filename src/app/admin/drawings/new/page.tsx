@@ -568,6 +568,7 @@ export default function NewDrawingPage() {
                     難易度 <span className="text-red-500">*</span>
                   </label>
                   <FormSelect
+                    name="difficulty"
                     value={drawing.difficulty}
                     onChange={(e) => updateDrawing(index, 'difficulty', e.target.value)}
                     options={[

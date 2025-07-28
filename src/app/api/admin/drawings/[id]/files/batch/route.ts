@@ -6,9 +6,6 @@ import path from 'path'
 import { existsSync } from 'fs'
 import { 
   getDataPath, 
-  sanitizeFileName, 
-  generateTimestampedFileName,
-  PROGRAM_EXTENSIONS,
   determineFileType 
 } from '@/lib/admin/utils'
 

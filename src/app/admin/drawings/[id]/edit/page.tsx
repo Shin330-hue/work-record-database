@@ -3,7 +3,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
@@ -45,7 +45,6 @@ interface EditFormData {
 type TabType = 'basic' | 'workSteps' | 'quality' | 'related'
 
 export default function DrawingEdit() {
-  const router = useRouter()
   const params = useParams()
   const drawingNumber = params.id as string
 

@@ -33,8 +33,6 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  // アコーディオン用の状態
-  const [openAccordions, setOpenAccordions] = useState<number[]>([0])
 
   const dataRoot = useMemo(() => getFrontendDataPath(), []);
 
