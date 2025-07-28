@@ -279,13 +279,11 @@ export const loadCompanies = async (): Promise<Company[]> => {
     if (process.env.NODE_ENV === 'development' && process.env.DEBUG_DATA_LOADING === 'true') {
       console.log('🔍 会社データ読み込み情報:', {
         isServerSide: typeof window === 'undefined',
-        dataPath: getDataPath(),
-        useNAS: process.env.USE_NAS,
         nodeEnv: process.env.NODE_ENV
       })
     }
-    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
-    const response = await fetch(`${dataPath}/companies.json`);
+    // APIエンドポイントから取得（キャッシュされない）
+    const response = await fetch('/api/companies');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -304,13 +302,11 @@ export const loadSearchIndex = async (): Promise<SearchIndex> => {
     if (process.env.DEBUG_DATA_LOADING === 'true') {
       console.log('🔍 検索インデックス読み込み情報:', {
         isServerSide: typeof window === 'undefined',
-        dataPath: getDataPath(),
-        useNAS: process.env.USE_NAS,
         nodeEnv: process.env.NODE_ENV
       })
     }
-    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
-    const response = await fetch(`${dataPath}/search-index.json`);
+    // APIエンドポイントから取得（キャッシュされない）
+    const response = await fetch('/api/search-index');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -336,16 +332,16 @@ export const loadWorkInstruction = async (drawingNumber: string): Promise<WorkIn
       console.log('🔍 作業手順読み込み情報:', {
         drawingNumber,
         isServerSide: typeof window === 'undefined',
-        dataPath: getDataPath(),
-        useNAS: process.env.USE_NAS,
         nodeEnv: process.env.NODE_ENV
       })
     }
-    const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber);
-    const dataPath = typeof window === 'undefined' ? getDataPath() : getFrontendDataPath();
-    const response = await fetch(`${dataPath}/work-instructions/drawing-${safeDrawingNumber}/instruction.json`);
+    // APIエンドポイントから取得（キャッシュされない）
+    const response = await fetch(`/api/work-instruction/${encodeURIComponent(drawingNumber)}`);
     if (!response.ok) {
-      throw new Error(`図番 ${drawingNumber} の作業手順が見つかりません`);
+      if (response.status === 404) {
+        throw new Error(`図番 ${drawingNumber} の作業手順が見つかりません`);
+      }
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     const workInstruction: WorkInstruction = await response.json();
     
