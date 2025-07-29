@@ -243,7 +243,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                     rel="noopener noreferrer"
                     className="custom-rect-button purple small"
                   >
-                    <span>📄</span>
+                    <span>🔴</span>
                     <span>{pdf}</span>
                   </a>
                 ))}
@@ -261,7 +261,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                       onClick={() => downloadFile(program, 'programs', 'overview')}
                       className="custom-rect-button purple small"
                     >
-                      <span>📁</span>
+                      <span>📄</span>
                       <span>{program}</span>
                     </button>
                   ))}

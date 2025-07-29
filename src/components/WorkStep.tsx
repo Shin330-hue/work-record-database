@@ -246,7 +246,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                       onClick={() => downloadStepFile(program)}
                       className="custom-rect-button purple small"
                     >
-                      <span>📁</span>
+                      <span>📄</span>
                       <span>{program}</span>
                     </button>
                   ))}
