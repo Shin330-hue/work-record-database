@@ -1196,47 +1196,51 @@ export default function DrawingEdit() {
           {/* 概要画像セクション */}
           <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
             <h2 className="text-xl font-semibold text-white mb-6">概要画像</h2>
-            <div className="space-y-2">
-              {actualFiles.overview.images.length > 0 ? actualFiles.overview.images.map((image, imgIndex) => (
-                <div key={imgIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-700 font-medium">{image}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeOverviewImage(imgIndex)}
-                      className="custom-rect-button red tiny"
-                    >
-                      削除
-                    </button>
-                  </div>
-                  <div className="aspect-video bg-gray-100 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                    onClick={() => {
-                      const imageUrls = actualFiles.overview.images.map(img => 
-                        `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(img)}`
-                      );
-                      const currentIdx = actualFiles.overview.images.indexOf(image);
-                      setCurrentImages(imageUrls);
-                      setCurrentImageIndex(currentIdx);
-                      setLightboxOpen(true);
-                    }}>
-                    <img
-                      src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`}
-                      alt={`概要画像 - ${image}`}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                        const parent = e.currentTarget.parentElement
-                        if (parent && !parent.querySelector('.error-message')) {
-                          const errorDiv = document.createElement('div')
-                          errorDiv.className = 'error-message flex items-center justify-center h-full text-gray-400'
-                          errorDiv.innerHTML = '<span>画像を読み込めません</span>'
-                          parent.appendChild(errorDiv)
-                        }
-                      }}
-                    />
-                  </div>
+            <div>
+              {actualFiles.overview.images.length > 0 ? (
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2">
+                  {actualFiles.overview.images.map((image, imgIndex) => (
+                    <div key={imgIndex} className="relative group">
+                      <div className="aspect-square bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200"
+                        onClick={() => {
+                          const imageUrls = actualFiles.overview.images.map(img => 
+                            `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(img)}`
+                          );
+                          const currentIdx = actualFiles.overview.images.indexOf(image);
+                          setCurrentImages(imageUrls);
+                          setCurrentImageIndex(currentIdx);
+                          setLightboxOpen(true);
+                        }}>
+                        <img
+                          src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`}
+                          alt={`概要画像 - ${image}`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none'
+                            const parent = e.currentTarget.parentElement
+                            if (parent && !parent.querySelector('.error-message')) {
+                              const errorDiv = document.createElement('div')
+                              errorDiv.className = 'error-message flex items-center justify-center h-full text-gray-400'
+                              errorDiv.innerHTML = '<span>画像を読み込めません</span>'
+                              parent.appendChild(errorDiv)
+                            }
+                          }}
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeOverviewImage(imgIndex)}
+                        className="absolute top-0.5 right-0.5 bg-red-600 text-white rounded px-1.5 py-0.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+                      >
+                        削除
+                      </button>
+                      <div className="mt-0.5 text-xs text-gray-500 truncate" title={image}>
+                        {image}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )) : (
+              ) : (
                 <div className="text-center py-4 text-gray-500">
                   概要画像はありません
                 </div>
@@ -2213,46 +2217,54 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 画像 ({(actualFiles.steps[index]?.images || []).length}件)
               </label>
-              <div className="space-y-2">
-                {(actualFiles.steps[index]?.images || []).map((image, imgIndex) => (
-                  <div key={imgIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-700 font-medium">{image}</span>
-                      <button
-                        type="button"
-                        onClick={() => onFileRemove(index, 'images', imgIndex)}
-                        className="custom-rect-button red tiny"
-                      >
-                        削除
-                      </button>
-                    </div>
-                    <div className="aspect-video bg-gray-100 rounded overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      onClick={() => {
-                        const stepImages = actualFiles.steps[index]?.images || [];
-                        const imageUrls = stepImages.map(img => 
-                          `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(img)}`
-                        );
-                        const currentIdx = stepImages.indexOf(image);
-                        onImageClick(imageUrls, currentIdx);
-                      }}>
-                      <img
-                        src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(image)}`}
-                        alt={`ステップ画像 - ${image}`}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none'
-                          const parent = e.currentTarget.parentElement
-                          if (parent && !parent.querySelector('.error-message')) {
-                            const errorDiv = document.createElement('div')
-                            errorDiv.className = 'error-message flex items-center justify-center h-full text-gray-400'
-                            errorDiv.innerHTML = '<span>画像を読み込めません</span>'
-                            parent.appendChild(errorDiv)
-                          }
-                        }}
-                      />
-                    </div>
+              <div>
+                {(actualFiles.steps[index]?.images || []).length > 0 ? (
+                  <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2">
+                    {(actualFiles.steps[index]?.images || []).map((image, imgIndex) => (
+                      <div key={imgIndex} className="relative group">
+                        <div className="aspect-square bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200"
+                          onClick={() => {
+                            const stepImages = actualFiles.steps[index]?.images || [];
+                            const imageUrls = stepImages.map(img => 
+                              `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(img)}`
+                            );
+                            const currentIdx = stepImages.indexOf(image);
+                            onImageClick(imageUrls, currentIdx);
+                          }}>
+                          <img
+                            src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(image)}`}
+                            alt={`ステップ画像 - ${image}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none'
+                              const parent = e.currentTarget.parentElement
+                              if (parent && !parent.querySelector('.error-message')) {
+                                const errorDiv = document.createElement('div')
+                                errorDiv.className = 'error-message flex items-center justify-center h-full text-gray-400'
+                                errorDiv.innerHTML = '<span>画像を読み込めません</span>'
+                                parent.appendChild(errorDiv)
+                              }
+                            }}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => onFileRemove(index, 'images', imgIndex)}
+                          className="absolute top-0.5 right-0.5 bg-red-600 text-white rounded px-1.5 py-0.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
+                        >
+                          削除
+                        </button>
+                        <div className="mt-0.5 text-xs text-gray-500 truncate" title={image}>
+                          {image}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <div className="text-center py-4 text-gray-500">
+                    画像はありません
+                  </div>
+                )}
                 
                 <div className="flex items-center space-x-2">
                   <input
