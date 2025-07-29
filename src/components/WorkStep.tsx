@@ -77,7 +77,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
     <>
       <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 shadow-lg">
       <div className="flex items-center gap-4 mb-4">
-        <div className="text-lg font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-lg">ステップ {step.stepNumber}</div>
+        <div className="text-lg font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-lg">第{step.stepNumber}工程</div>
         <div className="text-xl font-semibold text-white">{step.title}</div>
         <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">所要時間: {step.timeRequired}</span>
         <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">{getWarningLevelText(step.warningLevel)}</span>
@@ -112,7 +112,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                 }}>
                 <Image
                   src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/step_0${step.stepNumber}/${image}`}
-                  alt={`ステップ${step.stepNumber} - ${image}`}
+                  alt={`第${step.stepNumber}工程 - ${image}`}
                   width={200}
                   height={200}
                   className="w-full h-full object-cover"

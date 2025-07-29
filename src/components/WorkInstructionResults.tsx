@@ -4,7 +4,6 @@ import { WorkInstruction, loadRelatedIdeas } from '@/lib/dataLoader'
 import { Idea } from '@/types/idea'
 import { ContributionFile } from '@/types/contribution'
 import WorkStep from './WorkStep'
-import IdeaDisplay from './IdeaDisplay'
 import ContributionForm from './ContributionForm'
 import ContributionDisplay from './ContributionDisplay'
 import { getFrontendDataPath } from '../lib/dataLoader';
@@ -19,7 +18,7 @@ interface WorkInstructionResultsProps {
 
 
 export default function WorkInstructionResults({ instruction, contributions, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
-  const [activeTab, setActiveTab] = useState<'steps' | 'related' | 'ideas'>('steps')
+  const [activeTab, setActiveTab] = useState<'steps'>('steps')
   // overview用のファイル状態
   const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[], programs: string[] }>({ pdfs: [], images: [], videos: [], programs: [] })
   // 関連アイデアの状態
@@ -33,6 +32,9 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  // 関連情報の表示状態
+  const [showRelatedDrawings, setShowRelatedDrawings] = useState(false)
+  const [showIdeas, setShowIdeas] = useState(false)
 
   const dataRoot = useMemo(() => getFrontendDataPath(), []);
 
@@ -311,6 +313,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
         </div>
       )}
 
+
       {/* 概要 */}
       <div style={{ 
         marginBottom: '0',
@@ -392,6 +395,83 @@ export default function WorkInstructionResults({ instruction, contributions, onB
         </div>
       </div>
 
+      {/* 関連情報（控えめに表示） */}
+      <div style={{ 
+        marginBottom: '30px',
+        marginTop: '20px',
+        display: 'flex',
+        gap: '16px',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        flexWrap: 'wrap'
+      }}>
+        <button
+          onClick={() => setShowRelatedDrawings(!showRelatedDrawings)}
+          className="text-emerald-300 hover:text-emerald-200 transition-colors text-sm flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-emerald-500/20"
+        >
+          <span>📐</span>
+          <span>関連図番 ({instruction.relatedDrawings?.length || 0}件)</span>
+        </button>
+        <button
+          onClick={() => setShowIdeas(!showIdeas)}
+          className="text-emerald-300 hover:text-emerald-200 transition-colors text-sm flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-emerald-500/20"
+        >
+          <span>💡</span>
+          <span>加工アイデア ({relatedIdeas.length}件)</span>
+        </button>
+      </div>
+
+      {/* 関連図番表示 */}
+      {showRelatedDrawings && instruction.relatedDrawings && instruction.relatedDrawings.length > 0 && (
+        <div style={{ 
+          marginBottom: '30px',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(12px)',
+          borderRadius: '12px',
+          padding: '20px',
+          border: '1px solid rgba(16, 185, 129, 0.2)'
+        }}>
+          <h3 className="text-lg font-semibold text-emerald-200 mb-3">関連図番</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {instruction.relatedDrawings.map((related, index) => (
+              <button
+                key={index}
+                onClick={() => onRelatedDrawingClick(related.drawingNumber)}
+                className="text-left p-3 bg-white/5 rounded-lg border border-emerald-500/10 hover:bg-white/10 transition-all text-sm"
+              >
+                <div className="font-mono text-emerald-300 mb-1">{related.drawingNumber}</div>
+                <div className="text-emerald-200/70 text-xs">{related.relation}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 加工アイデア表示 */}
+      {showIdeas && relatedIdeas.length > 0 && (
+        <div style={{ 
+          marginBottom: '30px',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(12px)',
+          borderRadius: '12px',
+          padding: '20px',
+          border: '1px solid rgba(16, 185, 129, 0.2)'
+        }}>
+          <h3 className="text-lg font-semibold text-emerald-200 mb-3">加工アイデア</h3>
+          <div className="space-y-3">
+            {relatedIdeas.slice(0, 3).map((idea) => (
+              <div key={idea.id} className="p-3 bg-white/5 rounded-lg border border-emerald-500/10 text-sm">
+                <div className="font-medium text-emerald-200 mb-1">{idea.title}</div>
+                <div className="text-emerald-200/70 text-xs line-clamp-2">{idea.description}</div>
+              </div>
+            ))}
+            {relatedIdeas.length > 3 && (
+              <div className="text-center text-emerald-300/70 text-xs">他 {relatedIdeas.length - 3} 件</div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* タブ切替 */}
       <div className="flex gap-2 mb-6">
         <button
@@ -399,75 +479,23 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           onClick={() => setActiveTab('steps')}
           style={{ borderRadius: '0' }}
         >
-          作業ステップ
-        </button>
-        <button
-          className={`custom-rect-button ${activeTab === 'related' ? 'emerald' : 'gray'}`}
-          onClick={() => setActiveTab('related')}
-          style={{ borderRadius: '0' }}
-        >
-          関連図番
-        </button>
-        <button
-          className={`custom-rect-button ${activeTab === 'ideas' ? 'emerald' : 'gray'}`}
-          onClick={() => setActiveTab('ideas')}
-          style={{ borderRadius: '0' }}
-        >
-          加工アイデア
+          作業工程
         </button>
       </div>
 
       {/* タブコンテンツ */}
       {activeTab === 'steps' && (
-        <div className="work-steps">
-          {instruction.workSteps.map((step, index) => (
-            <WorkStep
-              key={index}
-              step={step}
-              instruction={instruction}
-              getStepFiles={getStepFiles}
-            />
-          ))}
-        </div>
-      )}
-
-      {activeTab === 'related' && (
-        <div className="related-drawings">
-          <h2 className="text-2xl font-bold text-emerald-100 mb-6">関連図番</h2>
-          {instruction.relatedDrawings && instruction.relatedDrawings.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {instruction.relatedDrawings.map((related, index) => (
-                <button
-                  key={index}
-                  onClick={() => onRelatedDrawingClick(related.drawingNumber)}
-                  className="text-left p-4 bg-white/10 backdrop-blur-md rounded-xl border border-emerald-500/20 hover:bg-white/15 transition-all duration-300"
-                >
-                  <div className="font-mono text-emerald-300 text-lg mb-2">{related.drawingNumber}</div>
-                  <div className="text-white text-sm mb-1">{related.relation}</div>
-                  <div className="text-emerald-200/70 text-xs">{related.description}</div>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className="text-emerald-200/70">該当する図番が見つかりません</p>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'ideas' && (
-        <div className="ideas">
-          <h2 className="text-2xl font-bold text-emerald-100 mb-6">
-            加工アイデア ({relatedIdeas.length}件)
-          </h2>
-          {relatedIdeas.length > 0 ? (
-            <div className="space-y-4">
-              {relatedIdeas.map((idea) => (
-                <IdeaDisplay key={idea.id} idea={idea} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-emerald-200/70">加工アイデアが登録されていません</p>
-          )}
+        <div style={{ marginBottom: '50px' }}>
+          <div className="work-steps">
+            {instruction.workSteps.map((step, index) => (
+              <WorkStep
+                key={index}
+                step={step}
+                instruction={instruction}
+                getStepFiles={getStepFiles}
+              />
+            ))}
+          </div>
         </div>
       )}
 
