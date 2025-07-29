@@ -42,7 +42,7 @@ interface EditFormData {
   }>
 }
 
-type TabType = 'basic' | 'workSteps' | 'quality' | 'related'
+type TabType = 'basic' | 'workSteps' | 'quality' | 'related' | 'contributions'
 
 export default function DrawingEdit() {
   const params = useParams()
@@ -75,6 +75,7 @@ export default function DrawingEdit() {
     { id: 'basic', label: '基本情報', icon: '📋' },
     { id: 'quality', label: '品質・安全', icon: '⚠️' },
     { id: 'workSteps', label: '作業手順', icon: '🔧' },
+    { id: 'contributions', label: '追記情報', icon: '💬' },
     { id: 'related', label: '関連情報', icon: '🔗' }
   ]
 
@@ -897,7 +898,14 @@ export default function DrawingEdit() {
                     activeTab === tab.id ? 'emerald' : 'gray'
                   }`}
                 >
-                  <span>{tab.icon} {tab.label}</span>
+                  <span>
+                    {tab.icon} {tab.label}
+                    {tab.id === 'contributions' && contributions && contributions.contributions.filter(c => c.status !== 'merged').length > 0 && (
+                      <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                        【{contributions.contributions.filter(c => c.status !== 'merged').length}件】
+                      </span>
+                    )}
+                  </span>
                 </button>
               ))}
             </nav>
@@ -1558,89 +1566,139 @@ export default function DrawingEdit() {
                   )}
                 </div>
               </div>
-              
-              {/* 追記管理セクション */}
+            </div>
+          )}
+
+          {/* 追記情報タブ */}
+          {activeTab === 'contributions' && (
+            <div className="space-y-6">
               <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-                <h2 className="text-xl font-semibold text-white mb-6">💬 追記情報</h2>
+                <h2 className="text-xl font-semibold text-white mb-6">💬 追記情報管理</h2>
                 
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    追記一覧 ({contributions?.contributions.length || 0}件)
-                  </h3>
-            
-            {contributions && contributions.contributions.length > 0 ? (
-              <div className="space-y-4">
-                {contributions.contributions.map((contribution, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm font-medium text-gray-900">
-                          {contribution.userName}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {new Date(contribution.timestamp).toLocaleString('ja-JP')}
-                        </span>
-                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          contribution.status === 'merged' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-orange-100 text-orange-800'
-                        }`}>
-                          {contribution.status === 'merged' ? 'マージ済み' : '未処理'}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <div className="text-sm text-gray-700 mb-3">
-                      {contribution.content.text}
-                    </div>
-                    
-                    {contribution.content.files && contribution.content.files.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {contribution.content.files.map((file, fileIndex) => (
-                          <span key={fileIndex} className={`inline-flex items-center px-2 py-1 text-xs rounded ${
-                            file.fileType === 'image' 
-                              ? 'bg-blue-100 text-blue-800' 
-                              : 'bg-purple-100 text-purple-800'
-                          }`}>
-                            {file.fileType === 'image' ? '📷' : '🎥'} {file.originalFileName}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    
-                    <div className="flex space-x-2">
-                      <button
-                        type="button"
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                        onClick={() => window.open(`/instruction/${drawingNumber}`, '_blank')}
-                      >
-                        詳細確認
-                      </button>
-                      {contribution.status !== 'merged' && (
-                        <button
-                          type="button"
-                          className="text-green-600 hover:text-green-800 text-sm font-medium"
-                          onClick={() => handleMergeContribution(index)}
-                        >
-                          マージ済みにする
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        className="custom-rect-button red tiny"
-                        onClick={() => handleDeleteContribution(index)}
-                      >
-                        削除
-                      </button>
-                    </div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-white">
+                      追記一覧 【{contributions?.contributions.length || 0}件】
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => window.open(`/instruction/${drawingNumber}`, '_blank')}
+                      className="custom-rect-button blue small"
+                    >
+                      <span>作業手順を確認</span>
+                    </button>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                追記はありません
-              </div>
-            )}
+            
+                  {contributions && contributions.contributions.length > 0 ? (
+                    <div className="space-y-4">
+                      {contributions.contributions.map((contribution, index) => (
+                        <div key={index} className="border border-gray-600 rounded-lg p-4 bg-gray-700/50">
+                          <div className="flex justify-between items-start mb-3">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-sm font-medium text-white">
+                                {contribution.userName}
+                              </span>
+                              <span className="text-xs text-gray-400">
+                                {new Date(contribution.timestamp).toLocaleString('ja-JP')}
+                              </span>
+                              <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                                contribution.status === 'merged' 
+                                  ? 'bg-green-100 text-green-800' 
+                                  : 'bg-orange-100 text-orange-800'
+                              }`}>
+                                {contribution.status === 'merged' ? 'マージ済み' : '未処理'}
+                              </span>
+                              <span className="text-xs text-gray-400">
+                                対象: {contribution.targetSection === 'overview' ? '概要' : 
+                                       contribution.targetSection === 'step' ? `ステップ ${contribution.stepNumber}` : 
+                                       '全般'}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                            {contribution.content.text}
+                          </div>
+                          
+                          {contribution.content.files && contribution.content.files.length > 0 && (
+                            <div className="mt-3">
+                              {/* 画像ファイル */}
+                              {contribution.content.files.filter(f => f.fileType === 'image').length > 0 && (
+                                <div className="mb-3">
+                                  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                    {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
+                                      <div
+                                        key={`img-${fileIndex}`}
+                                        className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                        onClick={() => {
+                                          // この追記の全画像URLを収集
+                                          const imageUrls = (contribution.content.files || [])
+                                            .filter(f => f.fileType === 'image')
+                                            .map(f => `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(f.filePath)}`);
+                                          const currentIndex = (contribution.content.files || [])
+                                            .filter(f => f.fileType === 'image')
+                                            .findIndex(f => f.filePath === file.filePath);
+                                          setCurrentImages(imageUrls);
+                                          setCurrentImageIndex(currentIndex);
+                                          setLightboxOpen(true);
+                                        }}
+                                      >
+                                        <img
+                                          src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
+                                          alt={file.originalFileName}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* 動画ファイル */}
+                              {contribution.content.files.filter(f => f.fileType === 'video').length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {contribution.content.files.filter(f => f.fileType === 'video').map((file, fileIndex) => (
+                                    <a
+                                      key={`vid-${fileIndex}`}
+                                      href={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center px-3 py-1 text-xs rounded bg-purple-600 text-white hover:opacity-80"
+                                    >
+                                      🎥 {file.originalFileName}
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          
+                          <div className="flex space-x-2 mt-3">
+                            {contribution.status !== 'merged' && (
+                              <button
+                                type="button"
+                                className="custom-rect-button emerald small"
+                                onClick={() => handleMergeContribution(index)}
+                              >
+                                <span>マージ済みにする</span>
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              className="custom-rect-button red small"
+                              onClick={() => handleDeleteContribution(index)}
+                            >
+                              <span>削除</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      追記はありません
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

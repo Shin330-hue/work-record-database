@@ -41,6 +41,8 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   // 切削条件の展開状態
   const [expandedConditions, setExpandedConditions] = useState<{ [key: string]: boolean }>({})
+  // 工程の展開/折りたたみ状態
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     const loadStepFiles = async () => {
@@ -75,15 +77,27 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
 
   return (
     <>
-      <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-emerald-500/20 shadow-lg">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="text-lg font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-lg">第{step.stepNumber}工程</div>
-        <div className="text-xl font-semibold text-white">{step.title}</div>
-        <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">所要時間: {step.timeRequired}</span>
-        <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">{getWarningLevelText(step.warningLevel)}</span>
+      <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl border border-emerald-500/20 shadow-lg overflow-hidden">
+      {/* ヘッダー部分（クリックでトグル） */}
+      <div 
+        className="flex items-center gap-4 p-6 cursor-pointer hover:bg-white/5 transition-colors"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="flex items-center gap-4 flex-1">
+          <div className="text-lg font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-lg">第{step.stepNumber}工程</div>
+          <div className="text-xl font-semibold text-white">{step.title}</div>
+          <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">所要時間: {step.timeRequired}</span>
+          <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">{getWarningLevelText(step.warningLevel)}</span>
+        </div>
+        <div className="text-emerald-300 text-2xl">
+          {isExpanded ? '▼' : '▶'}
+        </div>
       </div>
       
-      <div className="text-white mb-4 text-lg">{step.description}</div>
+      {/* 本文部分（展開時のみ表示） */}
+      {isExpanded && (
+        <div className="px-8 pb-8">
+          <div className="text-white mb-4 text-lg">{step.description}</div>
       
       {/* 詳細手順 */}
       {step.detailedInstructions && step.detailedInstructions.length > 0 && (
@@ -269,6 +283,8 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
               </div>
             ))}
           </div>
+        </div>
+      )}
         </div>
       )}
       </div>
