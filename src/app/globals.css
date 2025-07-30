@@ -1084,3 +1084,12 @@ a[href$=".pdf"]:visited {
     display: none; /* モバイルではサムネイル非表示 */
   }
 }
+
+/* カスタムCSSクラス - フォームラベル */
+.custom-form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.5rem;
+  display: block;
+}

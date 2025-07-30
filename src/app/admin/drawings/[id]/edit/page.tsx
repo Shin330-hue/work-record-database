@@ -839,6 +839,7 @@ export default function DrawingEdit() {
     }
   }
 
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -1819,20 +1820,20 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
             <button
               type="button"
               onClick={onMoveUp}
-              className="p-1 text-gray-500 hover:text-gray-700"
+              className="custom-rect-button blue small"
               title="上に移動"
             >
-              ↑
+              <span>↑</span>
             </button>
           )}
           {onMoveDown && (
             <button
               type="button"
               onClick={onMoveDown}
-              className="p-1 text-gray-500 hover:text-gray-700"
+              className="custom-rect-button blue small"
               title="下に移動"
             >
-              ↓
+              <span>↓</span>
             </button>
           )}
           <button
@@ -1852,7 +1853,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           {/* 基本情報 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="custom-form-label">
                 ステップタイトル
               </label>
               <input
@@ -1864,7 +1865,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="custom-form-label">
                 所要時間
               </label>
               <input
@@ -1878,7 +1879,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="custom-form-label">
               ステップ説明
             </label>
             <textarea
@@ -1891,7 +1892,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="custom-form-label">
               警告レベル
             </label>
             <select
@@ -1909,7 +1910,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
 
           {/* 詳細手順 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="custom-form-label">
               詳細手順
             </label>
             <div className="space-y-2">
@@ -1944,7 +1945,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
 
           {/* 切削条件セクション */}
           <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-            <h4 className="text-sm font-medium text-gray-900 mb-3">切削条件</h4>
+            <h4 className="text-base font-semibold text-white mb-3" style={{ fontSize: '1.25rem' }}>切削条件</h4>
             <div className="space-y-4">
               {(() => {
                 // 切削条件が単一のCuttingConditionsオブジェクトか、複数のオブジェクトかを判別
@@ -2014,7 +2015,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs text-gray-700 mb-1">工具</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">工具</label>
                         <input
                           type="text"
                           value={(condition && typeof condition === 'object' && 'tool' in condition) ? (condition.tool || '') : ''}
@@ -2029,7 +2030,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                       </div>
                       
                       <div>
-                        <label className="block text-xs text-gray-700 mb-1">主軸回転数</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">主軸回転数</label>
                         <input
                           type="text"
                           value={(condition && typeof condition === 'object' && 'spindleSpeed' in condition) ? (condition.spindleSpeed || '') : ''}
@@ -2044,7 +2045,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                       </div>
                       
                       <div>
-                        <label className="block text-xs text-gray-700 mb-1">送り速度</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">送り速度</label>
                         <input
                           type="text"
                           value={(condition && typeof condition === 'object' && 'feedRate' in condition) ? (condition.feedRate || '') : ''}
@@ -2128,7 +2129,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
 
           {/* 品質確認セクション */}
           <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-            <h4 className="text-sm font-medium text-gray-900 mb-3">品質確認</h4>
+            <h4 className="text-base font-semibold text-white mb-3" style={{ fontSize: '1.25rem' }}>品質確認</h4>
             <div className="space-y-4">
               {/* 確認項目リスト */}
               {(step.qualityCheck?.items || []).map((item, itemIndex) => (
@@ -2155,7 +2156,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
-                      <label className="block text-sm text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         確認項目
                       </label>
                       <input
@@ -2177,7 +2178,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                     </div>
                     
                     <div>
-                      <label className="block text-sm text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
                         公差
                       </label>
                       <input
@@ -2261,9 +2262,9 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                     }
                   });
                 }}
-                className="px-4 py-2 text-blue-600 hover:text-blue-800 font-medium border border-blue-300 rounded-md hover:bg-blue-50"
+                className="custom-rect-button emerald small"
               >
-                + 確認項目を追加
+                <span>+ 確認項目を追加</span>
               </button>
             </div>
           </div>
@@ -2272,7 +2273,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 画像セクション */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="custom-form-label">
                 画像 ({(actualFiles.steps[index]?.images || []).length}件)
               </label>
               <div>
@@ -2335,13 +2336,13 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                   />
                   <label
                     htmlFor={`image-upload-${index}`}
-                    className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
+                    className={`custom-rect-button small ${
                       uploadingFiles[`${index}-images`]
-                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                        : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                        ? 'gray cursor-not-allowed'
+                        : 'blue cursor-pointer'
                     }`}
                   >
-                    {uploadingFiles[`${index}-images`] ? 'アップロード中...' : '+ 画像を追加'}
+                    <span>{uploadingFiles[`${index}-images`] ? 'アップロード中...' : '+ 画像を追加'}</span>
                   </label>
                 </div>
               </div>
@@ -2349,39 +2350,47 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
 
             {/* 動画セクション */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="custom-form-label">
                 動画 ({(actualFiles.steps[index]?.videos || []).length}件)
               </label>
-              <div className="space-y-2">
-                {(actualFiles.steps[index]?.videos || []).map((video, vidIndex) => (
-                  <div key={vidIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-700 font-medium">{video}</span>
-                      <button
-                        type="button"
-                        onClick={() => onFileRemove(index, 'videos', vidIndex)}
-                        className="custom-rect-button red tiny"
-                      >
-                        削除
-                      </button>
-                    </div>
-                    <div className="aspect-video bg-gray-100 rounded overflow-hidden">
-                      <video
-                        controls
-                        className="w-full h-full object-cover"
-                        key={video}
-                      >
-                        <source
-                          src={`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(video)}`}
-                          type="video/mp4"
-                        />
-                        お使いのブラウザは動画をサポートしていません。
-                      </video>
-                    </div>
+              <div>
+                {(actualFiles.steps[index]?.videos || []).length > 0 ? (
+                  <div className="space-y-2">
+                    {(actualFiles.steps[index]?.videos || []).map((video, vidIndex) => (
+                      <div key={vidIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm text-gray-700 font-medium">{video}</span>
+                          <button
+                            type="button"
+                            onClick={() => onFileRemove(index, 'videos', vidIndex)}
+                            className="custom-rect-button red tiny"
+                          >
+                            削除
+                          </button>
+                        </div>
+                        <div className="aspect-video bg-gray-100 rounded overflow-hidden">
+                          <video
+                            controls
+                            className="w-full h-full object-cover"
+                            key={video}
+                          >
+                            <source
+                              src={`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(video)}`}
+                              type="video/mp4"
+                            />
+                            お使いのブラウザは動画をサポートしていません。
+                          </video>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <div className="text-center py-4 text-gray-500">
+                    動画はありません
+                  </div>
+                )}
                 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 mt-4">
                   <input
                     type="file"
                     accept="video/*"
@@ -2392,13 +2401,13 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                   />
                   <label
                     htmlFor={`video-upload-${index}`}
-                    className={`px-4 py-2 rounded-md cursor-pointer font-medium text-sm ${
+                    className={`custom-rect-button small ${
                       uploadingFiles[`${index}-videos`]
-                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                        : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                        ? 'gray cursor-not-allowed'
+                        : 'purple cursor-pointer'
                     }`}
                   >
-                    {uploadingFiles[`${index}-videos`] ? 'アップロード中...' : '+ 動画を追加'}
+                    <span>{uploadingFiles[`${index}-videos`] ? 'アップロード中...' : '+ 動画を追加'}</span>
                   </label>
                 </div>
               </div>
@@ -2406,6 +2415,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           </div>
         </div>
       )}
+      
     </div>
   )
 }
@@ -2556,3 +2566,4 @@ function NearMissEditor({ item, index, onChange, onRemove }: NearMissEditorProps
     </div>
   )
 }
+
