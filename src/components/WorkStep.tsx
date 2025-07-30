@@ -80,30 +80,30 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl border border-emerald-500/20 shadow-lg overflow-hidden">
       {/* ヘッダー部分（クリックでトグル） */}
       <div 
-        className="flex items-center gap-4 p-6 cursor-pointer hover:bg-white/5 transition-colors"
+        className="flex items-center gap-3 p-4 cursor-pointer hover:bg-white/5 transition-colors"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-4 flex-1">
-          <div className="text-lg font-bold text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-lg">第{step.stepNumber}工程</div>
-          <div className="text-xl font-semibold text-white">{step.title}</div>
+          <div className="text-sm font-bold text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-lg">第{step.stepNumber}工程</div>
+          <div className="text-base font-semibold text-white">{step.title}</div>
           <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">所要時間: {step.timeRequired}</span>
           <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">{getWarningLevelText(step.warningLevel)}</span>
         </div>
-        <div className="text-emerald-300 text-2xl">
+        <div className="text-emerald-300 text-lg">
           {isExpanded ? '▼' : '▶'}
         </div>
       </div>
       
       {/* 本文部分（展開時のみ表示） */}
       {isExpanded && (
-        <div className="px-8 pb-8">
-          <div className="text-white mb-4 text-lg">{step.description}</div>
+        <div className="px-6 pb-6">
+          <div className="text-white mb-3 text-sm">{step.description}</div>
       
       {/* 詳細手順 */}
       {step.detailedInstructions && step.detailedInstructions.length > 0 && (
-        <div className="bg-emerald-500/10 rounded-xl p-6 mb-4 border border-emerald-500/20">
-          <h4 className="text-lg font-semibold text-emerald-200 mb-3">詳細手順</h4>
-          <ul className="list-decimal pl-6 text-emerald-100 space-y-2">
+        <div className="bg-emerald-500/10 rounded-xl p-4 mb-3 border border-emerald-500/20">
+          <h4 className="text-base font-semibold text-emerald-200 mb-2">詳細手順</h4>
+          <ul className="list-decimal pl-5 text-emerald-100 space-y-1.5 text-sm">
             {step.detailedInstructions.map((inst, i) => (
               <li key={i}>{inst}</li>
             ))}
@@ -114,7 +114,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       {/* 画像・動画・プログラムファイル */}
       {!isLoading && (stepFiles.images.length > 0 || stepFiles.videos.length > 0 || stepFiles.programs.length > 0) && (
         <div className="mt-6" style={{ display: 'block' }}>
-          <h4 className="text-lg font-semibold text-emerald-200 mb-4 block">メディア</h4>
+          <h4 className="text-base font-semibold text-emerald-200 mb-3 block">メディア</h4>
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {/* 画像ギャラリー */}
             {stepFiles.images.map((image, i) => (
@@ -161,7 +161,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       {/* 切削条件 */}
       {step.cuttingConditions && (
         <div className="cutting-conditions mt-6 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
-          <h4 className="text-lg font-semibold text-emerald-200 mb-3">《切削条件》</h4>
+          <h4 className="text-base font-semibold text-emerald-200 mb-2">《切削条件》</h4>
           <div className="space-y-2">
             {Object.entries(step.cuttingConditions).map(([key, condition]) => {
               const isExpanded = expandedConditions[key] ?? false;
@@ -169,13 +169,13 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                 <div key={key} className="border border-emerald-500/20 rounded-lg overflow-hidden">
                   <button
                     className="w-full flex items-center justify-between bg-black/20 hover:bg-black/30 transition-colors"
-                    style={{ padding: '14px 16px' }}
+                    style={{ padding: '10px 14px' }}
                     onClick={() => setExpandedConditions(prev => ({ ...prev, [key]: !prev[key] }))}
                   >
-                    <span className="font-semibold text-emerald-300" style={{ fontSize: '1.1rem' }}>
+                    <span className="font-semibold text-emerald-300 text-sm">
                       {key.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-emerald-400" style={{ fontSize: '1.25rem' }}>
+                    <span className="text-emerald-400 text-base">
                       {isExpanded ? '−' : '+'}
                     </span>
                   </button>
@@ -204,15 +204,15 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       
       {/* 品質確認 */}
       {step.qualityCheck && (
-        <div className="quality-check mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
-          <h4 className="text-lg font-semibold text-emerald-200 mb-4">品質確認</h4>
+        <div className="quality-check mt-4 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
+          <h4 className="text-base font-semibold text-emerald-200 mb-3">品質確認</h4>
           <div className="space-y-4">
             {/* 新形式のデータ構造に対応 */}
             {step.qualityCheck.items && step.qualityCheck.items.length > 0 ? (
               step.qualityCheck.items.map((item, index) => (
-                <div key={index} className="bg-black/20 rounded-lg p-4 border border-emerald-500/10">
-                  <div className="text-emerald-100 space-y-2">
-                    <div className="text-base font-medium text-emerald-200">{item.checkPoint}</div>
+                <div key={index} className="bg-black/20 rounded-lg p-3 border border-emerald-500/10">
+                  <div className="text-emerald-100 space-y-1.5">
+                    <div className="text-sm font-medium text-emerald-200">{item.checkPoint}</div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                       {item.tolerance && (
                         <div>
@@ -273,8 +273,8 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       
       {/* 備考 */}
       {step.notes && step.notes.length > 0 && (
-        <div className="mt-6 bg-emerald-500/10 rounded-xl p-6 border border-emerald-500/20">
-          <h4 className="text-lg font-semibold text-emerald-200 mb-4">備考</h4>
+        <div className="mt-4 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
+          <h4 className="text-base font-semibold text-emerald-200 mb-3">備考</h4>
           <div className="space-y-3">
             {step.notes.map((note, index) => (
               <div key={index} className="flex items-start gap-3">

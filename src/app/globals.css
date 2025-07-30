@@ -1093,3 +1093,61 @@ a[href$=".pdf"]:visited {
   margin-bottom: 0.5rem;
   display: block;
 }
+
+/* ドラッグ&ドロップゾーン用カスタムCSS */
+.custom-dropzone {
+  text-align: center;
+  padding: 48px 20px;
+  border: 3px dashed #10b981;
+  border-radius: 16px;
+  background-color: rgba(16, 185, 129, 0.05);
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+}
+
+.custom-dropzone:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: #059669;
+}
+
+.custom-dropzone.dragover {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.25);
+  transform: scale(1.02);
+}
+
+.custom-dropzone-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+
+.custom-dropzone-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #047857;
+  margin-bottom: 8px;
+}
+
+.custom-dropzone.dragover .custom-dropzone-text {
+  color: #1d4ed8;
+}
+
+.custom-dropzone-subtext {
+  font-size: 0.875rem;
+  color: #059669;
+}
+
+.custom-dropzone.dragover .custom-dropzone-subtext {
+  color: #2563eb;
+}
+
+/* 画像がすでにある時のコンパクトなドロップゾーン */
+.custom-dropzone.custom-dropzone-compact {
+  padding: 24px 20px;
+}
+
+.custom-dropzone.custom-dropzone-compact .custom-dropzone-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
