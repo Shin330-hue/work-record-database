@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
@@ -1665,7 +1665,26 @@ export default function DrawingEdit() {
                                       {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
                                         <div
                                           key={`img-${fileIndex}`}
-                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-move"
+                                          draggable="true"
+                                          onDragStart={(e) => {
+                                            // ドラッグデータを設定
+                                            const imageUrl = `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`;
+                                            e.dataTransfer.setData('imageUrl', imageUrl);
+                                            e.dataTransfer.setData('fileName', file.originalFileName);
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                            
+                                            // ドラッグ中の視覚効果（小さいサイズで表示）
+                                            const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+                                            dragImage.style.opacity = '0.8';
+                                            dragImage.style.width = '80px';
+                                            dragImage.style.height = '80px';
+                                            dragImage.style.position = 'absolute';
+                                            dragImage.style.top = '-9999px';
+                                            document.body.appendChild(dragImage);
+                                            e.dataTransfer.setDragImage(dragImage, 40, 40);
+                                            setTimeout(() => document.body.removeChild(dragImage), 0);
+                                          }}
                                           onClick={() => {
                                             // この追記の全画像URLを収集
                                             const imageUrls = (contribution.content.files || [])
@@ -1678,11 +1697,12 @@ export default function DrawingEdit() {
                                             setCurrentImageIndex(currentIndex);
                                             setLightboxOpen(true);
                                           }}
+                                          title="ドラッグして作業ステップに追加できます"
                                         >
                                           <img
                                             src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
                                             alt={file.originalFileName}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover pointer-events-none"
                                           />
                                         </div>
                                       ))}
@@ -2056,6 +2076,8 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
   const params = useParams()
   const drawingNumber = params.id as string
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isDragOver, setIsDragOver] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const warningLevels = ['normal', 'caution', 'important', 'critical'] as const
   const warningLevelLabels = {
@@ -2562,7 +2584,48 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
           {/* 画像・動画セクション */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 画像セクション */}
-            <div>
+            <div
+              onDragOver={(e) => {
+                e.preventDefault()
+                e.dataTransfer.dropEffect = 'copy'
+                setIsDragOver(true)
+              }}
+              onDragLeave={(e) => {
+                // 子要素へのドラッグでも発火するため、実際に離れた時のみ処理
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setIsDragOver(false)
+                }
+              }}
+              onDrop={async (e) => {
+                e.preventDefault()
+                setIsDragOver(false)
+                
+                const imageUrl = e.dataTransfer.getData('imageUrl')
+                const fileName = e.dataTransfer.getData('fileName')
+                
+                if (imageUrl && fileName) {
+                  try {
+                    // 画像をダウンロードしてBlob化
+                    const response = await fetch(imageUrl)
+                    const blob = await response.blob()
+                    
+                    // File オブジェクトを作成
+                    const file = new File([blob], fileName, { type: blob.type })
+                    
+                    // FileListを模擬（単一ファイル）
+                    const dataTransfer = new DataTransfer()
+                    dataTransfer.items.add(file)
+                    
+                    // 既存のアップロード処理を呼び出し
+                    onFileUpload(index, 'images', dataTransfer.files)
+                  } catch (error) {
+                    console.error('画像の転送に失敗しました:', error)
+                    alert('画像の転送に失敗しました')
+                  }
+                }
+              }}
+              className={`transition-all duration-200 rounded-lg ${isDragOver ? 'bg-blue-50 border-2 border-blue-400 border-dashed p-4 shadow-inner' : 'border-2 border-transparent p-2'}`}
+            >
               <label className="custom-form-label">
                 画像 ({(actualFiles.steps[index]?.images || []).length}件)
               </label>
@@ -2610,31 +2673,36 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-4 text-gray-500">
-                    画像はありません
-                  </div>
+                  <>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => onFileUpload(index, 'images', e.target.files)}
+                      className="hidden"
+                    />
+                    <div 
+                      className={`text-center py-12 border-2 border-dashed rounded-lg transition-all cursor-pointer hover:bg-gray-50 ${
+                        isDragOver ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-gray-50/50'
+                      }`}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <div className="pointer-events-none">
+                        <div className="text-5xl mb-3">📁</div>
+                        <p className="text-gray-600 text-sm font-medium mb-2">
+                          ここに画像をドロップ
+                        </p>
+                        <p className="text-gray-400 text-xs">
+                          または、クリックしてファイルを選択
+                        </p>
+                        <p className="text-gray-400 text-xs mt-1">
+                          追記情報からドラッグ&ドロップも可能です
+                        </p>
+                      </div>
+                    </div>
+                  </>
                 )}
-                
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={(e) => onFileUpload(index, 'images', e.target.files)}
-                    className="hidden"
-                    id={`image-upload-${index}`}
-                  />
-                  <label
-                    htmlFor={`image-upload-${index}`}
-                    className={`custom-rect-button small ${
-                      uploadingFiles[`${index}-images`]
-                        ? 'gray cursor-not-allowed'
-                        : 'blue cursor-pointer'
-                    }`}
-                  >
-                    <span>{uploadingFiles[`${index}-images`] ? 'アップロード中...' : '+ 画像を追加'}</span>
-                  </label>
-                </div>
               </div>
             </div>
 
