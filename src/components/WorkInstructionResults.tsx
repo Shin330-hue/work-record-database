@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { WorkInstruction, loadRelatedIdeas } from '@/lib/dataLoader'
 import { Idea } from '@/types/idea'
@@ -6,7 +6,6 @@ import { ContributionFile } from '@/types/contribution'
 import WorkStep from './WorkStep'
 import ContributionForm from './ContributionForm'
 import ContributionDisplay from './ContributionDisplay'
-import { getFrontendDataPath } from '../lib/dataLoader';
 import { ImageLightbox } from './ImageLightbox'
 
 interface WorkInstructionResultsProps {
@@ -36,12 +35,17 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   const [showRelatedDrawings, setShowRelatedDrawings] = useState(false)
   const [showIdeas, setShowIdeas] = useState(false)
 
-  const dataRoot = useMemo(() => getFrontendDataPath(), []);
 
   // ファイルダウンロード関数
   const downloadFile = (filename: string, folderType: string, subFolder?: string) => {
     const drawingNumber = instruction.metadata.drawingNumber
-    const filePath = `${dataRoot}/work-instructions/drawing-${drawingNumber}/${folderType}/${subFolder || ''}/${encodeURIComponent(filename)}`
+    const params = new URLSearchParams({
+      drawingNumber,
+      folderType,
+      fileName: filename,
+      ...(subFolder && { subFolder })
+    })
+    const filePath = `/api/files?${params}`
     const link = document.createElement('a')
     link.href = filePath
     link.download = filename
@@ -240,7 +244,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                 {overviewFiles.pdfs.map((pdf, i) => (
                   <a
                     key={`overview-pdf-${i}`}
-                    href={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/pdfs/overview/${encodeURIComponent(pdf)}`}
+                    href={`/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=pdfs&subFolder=overview&fileName=${encodeURIComponent(pdf)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="custom-rect-button purple small"
@@ -283,7 +287,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                       setLightboxOpen(true);
                     }}>
                     <Image
-                      src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`}
+                      src={`/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`}
                       alt={`概要 - ${image}`}
                       width={200}
                       height={200}
@@ -303,7 +307,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   <div key={`overview-vid-${i}`}
                     className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
                     <video controls className="w-full h-full object-cover">
-                      <source src={`${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/videos/overview/${video}`} type="video/mp4" />
+                      <source src={`/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=videos&subFolder=overview&fileName=${encodeURIComponent(video)}`} type="video/mp4" />
                     </video>
                   </div>
                 ))}
@@ -536,7 +540,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       {overviewFiles.images.length > 0 && (
         <ImageLightbox
           images={overviewFiles.images.map(image => 
-            `${dataRoot}/work-instructions/drawing-${instruction.metadata.drawingNumber}/images/overview/${image}`
+            `/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`
           )}
           isOpen={lightboxOpen}
           currentIndex={currentImageIndex}

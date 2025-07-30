@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Idea } from '@/types/idea';
-import { getFrontendDataPath } from '@/lib/dataLoader';
 
 interface IdeaDisplayProps {
   idea: Idea;
 }
 
 export default function IdeaDisplay({ idea }: IdeaDisplayProps) {
-  const dataRoot = getFrontendDataPath();
   const [ideaFiles, setIdeaFiles] = useState<{ images: string[], videos: string[] }>({ images: [], videos: [] })
   const [isLoading, setIsLoading] = useState(true)
 
@@ -129,7 +127,7 @@ export default function IdeaDisplay({ idea }: IdeaDisplayProps) {
             {ideaFiles.images.map((image, index) => (
               <div key={index} className="bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
                 <Image
-                  src={`${dataRoot}/ideas-library/${idea.category}/${idea.id}/images/${image}`}
+                  src={`/api/files?ideaCategory=${idea.category}&ideaId=${idea.id}&folderType=images&fileName=${encodeURIComponent(image)}`}
                   alt={`${idea.title} - ${image}`}
                   width={300}
                   height={200}
@@ -149,7 +147,7 @@ export default function IdeaDisplay({ idea }: IdeaDisplayProps) {
             {ideaFiles.videos.map((video, index) => (
               <div key={index} className="bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
                 <video controls className="w-full h-full object-cover">
-                  <source src={`${dataRoot}/ideas-library/${idea.category}/${idea.id}/videos/${video}`} type="video/mp4" />
+                  <source src={`/api/files?ideaCategory=${idea.category}&ideaId=${idea.id}&folderType=videos&fileName=${encodeURIComponent(video)}`} type="video/mp4" />
                 </video>
               </div>
             ))}
