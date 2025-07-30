@@ -42,7 +42,7 @@ interface EditFormData {
   }>
 }
 
-type TabType = 'basic' | 'workSteps' | 'quality' | 'related' | 'contributions'
+type TabType = 'basic' | 'workSteps' | 'quality' | 'related' | 'contributions' | 'workStepsWithContributions'
 
 export default function DrawingEdit() {
   const params = useParams()
@@ -74,8 +74,7 @@ export default function DrawingEdit() {
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: 'basic', label: '基本情報', icon: '📋' },
     { id: 'quality', label: '品質・安全', icon: '⚠️' },
-    { id: 'workSteps', label: '作業手順', icon: '🔧' },
-    { id: 'contributions', label: '追記情報', icon: '💬' },
+    { id: 'workStepsWithContributions', label: '作業手順・追記', icon: '🔧💬' },
     { id: 'related', label: '関連情報', icon: '🔗' }
   ]
 
@@ -879,7 +878,7 @@ export default function DrawingEdit() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={activeTab === 'workStepsWithContributions' ? "bg-gray-50" : "min-h-screen bg-gray-50"}>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-3xl font-bold text-white mb-8 text-center">
@@ -901,7 +900,7 @@ export default function DrawingEdit() {
                 >
                   <span>
                     {tab.icon} {tab.label}
-                    {tab.id === 'contributions' && contributions && contributions.contributions.filter(c => c.status !== 'merged').length > 0 && (
+                    {tab.id === 'workStepsWithContributions' && contributions && contributions.contributions.filter(c => c.status !== 'merged').length > 0 && (
                       <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
                         【{contributions.contributions.filter(c => c.status !== 'merged').length}件】
                       </span>
@@ -909,9 +908,9 @@ export default function DrawingEdit() {
                   </span>
                 </button>
               ))}
-            </nav>
+              </nav>
+            </div>
           </div>
-        </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* 基本情報タブ */}
@@ -1453,6 +1452,295 @@ export default function DrawingEdit() {
             </div>
           )}
 
+          {/* 作業手順・追記統合タブ */}
+          {activeTab === 'workStepsWithContributions' && (
+            <div className="grid grid-cols-2 gap-4">
+              {/* 左側: 作業手順（既存の作業手順タブの内容をそのまま） */}
+              <div className="space-y-6 overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+                {/* 概要セクション */}
+                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                  <h2 className="text-xl font-semibold text-white mb-6">🔧 作業手順概要</h2>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="custom-form-label">
+                        準備時間
+                      </label>
+                      <div className="flex">
+                        <input
+                          type="number"
+                          value={formData.overview.preparationTime}
+                          onChange={(e) => setFormData(prev => prev ? {
+                            ...prev,
+                            overview: { ...prev.overview, preparationTime: e.target.value }
+                          } : prev)}
+                          className="custom-form-input rounded-r-none"
+                          min="0"
+                          max="9999"
+                        />
+                        <span className="px-3 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600">
+                          分
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="custom-form-label">
+                        加工時間
+                      </label>
+                      <div className="flex">
+                        <input
+                          type="number"
+                          value={formData.overview.processingTime}
+                          onChange={(e) => setFormData(prev => prev ? {
+                            ...prev,
+                            overview: { ...prev.overview, processingTime: e.target.value }
+                          } : prev)}
+                          className="custom-form-input rounded-r-none"
+                          min="0"
+                          max="9999"
+                        />
+                        <span className="px-3 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600">
+                          分
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <label className="custom-form-label">
+                      注意事項
+                    </label>
+                    <div className="space-y-2">
+                      {formData.overview.warnings.map((warning, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <input
+                            type="text"
+                            value={warning}
+                            onChange={(e) => handleWarningChange(index, e.target.value)}
+                            className="custom-form-input"
+                            placeholder="注意事項を入力..."
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeWarning(index)}
+                            className="custom-rect-button red tiny"
+                          >
+                            削除
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={addWarning}
+                        className="custom-rect-button emerald small"
+                      >
+                        <span>+ 注意事項を追加</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 作業ステップセクション */}
+                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-white">
+                      作業ステップ ({formData.workSteps.length}件)
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={addWorkStep}
+                      className="custom-rect-button emerald small"
+                    >
+                      <span>+ ステップ追加</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {formData.workSteps.map((step, index) => (
+                      <WorkStepEditor
+                        key={index}
+                        step={step}
+                        index={index}
+                        onUpdate={(updatedStep) => updateWorkStep(index, updatedStep)}
+                        onDelete={() => deleteWorkStep(index)}
+                        onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1) : undefined}
+                        onMoveDown={index < formData.workSteps.length - 1 ? () => moveWorkStep(index, index + 1) : undefined}
+                        uploadingFiles={uploadingFiles}
+                        onFileUpload={handleFileUpload}
+                        onFileRemove={removeStepFile}
+                        actualFiles={actualFiles}
+                        onImageClick={(images, currentIndex) => {
+                          setCurrentImages(images);
+                          setCurrentImageIndex(currentIndex);
+                          setLightboxOpen(true);
+                        }}
+                      />
+                    ))}
+                    
+                    {formData.workSteps.length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 操作ボタン（作業手順側に配置） */}
+                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700 mt-6">
+                  <div className="flex justify-end space-x-4">
+                    <Link
+                      href="/admin/drawings/list"
+                      className="custom-rect-button gray"
+                    >
+                      <span>キャンセル</span>
+                    </Link>
+                    <button
+                      type="submit"
+                      disabled={saving}
+                      className="custom-rect-button blue"
+                    >
+                      <span>{saving ? '更新中...' : '更新する'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 右側: 追記情報（既存の追記情報タブの内容をそのまま） */}
+              <div className="space-y-6 overflow-y-auto pl-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                  <h2 className="text-xl font-semibold text-white mb-6">💬 追記情報管理</h2>
+                  
+                  <div className="mb-8">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-semibold text-white">
+                        追記一覧 【{contributions?.contributions.length || 0}件】
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => window.open(`/instruction/${drawingNumber}`, '_blank')}
+                        className="custom-rect-button blue small"
+                      >
+                        <span>作業手順を確認</span>
+                      </button>
+                    </div>
+              
+                    {contributions && contributions.contributions.length > 0 ? (
+                      <div className="space-y-4">
+                        {contributions.contributions.map((contribution, index) => (
+                          <div key={index} className="border border-gray-600 rounded-lg p-4 bg-gray-700/50">
+                            <div className="flex justify-between items-start mb-3">
+                              <div className="flex items-center space-x-3">
+                                <span className="text-sm font-medium text-white">
+                                  {contribution.userName}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  {new Date(contribution.timestamp).toLocaleString('ja-JP')}
+                                </span>
+                                <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                                  contribution.status === 'merged' 
+                                    ? 'bg-green-100 text-green-800' 
+                                    : 'bg-orange-100 text-orange-800'
+                                }`}>
+                                  {contribution.status === 'merged' ? 'マージ済み' : '未処理'}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  対象: {contribution.targetSection === 'overview' ? '概要' : 
+                                         contribution.targetSection === 'step' ? `ステップ ${contribution.stepNumber}` : 
+                                         '全般'}
+                                </span>
+                              </div>
+                            </div>
+                            
+                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                              {contribution.content.text}
+                            </div>
+                            
+                            {contribution.content.files && contribution.content.files.length > 0 && (
+                              <div className="mt-3">
+                                {/* 画像ファイル */}
+                                {contribution.content.files.filter(f => f.fileType === 'image').length > 0 && (
+                                  <div className="mb-3">
+                                    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                      {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
+                                        <div
+                                          key={`img-${fileIndex}`}
+                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                          onClick={() => {
+                                            // この追記の全画像URLを収集
+                                            const imageUrls = (contribution.content.files || [])
+                                              .filter(f => f.fileType === 'image')
+                                              .map(f => `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(f.filePath)}`);
+                                            const currentIndex = (contribution.content.files || [])
+                                              .filter(f => f.fileType === 'image')
+                                              .findIndex(f => f.filePath === file.filePath);
+                                            setCurrentImages(imageUrls);
+                                            setCurrentImageIndex(currentIndex);
+                                            setLightboxOpen(true);
+                                          }}
+                                        >
+                                          <img
+                                            src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
+                                            alt={file.originalFileName}
+                                            className="w-full h-full object-cover"
+                                          />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* 動画ファイル */}
+                                {contribution.content.files.filter(f => f.fileType === 'video').length > 0 && (
+                                  <div className="flex flex-wrap gap-2">
+                                    {contribution.content.files.filter(f => f.fileType === 'video').map((file, fileIndex) => (
+                                      <a
+                                        key={`vid-${fileIndex}`}
+                                        href={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center px-3 py-1 text-xs rounded bg-purple-600 text-white hover:opacity-80"
+                                      >
+                                        🎥 {file.originalFileName}
+                                      </a>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            
+                            <div className="flex space-x-2 mt-3">
+                              {contribution.status !== 'merged' && (
+                                <button
+                                  type="button"
+                                  className="custom-rect-button emerald small"
+                                  onClick={() => handleMergeContribution(index)}
+                                >
+                                  <span>マージ済みにする</span>
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                className="custom-rect-button red small"
+                                onClick={() => handleDeleteContribution(index)}
+                              >
+                                <span>削除</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        追記はありません
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* 関連情報タブ */}
           {activeTab === 'related' && (
             <div className="space-y-6">
@@ -1705,29 +1993,31 @@ export default function DrawingEdit() {
             </div>
           )}
 
-          {/* エラー表示 */}
-          {error && (
+          {/* エラー表示（統合タブ以外で表示） */}
+          {error && activeTab !== 'workStepsWithContributions' && (
             <div className="bg-red-50 border border-red-200 rounded-md p-4">
               <div className="text-red-800">{error}</div>
             </div>
           )}
 
-          {/* 操作ボタン */}
-          <div className="flex justify-end space-x-4">
-            <Link
-              href="/admin/drawings/list"
-              className="custom-rect-button gray"
-            >
-              <span>キャンセル</span>
-            </Link>
-            <button
-              type="submit"
-              disabled={saving}
-              className="custom-rect-button blue"
-            >
-              <span>{saving ? '更新中...' : '更新する'}</span>
-            </button>
-          </div>
+          {/* 操作ボタン（統合タブ以外で表示） */}
+          {activeTab !== 'workStepsWithContributions' && (
+            <div className="flex justify-end space-x-4">
+              <Link
+                href="/admin/drawings/list"
+                className="custom-rect-button gray"
+              >
+                <span>キャンセル</span>
+              </Link>
+              <button
+                type="submit"
+                disabled={saving}
+                className="custom-rect-button blue"
+              >
+                <span>{saving ? '更新中...' : '更新する'}</span>
+              </button>
+            </div>
+          )}
         </form>
       </main>
 
