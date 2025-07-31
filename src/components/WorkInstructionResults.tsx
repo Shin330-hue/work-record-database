@@ -16,8 +16,19 @@ interface WorkInstructionResultsProps {
 }
 
 
+type MachineType = 'machining' | 'turning' | 'radial' | 'other'
+
 export default function WorkInstructionResults({ instruction, contributions, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
-  const [activeTab, setActiveTab] = useState<'steps'>('steps')
+  // 機械種別ごとの工程数を計算
+  const getStepCountByMachine = (machine: MachineType): number => {
+    if (instruction.workStepsByMachine && instruction.workStepsByMachine[machine]) {
+      return instruction.workStepsByMachine[machine]!.length
+    }
+    // 後方互換性: workStepsByMachineがない場合は、既存のworkStepsをマシニングとして扱う
+    return machine === 'machining' ? instruction.workSteps.length : 0
+  }
+
+  const [activeTab, setActiveTab] = useState<MachineType>('machining')
   // overview用のファイル状態
   const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[], programs: string[] }>({ pdfs: [], images: [], videos: [], programs: [] })
   // 関連アイデアの状態
@@ -479,19 +490,40 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       {/* タブ切替 */}
       <div className="flex gap-2 mb-6">
         <button
-          className={`custom-rect-button ${activeTab === 'steps' ? 'emerald' : 'gray'}`}
-          onClick={() => setActiveTab('steps')}
+          className={`custom-rect-button ${activeTab === 'machining' ? 'emerald' : 'gray'}`}
+          onClick={() => setActiveTab('machining')}
           style={{ borderRadius: '0' }}
         >
-          作業工程
+          マシニング【{getStepCountByMachine('machining')}件】
+        </button>
+        <button
+          className={`custom-rect-button ${activeTab === 'turning' ? 'emerald' : 'gray'}`}
+          onClick={() => setActiveTab('turning')}
+          style={{ borderRadius: '0' }}
+        >
+          ターニング【{getStepCountByMachine('turning')}件】
+        </button>
+        <button
+          className={`custom-rect-button ${activeTab === 'radial' ? 'emerald' : 'gray'}`}
+          onClick={() => setActiveTab('radial')}
+          style={{ borderRadius: '0' }}
+        >
+          ラジアル【{getStepCountByMachine('radial')}件】
+        </button>
+        <button
+          className={`custom-rect-button ${activeTab === 'other' ? 'emerald' : 'gray'}`}
+          onClick={() => setActiveTab('other')}
+          style={{ borderRadius: '0' }}
+        >
+          その他【{getStepCountByMachine('other')}件】
         </button>
       </div>
 
       {/* タブコンテンツ */}
-      {activeTab === 'steps' && (
+      {activeTab === 'machining' && (
         <div style={{ marginBottom: '50px' }}>
           <div className="work-steps">
-            {instruction.workSteps.map((step, index) => (
+            {(instruction.workStepsByMachine?.machining || instruction.workSteps).map((step, index) => (
               <WorkStep
                 key={index}
                 step={step}
@@ -500,6 +532,72 @@ export default function WorkInstructionResults({ instruction, contributions, onB
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {/* ターニングタブ */}
+      {activeTab === 'turning' && (
+        <div style={{ marginBottom: '50px' }}>
+          {instruction.workStepsByMachine?.turning && instruction.workStepsByMachine.turning.length > 0 ? (
+            <div className="work-steps">
+              {instruction.workStepsByMachine.turning.map((step, index) => (
+                <WorkStep
+                  key={index}
+                  step={step}
+                  instruction={instruction}
+                  getStepFiles={getStepFiles}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-400 py-20">
+              ターニングの作業手順はまだ登録されていません
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ラジアルタブ */}
+      {activeTab === 'radial' && (
+        <div style={{ marginBottom: '50px' }}>
+          {instruction.workStepsByMachine?.radial && instruction.workStepsByMachine.radial.length > 0 ? (
+            <div className="work-steps">
+              {instruction.workStepsByMachine.radial.map((step, index) => (
+                <WorkStep
+                  key={index}
+                  step={step}
+                  instruction={instruction}
+                  getStepFiles={getStepFiles}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-400 py-20">
+              ラジアルの作業手順はまだ登録されていません
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* その他タブ */}
+      {activeTab === 'other' && (
+        <div style={{ marginBottom: '50px' }}>
+          {instruction.workStepsByMachine?.other && instruction.workStepsByMachine.other.length > 0 ? (
+            <div className="work-steps">
+              {instruction.workStepsByMachine.other.map((step, index) => (
+                <WorkStep
+                  key={index}
+                  step={step}
+                  instruction={instruction}
+                  getStepFiles={getStepFiles}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-400 py-20">
+              その他の作業手順はまだ登録されていません
+            </div>
+          )}
         </div>
       )}
 

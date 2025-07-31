@@ -51,10 +51,10 @@ async function deleteContributionFiles(drawingNumber: string, contribution: Cont
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { drawingNumber: string } }
+  { params }: { params: Promise<{ drawingNumber: string }> }
 ) {
   try {
-    const { drawingNumber } = params
+    const { drawingNumber } = await params
     const body = await request.json()
     const { action, contributionId, contributionIndex, status } = body
 

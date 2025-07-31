@@ -239,6 +239,12 @@ export interface WorkInstruction {
   metadata: InstructionMetadata
   overview: InstructionOverview
   workSteps: WorkStep[]
+  workStepsByMachine?: {
+    machining?: WorkStep[]
+    turning?: WorkStep[]
+    radial?: WorkStep[]
+    other?: WorkStep[]
+  }
   nearMiss?: NearMissItem[]
   relatedDrawings: RelatedDrawing[]
   troubleshooting?: TroubleshootingItem[]
