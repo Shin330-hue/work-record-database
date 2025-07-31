@@ -801,42 +801,6 @@ export default function DrawingEdit() {
     }
   }
 
-  const handleDeleteContribution = async (contributionIndex: number) => {
-    if (!contributions) return
-    
-    if (!confirm('この追記を削除しますか？この操作は取り消せません。')) {
-      return
-    }
-
-    try {
-      const response = await fetch(`/api/admin/contributions/${drawingNumber}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'delete',
-          contributionIndex
-        }),
-      })
-
-      if (response.ok) {
-        // ローカル状態更新
-        setContributions(prev => {
-          if (!prev) return prev
-          const updated = { ...prev }
-          updated.contributions.splice(contributionIndex, 1)
-          return updated
-        })
-        alert('追記を削除しました')
-      } else {
-        throw new Error('削除に失敗しました')
-      }
-    } catch (error) {
-      console.error('削除エラー:', error)
-      alert('削除処理に失敗しました')
-    }
-  }
 
 
   if (loading) {
@@ -1738,19 +1702,12 @@ export default function DrawingEdit() {
                               {contribution.status !== 'merged' && (
                                 <button
                                   type="button"
-                                  className="custom-rect-button emerald small"
+                                  className="custom-rect-button red small"
                                   onClick={() => handleMergeContribution(index)}
                                 >
-                                  <span>マージ済みにする</span>
+                                  <span>追記情報から消す</span>
                                 </button>
                               )}
-                              <button
-                                type="button"
-                                className="custom-rect-button red small"
-                                onClick={() => handleDeleteContribution(index)}
-                              >
-                                <span>削除</span>
-                              </button>
                             </div>
                           </div>
                         ))}
@@ -1994,16 +1951,9 @@ export default function DrawingEdit() {
                                 className="custom-rect-button emerald small"
                                 onClick={() => handleMergeContribution(index)}
                               >
-                                <span>マージ済みにする</span>
+                                <span>作業手順に転記済み</span>
                               </button>
                             )}
-                            <button
-                              type="button"
-                              className="custom-rect-button red small"
-                              onClick={() => handleDeleteContribution(index)}
-                            >
-                              <span>削除</span>
-                            </button>
                           </div>
                         </div>
                       ))}

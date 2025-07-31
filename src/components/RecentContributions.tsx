@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { loadRecentContributions } from '@/lib/dataLoader'
 import { ContributionData } from '@/types/contribution'
 
@@ -141,10 +142,10 @@ export default function RecentContributions({ onDrawingClick }: RecentContributi
       </div>
 
       <div className="mt-6 text-center">
-        <button className="custom-rect-button blue">
+        <Link href="/contributions/all" className="custom-rect-button blue">
           <span>全ての追記を見る</span>
           <span>→</span>
-        </button>
+        </Link>
       </div>
     </div>
   )
