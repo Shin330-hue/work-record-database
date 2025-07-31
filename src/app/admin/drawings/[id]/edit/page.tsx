@@ -771,6 +771,9 @@ export default function DrawingEdit() {
   const handleMergeContribution = async (contributionIndex: number) => {
     if (!contributions) return
 
+    const targetContribution = contributions.contributions[contributionIndex]
+    if (!targetContribution) return
+
     try {
       const response = await fetch(`/api/admin/contributions/${drawingNumber}`, {
         method: 'PATCH',
@@ -778,8 +781,9 @@ export default function DrawingEdit() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: 'merge',
-          contributionIndex
+          action: 'updateStatus',
+          contributionId: targetContribution.id,
+          status: 'merged'
         }),
       })
 
@@ -787,17 +791,27 @@ export default function DrawingEdit() {
         // ローカル状態更新
         setContributions(prev => {
           if (!prev) return prev
-          const updated = { ...prev }
-          updated.contributions[contributionIndex].status = 'merged'
-          return updated
+          const updatedContributions = [...prev.contributions]
+          updatedContributions[contributionIndex] = {
+            ...updatedContributions[contributionIndex],
+            status: 'merged'
+          }
+          return {
+            ...prev,
+            contributions: updatedContributions,
+            metadata: {
+              ...prev.metadata,
+              mergedCount: updatedContributions.filter(c => c.status === 'merged').length
+            }
+          }
         })
-        alert('追記をマージ済みに変更しました')
+        alert('追記情報から消しました')
       } else {
         throw new Error('ステータス更新に失敗しました')
       }
     } catch (error) {
-      console.error('マージエラー:', error)
-      alert('マージ処理に失敗しました')
+      console.error('ステータス更新エラー:', error)
+      alert('ステータス更新処理に失敗しました')
     }
   }
 
@@ -864,9 +878,9 @@ export default function DrawingEdit() {
                 >
                   <span>
                     {tab.icon} {tab.label}
-                    {tab.id === 'workStepsWithContributions' && contributions && contributions.contributions.filter(c => c.status !== 'merged').length > 0 && (
+                    {tab.id === 'workStepsWithContributions' && contributions && contributions.contributions.filter(c => c.status === 'active').length > 0 && (
                       <span className="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
-                        【{contributions.contributions.filter(c => c.status !== 'merged').length}件】
+                        【{contributions.contributions.filter(c => c.status === 'active').length}件】
                       </span>
                     )}
                   </span>
@@ -1583,7 +1597,7 @@ export default function DrawingEdit() {
                   <div className="mb-8">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-semibold text-white">
-                        追記一覧 【{contributions?.contributions.length || 0}件】
+                        追記一覧 【{contributions?.contributions.filter(c => c.status === 'active').length || 0}件】
                       </h3>
                       <button
                         type="button"
@@ -1594,10 +1608,15 @@ export default function DrawingEdit() {
                       </button>
                     </div>
               
-                    {contributions && contributions.contributions.length > 0 ? (
+                    {contributions && contributions.contributions.filter(c => c.status === 'active').length > 0 ? (
                       <div className="space-y-4">
-                        {contributions.contributions.map((contribution, index) => (
-                          <div key={index} className="border border-gray-600 rounded-lg p-4 bg-gray-700/50">
+                        {contributions.contributions
+                          .filter(c => c.status === 'active')
+                          .map((contribution, filteredIndex) => {
+                            // 元の配列でのインデックスを取得
+                            const originalIndex = contributions.contributions.findIndex(c => c.id === contribution.id)
+                            return (
+                          <div key={contribution.id} className="border border-gray-600 rounded-lg p-4 bg-gray-700/50">
                             <div className="flex justify-between items-start mb-3">
                               <div className="flex items-center space-x-3">
                                 <span className="text-sm font-medium text-white">
@@ -1703,14 +1722,14 @@ export default function DrawingEdit() {
                                 <button
                                   type="button"
                                   className="custom-rect-button red small"
-                                  onClick={() => handleMergeContribution(index)}
+                                  onClick={() => handleMergeContribution(originalIndex)}
                                 >
                                   <span>追記情報から消す</span>
                                 </button>
                               )}
                             </div>
                           </div>
-                        ))}
+                        )})}
                       </div>
                     ) : (
                       <div className="text-center py-8 text-gray-500">
@@ -1860,10 +1879,15 @@ export default function DrawingEdit() {
                     </button>
                   </div>
             
-                  {contributions && contributions.contributions.length > 0 ? (
+                  {contributions && contributions.contributions.filter(c => c.status === 'active').length > 0 ? (
                     <div className="space-y-4">
-                      {contributions.contributions.map((contribution, index) => (
-                        <div key={index} className="border border-gray-600 rounded-lg p-4 bg-gray-700/50">
+                      {contributions.contributions
+                        .filter(c => c.status === 'active')
+                        .map((contribution, filteredIndex) => {
+                          // 元の配列でのインデックスを取得
+                          const originalIndex = contributions.contributions.findIndex(c => c.id === contribution.id)
+                          return (
+                        <div key={contribution.id} className="border border-gray-600 rounded-lg p-4 bg-gray-700/50">
                           <div className="flex justify-between items-start mb-3">
                             <div className="flex items-center space-x-3">
                               <span className="text-sm font-medium text-white">
@@ -1949,14 +1973,14 @@ export default function DrawingEdit() {
                               <button
                                 type="button"
                                 className="custom-rect-button emerald small"
-                                onClick={() => handleMergeContribution(index)}
+                                onClick={() => handleMergeContribution(originalIndex)}
                               >
                                 <span>作業手順に転記済み</span>
                               </button>
                             )}
                           </div>
                         </div>
-                      ))}
+                      )})}
                     </div>
                   ) : (
                     <div className="text-center py-8 text-gray-500">
