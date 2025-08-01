@@ -478,11 +478,14 @@ export const loadRecentContributions = async (limit: number = 10): Promise<{ dra
     const contributionPromises = searchIndex.drawings.map(async (drawing) => {
       try {
         const contributionFile = await loadContributions(drawing.drawingNumber)
-        return contributionFile.contributions.map(contribution => ({
-          drawingNumber: drawing.drawingNumber,
-          contribution,
-          drawingTitle: drawing.title
-        }))
+        // activeステータスの追記のみを返す
+        return contributionFile.contributions
+          .filter(contribution => contribution.status === 'active')
+          .map(contribution => ({
+            drawingNumber: drawing.drawingNumber,
+            contribution,
+            drawingTitle: drawing.title
+          }))
       } catch {
         return []
       }

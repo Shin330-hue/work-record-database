@@ -374,7 +374,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
         {/* 概要への追記表示 */}
         {contributions && (
           <ContributionDisplay 
-            contributions={contributions.contributions.filter(c => c.targetSection === 'overview')}
+            contributions={contributions.contributions.filter(c => c.targetSection === 'overview' && c.status === 'active')}
             drawingNumber={instruction.metadata.drawingNumber}
           />
         )}
