@@ -31,6 +31,13 @@ interface UpdateDrawingData {
     processingTime: string
   }
   workSteps: WorkStep[]
+  workStepsByMachine?: {
+    machining?: WorkStep[]
+    turning?: WorkStep[]
+    yokonaka?: WorkStep[]
+    radial?: WorkStep[]
+    other?: WorkStep[]
+  }
   nearMiss: NearMissItem[]
   relatedDrawings: Array<{
     drawingNumber: string
@@ -176,6 +183,11 @@ class UpdateTransaction {
     // 作業ステップ更新
     if (updateData.workSteps && updateData.workSteps.length > 0) {
       instruction.workSteps = updateData.workSteps
+    }
+    
+    // 機械種別ごとの作業ステップ更新
+    if (updateData.workStepsByMachine) {
+      instruction.workStepsByMachine = updateData.workStepsByMachine
     }
 
     // ヒヤリハット事例更新

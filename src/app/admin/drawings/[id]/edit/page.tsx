@@ -310,6 +310,7 @@ export default function DrawingEdit() {
           warnings: formData.overview.warnings.filter(w => w.trim())
         },
         workSteps: formData.workSteps,
+        workStepsByMachine: formData.workStepsByMachine,
         nearMiss: formData.nearMiss,
         relatedDrawings: formData.relatedDrawings
       }
@@ -1461,25 +1462,6 @@ export default function DrawingEdit() {
                     )}
                   </div>
                 </div>
-
-                {/* 操作ボタン（作業手順側に配置） */}
-                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700 mt-6">
-                  <div className="flex justify-end space-x-4">
-                    <Link
-                      href="/admin/drawings/list"
-                      className="custom-rect-button gray"
-                    >
-                      <span>キャンセル</span>
-                    </Link>
-                    <button
-                      type="submit"
-                      disabled={saving}
-                      className="custom-rect-button blue"
-                    >
-                      <span>{saving ? '更新中...' : '更新する'}</span>
-                    </button>
-                  </div>
-                </div>
               </div>
 
               {/* 右側: 追記情報（既存の追記情報タブの内容をそのまま） */}
@@ -1742,7 +1724,26 @@ export default function DrawingEdit() {
                                       {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
                                         <div
                                           key={`img-${fileIndex}`}
-                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-move"
+                                          draggable="true"
+                                          onDragStart={(e) => {
+                                            // ドラッグデータを設定
+                                            const imageUrl = `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`;
+                                            e.dataTransfer.setData('imageUrl', imageUrl);
+                                            e.dataTransfer.setData('fileName', file.originalFileName);
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                            
+                                            // ドラッグ中の視覚効果（小さいサイズで表示）
+                                            const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+                                            dragImage.style.opacity = '0.8';
+                                            dragImage.style.width = '80px';
+                                            dragImage.style.height = '80px';
+                                            dragImage.style.position = 'absolute';
+                                            dragImage.style.top = '-9999px';
+                                            document.body.appendChild(dragImage);
+                                            e.dataTransfer.setDragImage(dragImage, 40, 40);
+                                            setTimeout(() => document.body.removeChild(dragImage), 0);
+                                          }}
                                           onClick={() => {
                                             // この追記の全画像URLを収集
                                             const imageUrls = (contribution.content.files || [])
@@ -1755,6 +1756,7 @@ export default function DrawingEdit() {
                                             setCurrentImageIndex(currentIndex);
                                             setLightboxOpen(true);
                                           }}
+                                          title="ドラッグして作業ステップに追加できます"
                                         >
                                           <img
                                             src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
@@ -1918,7 +1920,26 @@ export default function DrawingEdit() {
                                       {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
                                         <div
                                           key={`img-${fileIndex}`}
-                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-move"
+                                          draggable="true"
+                                          onDragStart={(e) => {
+                                            // ドラッグデータを設定
+                                            const imageUrl = `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`;
+                                            e.dataTransfer.setData('imageUrl', imageUrl);
+                                            e.dataTransfer.setData('fileName', file.originalFileName);
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                            
+                                            // ドラッグ中の視覚効果（小さいサイズで表示）
+                                            const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+                                            dragImage.style.opacity = '0.8';
+                                            dragImage.style.width = '80px';
+                                            dragImage.style.height = '80px';
+                                            dragImage.style.position = 'absolute';
+                                            dragImage.style.top = '-9999px';
+                                            document.body.appendChild(dragImage);
+                                            e.dataTransfer.setDragImage(dragImage, 40, 40);
+                                            setTimeout(() => document.body.removeChild(dragImage), 0);
+                                          }}
                                           onClick={() => {
                                             // この追記の全画像URLを収集
                                             const imageUrls = (contribution.content.files || [])
@@ -1931,6 +1952,7 @@ export default function DrawingEdit() {
                                             setCurrentImageIndex(currentIndex);
                                             setLightboxOpen(true);
                                           }}
+                                          title="ドラッグして作業ステップに追加できます"
                                         >
                                           <img
                                             src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
@@ -2094,7 +2116,26 @@ export default function DrawingEdit() {
                                       {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
                                         <div
                                           key={`img-${fileIndex}`}
-                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-move"
+                                          draggable="true"
+                                          onDragStart={(e) => {
+                                            // ドラッグデータを設定
+                                            const imageUrl = `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`;
+                                            e.dataTransfer.setData('imageUrl', imageUrl);
+                                            e.dataTransfer.setData('fileName', file.originalFileName);
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                            
+                                            // ドラッグ中の視覚効果（小さいサイズで表示）
+                                            const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+                                            dragImage.style.opacity = '0.8';
+                                            dragImage.style.width = '80px';
+                                            dragImage.style.height = '80px';
+                                            dragImage.style.position = 'absolute';
+                                            dragImage.style.top = '-9999px';
+                                            document.body.appendChild(dragImage);
+                                            e.dataTransfer.setDragImage(dragImage, 40, 40);
+                                            setTimeout(() => document.body.removeChild(dragImage), 0);
+                                          }}
                                           onClick={() => {
                                             // この追記の全画像URLを収集
                                             const imageUrls = (contribution.content.files || [])
@@ -2107,6 +2148,7 @@ export default function DrawingEdit() {
                                             setCurrentImageIndex(currentIndex);
                                             setLightboxOpen(true);
                                           }}
+                                          title="ドラッグして作業ステップに追加できます"
                                         >
                                           <img
                                             src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
@@ -2270,7 +2312,26 @@ export default function DrawingEdit() {
                                       {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
                                         <div
                                           key={`img-${fileIndex}`}
-                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-move"
+                                          draggable="true"
+                                          onDragStart={(e) => {
+                                            // ドラッグデータを設定
+                                            const imageUrl = `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`;
+                                            e.dataTransfer.setData('imageUrl', imageUrl);
+                                            e.dataTransfer.setData('fileName', file.originalFileName);
+                                            e.dataTransfer.effectAllowed = 'copy';
+                                            
+                                            // ドラッグ中の視覚効果（小さいサイズで表示）
+                                            const dragImage = e.currentTarget.cloneNode(true) as HTMLElement;
+                                            dragImage.style.opacity = '0.8';
+                                            dragImage.style.width = '80px';
+                                            dragImage.style.height = '80px';
+                                            dragImage.style.position = 'absolute';
+                                            dragImage.style.top = '-9999px';
+                                            document.body.appendChild(dragImage);
+                                            e.dataTransfer.setDragImage(dragImage, 40, 40);
+                                            setTimeout(() => document.body.removeChild(dragImage), 0);
+                                          }}
                                           onClick={() => {
                                             // この追記の全画像URLを収集
                                             const imageUrls = (contribution.content.files || [])
@@ -2283,6 +2344,7 @@ export default function DrawingEdit() {
                                             setCurrentImageIndex(currentIndex);
                                             setLightboxOpen(true);
                                           }}
+                                          title="ドラッグして作業ステップに追加できます"
                                         >
                                           <img
                                             src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
