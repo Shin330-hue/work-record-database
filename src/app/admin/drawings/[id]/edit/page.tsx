@@ -77,13 +77,14 @@ export default function DrawingEdit() {
   const machineTypes = ['マシニング', 'ターニング', '横中', 'ラジアル', 'フライス']
 
   // 機械種別ごとの工程数と追記数を計算
-  const getStepCountByMachine = (machine: 'machining' | 'turning' | 'radial' | 'other'): number => {
-    if (formData?.workStepsByMachine && formData.workStepsByMachine[machine]) {
-      return formData.workStepsByMachine[machine]!.length
-    }
-    // 後方互換性: workStepsByMachineがない場合は、既存のworkStepsをマシニングとして扱う
-    return machine === 'machining' ? (formData?.workSteps?.length || 0) : 0
-  }
+  // 機械種別ごとの工程数を計算（将来的な使用のため保持）
+  // const getStepCountByMachine = (machine: 'machining' | 'turning' | 'radial' | 'other'): number => {
+  //   if (formData?.workStepsByMachine && formData.workStepsByMachine[machine]) {
+  //     return formData.workStepsByMachine[machine]!.length
+  //   }
+  //   // 後方互換性: workStepsByMachineがない場合は、既存のworkStepsをマシニングとして扱う
+  //   return machine === 'machining' ? (formData?.workSteps?.length || 0) : 0
+  // }
 
   const getContributionCount = (): number => {
     if (!contributions?.contributions) return 0

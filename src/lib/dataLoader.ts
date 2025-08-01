@@ -242,6 +242,7 @@ export interface WorkInstruction {
   workStepsByMachine?: {
     machining?: WorkStep[]
     turning?: WorkStep[]
+    yokonaka?: WorkStep[]
     radial?: WorkStep[]
     other?: WorkStep[]
   }

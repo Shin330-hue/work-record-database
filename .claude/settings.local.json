@@ -1,8 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": [
       "Bash(move \"要件定義書.md\" \"bk\\要件定義書.md\")",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(powershell:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }

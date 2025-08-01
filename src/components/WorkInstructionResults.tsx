@@ -16,7 +16,7 @@ interface WorkInstructionResultsProps {
 }
 
 
-type MachineType = 'machining' | 'turning' | 'radial' | 'other'
+type MachineType = 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other'
 
 export default function WorkInstructionResults({ instruction, contributions, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
   // 機械種別ごとの工程数を計算
@@ -504,6 +504,13 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           ターニング【{getStepCountByMachine('turning')}件】
         </button>
         <button
+          className={`custom-rect-button ${activeTab === 'yokonaka' ? 'emerald' : 'gray'}`}
+          onClick={() => setActiveTab('yokonaka')}
+          style={{ borderRadius: '0' }}
+        >
+          横中【{getStepCountByMachine('yokonaka')}件】
+        </button>
+        <button
           className={`custom-rect-button ${activeTab === 'radial' ? 'emerald' : 'gray'}`}
           onClick={() => setActiveTab('radial')}
           style={{ borderRadius: '0' }}
@@ -522,16 +529,22 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       {/* タブコンテンツ */}
       {activeTab === 'machining' && (
         <div style={{ marginBottom: '50px' }}>
-          <div className="work-steps">
-            {(instruction.workStepsByMachine?.machining || instruction.workSteps).map((step, index) => (
-              <WorkStep
-                key={index}
-                step={step}
-                instruction={instruction}
-                getStepFiles={getStepFiles}
-              />
-            ))}
-          </div>
+          {(instruction.workStepsByMachine?.machining || instruction.workSteps).length > 0 ? (
+            <div className="work-steps">
+              {(instruction.workStepsByMachine?.machining || instruction.workSteps).map((step, index) => (
+                <WorkStep
+                  key={index}
+                  step={step}
+                  instruction={instruction}
+                  getStepFiles={getStepFiles}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-400 py-20">
+              マシニングの作業手順はまだ登録されていません
+            </div>
+          )}
         </div>
       )}
 
@@ -552,6 +565,28 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           ) : (
             <div className="text-center text-gray-400 py-20">
               ターニングの作業手順はまだ登録されていません
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 横中タブ */}
+      {activeTab === 'yokonaka' && (
+        <div style={{ marginBottom: '50px' }}>
+          {instruction.workStepsByMachine?.yokonaka && instruction.workStepsByMachine.yokonaka.length > 0 ? (
+            <div className="work-steps">
+              {instruction.workStepsByMachine.yokonaka.map((step, index) => (
+                <WorkStep
+                  key={index}
+                  step={step}
+                  instruction={instruction}
+                  getStepFiles={getStepFiles}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-400 py-20">
+              横中の作業手順はまだ登録されていません
             </div>
           )}
         </div>
