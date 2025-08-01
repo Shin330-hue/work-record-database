@@ -19,7 +19,7 @@ export default function ContributionsManagementPage() {
   const [contributions, setContributions] = useState<ContributionWithDrawing[]>([])
   const [filteredContributions, setFilteredContributions] = useState<ContributionWithDrawing[]>([])
   const [loading, setLoading] = useState(true)
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'merged'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'merged'>('active')
   const [searchQuery, setSearchQuery] = useState('')
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImages, setCurrentImages] = useState<string[]>([])

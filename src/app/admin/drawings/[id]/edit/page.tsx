@@ -890,6 +890,17 @@ export default function DrawingEdit() {
     }
   }
 
+  // テキストをクリップボードにコピー
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      alert('テキストをコピーしました')
+    } catch (err) {
+      console.error('コピーに失敗しました:', err)
+      alert('コピーに失敗しました')
+    }
+  }
+
   // 追記管理ハンドラー
   const handleMergeContribution = async (contributionIndex: number) => {
     if (!contributions) return
@@ -982,9 +993,25 @@ export default function DrawingEdit() {
     <div className={activeTab === 'workStepsWithContributions' ? "bg-gray-50" : "min-h-screen bg-gray-50"}>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-white mb-8 text-center">
-          【図番編集】 {formData.drawingNumber}
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-white text-center flex-1">
+            【図番編集】 {formData.drawingNumber}
+          </h1>
+          <div className="flex space-x-4">
+            <Link
+              href="/admin/drawings/list"
+              className="custom-rect-button gray small"
+            >
+              <span>図番一覧検索</span>
+            </Link>
+            <Link
+              href="/admin/contributions"
+              className="custom-rect-button emerald small"
+            >
+              <span>追記管理</span>
+            </Link>
+          </div>
+        </div>
         
         {/* タブナビゲーション */}
         <div className="bg-white rounded-lg shadow mb-6">
@@ -1515,8 +1542,18 @@ export default function DrawingEdit() {
                               </div>
                             </div>
                             
-                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap relative group">
                               {contribution.content.text}
+                              {contribution.content.text && (
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(contribution.content.text)}
+                                  className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                                  title="テキストをコピー"
+                                >
+                                  📋 コピー
+                                </button>
+                              )}
                             </div>
                             
                             {contribution.content.files && contribution.content.files.length > 0 && (
@@ -1711,8 +1748,18 @@ export default function DrawingEdit() {
                               </div>
                             </div>
                             
-                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap relative group">
                               {contribution.content.text}
+                              {contribution.content.text && (
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(contribution.content.text)}
+                                  className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                                  title="テキストをコピー"
+                                >
+                                  📋 コピー
+                                </button>
+                              )}
                             </div>
                             
                             {contribution.content.files && contribution.content.files.length > 0 && (
@@ -1907,8 +1954,18 @@ export default function DrawingEdit() {
                               </div>
                             </div>
                             
-                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap relative group">
                               {contribution.content.text}
+                              {contribution.content.text && (
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(contribution.content.text)}
+                                  className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                                  title="テキストをコピー"
+                                >
+                                  📋 コピー
+                                </button>
+                              )}
                             </div>
                             
                             {contribution.content.files && contribution.content.files.length > 0 && (
@@ -2103,8 +2160,18 @@ export default function DrawingEdit() {
                               </div>
                             </div>
                             
-                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap relative group">
                               {contribution.content.text}
+                              {contribution.content.text && (
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(contribution.content.text)}
+                                  className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                                  title="テキストをコピー"
+                                >
+                                  📋 コピー
+                                </button>
+                              )}
                             </div>
                             
                             {contribution.content.files && contribution.content.files.length > 0 && (
@@ -2299,8 +2366,18 @@ export default function DrawingEdit() {
                               </div>
                             </div>
                             
-                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap relative group">
                               {contribution.content.text}
+                              {contribution.content.text && (
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(contribution.content.text)}
+                                  className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                                  title="テキストをコピー"
+                                >
+                                  📋 コピー
+                                </button>
+                              )}
                             </div>
                             
                             {contribution.content.files && contribution.content.files.length > 0 && (
@@ -2570,8 +2647,18 @@ export default function DrawingEdit() {
                             </div>
                           </div>
                           
-                          <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                          <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap relative group">
                             {contribution.content.text}
+                            {contribution.content.text && (
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(contribution.content.text)}
+                                className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                                title="テキストをコピー"
+                              >
+                                📋 コピー
+                              </button>
+                            )}
                           </div>
                           
                           {contribution.content.files && contribution.content.files.length > 0 && (
