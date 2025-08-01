@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation'
 import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
 import { getAuthHeadersForFormData } from '@/lib/auth/client'
-import { FormButton, FormTextarea, FormSelect } from '@/components/admin/forms'
+import { FormButton } from '@/components/admin/forms'
 
-// 図番データ型
+// 図番データ型（シンプル化）
 interface DrawingFormData {
   drawingNumber: string
   title: string
@@ -24,11 +24,7 @@ interface DrawingFormData {
     name: string
     category: string
   }
-  difficulty: string
-  estimatedTime: string
   machineType: string
-  description?: string
-  keywords?: string
   pdfFiles: File[]  // 複数ファイル対応に変更
   programFiles: File[]  // プログラムファイル追加
 }
@@ -157,7 +153,7 @@ function CompanySelector({
               value={value.id || ''}
               onChange={(e) => onChange({ ...value, id: e.target.value })}
               placeholder="例: kouwa-engineering"
-              pattern="^[a-z0-9-]+$"
+              pattern="^[a-z0-9\-]+$"
               className="custom-form-input"
             />
             <p className="mt-1 text-xs text-gray-400">
@@ -175,40 +171,6 @@ function CompanySelector({
 
 // 削除：ProductSelectorコンポーネントは不要になりました
 
-// キーワード自動生成関数
-function generateAutoKeywords(drawing: DrawingFormData, companies: Company[]): string {
-  const keywords = []
-  
-  // 製品カテゴリ
-  if (drawing.product.category) {
-    keywords.push(drawing.product.category)
-  }
-  
-  // 製品名
-  if (drawing.product.name) {
-    keywords.push(drawing.product.name)
-  }
-  
-  // 会社名略称
-  if (drawing.company.type === 'existing' && drawing.company.id) {
-    const company = companies.find(c => c.id === drawing.company.id)
-    if (company?.shortName) {
-      keywords.push(company.shortName)
-    }
-  } else if (drawing.company.name) {
-    // 新規会社の場合は会社名をそのまま使用
-    keywords.push(drawing.company.name)
-  }
-  
-  // 機械種別
-  if (drawing.machineType) {
-    const machineTypes = drawing.machineType.split(',').map(s => s.trim()).filter(s => s)
-    keywords.push(...machineTypes)
-  }
-  
-  return keywords.length > 0 ? keywords.join(',') : 'カテゴリ,製品名,会社名略称,機械種別'
-}
-
 // メインコンポーネント
 export default function NewDrawingPage() {
   const router = useRouter()
@@ -219,11 +181,7 @@ export default function NewDrawingPage() {
       title: '',
       company: { type: 'existing', name: '' },
       product: { type: 'existing', name: '', category: '' },
-      difficulty: '中級',
-      estimatedTime: '180',
       machineType: 'マシニング',
-      description: '',
-      keywords: '',
       pdfFiles: [],
       programFiles: []
     }
@@ -250,11 +208,7 @@ export default function NewDrawingPage() {
       title: '',
       company: { type: 'existing', name: '' },
       product: { type: 'existing', name: '', category: '' },
-      difficulty: '中級',
-      estimatedTime: '180',
       machineType: 'マシニング',
-      description: '',
-      keywords: '',
       pdfFiles: [],
       programFiles: []
     }])
@@ -365,6 +319,10 @@ export default function NewDrawingPage() {
         pdfFiles: undefined,
         programFiles: undefined
       }))
+      
+      // デバッグ用：送信データをログ出力
+      console.log('送信データ:', drawingsData)
+      
       formData.append('drawings', JSON.stringify(drawingsData))
       
       // PDFファイルを追加（複数対応）
@@ -393,9 +351,17 @@ export default function NewDrawingPage() {
         alert(`${result.summary.successful}件の図番が正常に登録されました`)
         router.push('/admin/drawings/list')
       } else {
-        setError(result.error || '登録に失敗しました')
+        // API からの詳細エラーメッセージを優先的に表示
+        if (result.details && Array.isArray(result.details)) {
+          setError(result.details.join('\n'))
+        } else if (result.error) {
+          setError(result.error)
+        } else {
+          setError('登録に失敗しました')
+        }
       }
-    } catch {
+    } catch (error) {
+      console.error('登録エラー:', error)
       setError('登録中にエラーが発生しました')
     } finally {
       setLoading(false)
@@ -426,6 +392,46 @@ export default function NewDrawingPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
+                {/* 5. 図面PDF（複数対応） */}
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
+                    図面PDF（複数可）
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    multiple
+                    onChange={(e) => updatePdfFiles(index, e.target.files)}
+                    className="custom-file-input"
+                  />
+                  {drawing.pdfFiles.length > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      選択済み: {drawing.pdfFiles.map(f => f.name).join(', ')}
+                    </div>
+                  )}
+                </div>
+
+                {/* 6. プログラムファイル */}
+                <div className="space-y-2 pb-6 border-b border-gray-600">
+                  <label className="custom-form-label">
+                    プログラムファイル（複数可）
+                  </label>
+                  <input
+                    type="file"
+                    accept=".nc,.min,.dxf,.dwg,.mcam,.txt"
+                    multiple
+                    onChange={(e) => updateProgramFiles(index, e.target.files)}
+                    className="custom-file-input"
+                  />
+                  {drawing.programFiles.length > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      選択済み: {drawing.programFiles.map(f => f.name).join(', ')}
+                    </div>
+                  )}
+                  <p className="mt-1 text-xs text-gray-500">
+                    NCプログラム、dxfファイルなど図面データ
+                  </p>
+                </div>
                 {/* 1. 会社名 */}
                 <div className="space-y-2 pb-6 border-b border-gray-600">
                   <CompanySelector
@@ -449,48 +455,8 @@ export default function NewDrawingPage() {
                   />
                 </div>
 
-                {/* 3. 図面PDF（複数対応） */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
-                  <label className="custom-form-label">
-                    図面PDF（複数可）
-                  </label>
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    multiple
-                    onChange={(e) => updatePdfFiles(index, e.target.files)}
-                    className="custom-file-input"
-                  />
-                  {drawing.pdfFiles.length > 0 && (
-                    <div className="mt-2 text-sm text-gray-600">
-                      選択済み: {drawing.pdfFiles.map(f => f.name).join(', ')}
-                    </div>
-                  )}
-                </div>
 
-                {/* 4. プログラムファイル */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
-                  <label className="custom-form-label">
-                    プログラムファイル（複数可）
-                  </label>
-                  <input
-                    type="file"
-                    accept=".nc,.min,.dxf,.dwg,.mcam,.txt"
-                    multiple
-                    onChange={(e) => updateProgramFiles(index, e.target.files)}
-                    className="custom-file-input"
-                  />
-                  {drawing.programFiles.length > 0 && (
-                    <div className="mt-2 text-sm text-gray-600">
-                      選択済み: {drawing.programFiles.map(f => f.name).join(', ')}
-                    </div>
-                  )}
-                  <p className="mt-1 text-xs text-gray-500">
-                    NCプログラム、dxfファイルなど図面データ
-                  </p>
-                </div>
-
-                {/* 5. 製品カテゴリ */}
+                {/* 3. 製品カテゴリ */}
                 <div className="space-y-2 pb-6 border-b border-gray-600">
                   <label className="custom-form-label">
                     製品カテゴリ <span className="text-red-500">*</span>
@@ -516,7 +482,7 @@ export default function NewDrawingPage() {
                   </div>
                 </div>
 
-                {/* 5. 製品名（名称やあだ名） */}
+                {/* 4. 製品名（名称やあだ名） */}
                 <div className="space-y-2 pb-6 border-b border-gray-600">
                   <label className="custom-form-label">
                     製品名 <span className="text-red-500">*</span>
@@ -531,7 +497,8 @@ export default function NewDrawingPage() {
                   />
                 </div>
 
-                {/* 6. 作業手順タイトル */}
+
+                {/* 7. 作業手順タイトル */}
                 <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-600">
                   <label className="custom-form-label">
                     作業手順タイトル <span className="text-red-500">*</span>
@@ -562,41 +529,7 @@ export default function NewDrawingPage() {
                   </button>
                 </div>
 
-                {/* 7. 難易度 */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
-                  <label className="custom-form-label">
-                    難易度 <span className="text-red-500">*</span>
-                  </label>
-                  <FormSelect
-                    name="difficulty"
-                    value={drawing.difficulty}
-                    onChange={(e) => updateDrawing(index, 'difficulty', e.target.value)}
-                    options={[
-                      { value: '初級', label: '初級' },
-                      { value: '中級', label: '中級' },
-                      { value: '上級', label: '上級' }
-                    ]}
-                  />
-                </div>
-
-                {/* 8. 推定時間 */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
-                  <label className="custom-form-label">
-                    推定時間 <span className="text-red-500">*</span>
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="number"
-                      value={drawing.estimatedTime}
-                      onChange={(e) => updateDrawing(index, 'estimatedTime', e.target.value)}
-                      min="1"
-                      className="custom-form-input"
-                    />
-                    <span className="text-gray-500">分</span>
-                  </div>
-                </div>
-
-                {/* 9. 機械種別 */}
+                {/* 8. 機械種別 */}
                 <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-600">
                   <label className="custom-form-label">
                     機械種別 <span className="text-red-500">*</span>
@@ -636,52 +569,6 @@ export default function NewDrawingPage() {
                 </div>
               </div>
 
-              {/* 説明・キーワード */}
-              <div className="mt-6 space-y-4">
-                {/* 10. 説明 */}
-                <div className="space-y-2">
-                  <label className="custom-form-label">
-                    説明（任意）
-                  </label>
-                  <FormTextarea
-                    value={drawing.description || ''}
-                    onChange={(e) => updateDrawing(index, 'description', e.target.value)}
-                    rows={3}
-                    placeholder="作業の概要や注意点など"
-                    name={`description-${index}`}
-                  />
-                </div>
-
-                {/* 11. 検索キーワード */}
-                <div className="space-y-2">
-                  <label className="custom-form-label">
-                    検索キーワード（任意）
-                  </label>
-                  <input
-                    type="text"
-                    value={drawing.keywords || ''}
-                    onChange={(e) => updateDrawing(index, 'keywords', e.target.value)}
-                    placeholder="カンマ区切りでキーワードを入力"
-                    className="custom-form-input"
-                  />
-                  <p className="mt-1 text-sm text-gray-500">
-                    自動生成: {generateAutoKeywords(drawing, companies)}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const autoKeywords = generateAutoKeywords(drawing, companies)
-                      if (autoKeywords !== 'カテゴリ,製品名,会社名略称,機械種別') {
-                        updateDrawing(index, 'keywords', autoKeywords)
-                      }
-                    }}
-                    className="mt-1 text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400"
-                    disabled={!drawing.product.category || !drawing.product.name || !drawing.company.name}
-                  >
-                    {drawing.product.category && drawing.product.name && drawing.company.name ? '自動生成を適用' : '必要な情報を入力してください'}
-                  </button>
-                </div>
-              </div>
             </div>
           ))}
 

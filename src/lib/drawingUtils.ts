@@ -171,87 +171,9 @@ export function generateBasicInstruction(data: {
       preparationTime: `${prepTime}分`,
       processingTime: `${processTime}分`
     },
-    workSteps: [
-      {
-        stepNumber: 1,
-        title: "準備・段取り",
-        description: "作業準備と材料セットアップを行います",
-        detailedInstructions: [
-          "図面を確認する",
-          "材料を準備する",
-          "工具を準備する",
-          "機械の点検を行う"
-        ],
-        images: [],
-        videos: [],
-        timeRequired: `${prepTime}分`,
-        warningLevel: "normal" as const,
-        qualityCheck: {
-          items: [
-            { checkPoint: "材料の確認" },
-            { checkPoint: "工具の状態確認" },
-            { checkPoint: "機械の動作確認", inspectionTool: "目視確認" }
-          ]
-        }
-      },
-      {
-        stepNumber: 2,
-        title: "メイン加工",
-        description: "主要な加工作業を実施します",
-        detailedInstructions: [
-          "加工条件を設定する",
-          "加工プログラムを確認する",
-          "加工を開始する",
-          "加工状況を監視する"
-        ],
-        images: [],
-        videos: [],
-        timeRequired: `${Math.floor(processTime * 0.8)}分`,
-        warningLevel: "important" as const,
-        qualityCheck: {
-          items: [
-            { checkPoint: "加工寸法の確認", inspectionTool: "ノギス" },
-            { checkPoint: "表面状態の確認" },
-            { checkPoint: "工具の状態確認", inspectionTool: "マイクロメーター" }
-          ]
-        }
-      },
-      {
-        stepNumber: 3,
-        title: "仕上げ・検査",
-        description: "仕上げ作業と最終検査を行います",
-        detailedInstructions: [
-          "仕上げ加工を行う",
-          "寸法検査を実施する",
-          "外観検査を行う",
-          "清掃・片付けを行う"
-        ],
-        images: [],
-        videos: [],
-        timeRequired: `${Math.ceil(processTime * 0.2)}分`,
-        warningLevel: "normal" as const,
-        qualityCheck: {
-          items: [
-            { checkPoint: "最終寸法", inspectionTool: "ノギス" },
-            { checkPoint: "表面仕上げ", inspectionTool: "表面粗さ計" },
-            { checkPoint: "外観品質", inspectionTool: "マイクロメーター" }
-          ]
-        }
-      }
-    ],
+    workSteps: [],
     relatedDrawings: [],
-    troubleshooting: [
-      {
-        problem: "寸法精度が出ない",
-        cause: "工具の摩耗、機械の熱変形、切削条件の不適切",
-        solution: "工具交換、機械の暖機運転、切削条件の見直し"
-      },
-      {
-        problem: "表面粗さが悪い",
-        cause: "切削速度の不適切、工具の選定ミス、クーラントの不足",
-        solution: "切削速度の調整、工具の選定見直し、クーラント供給の確認"
-      }
-    ],
+    troubleshooting: [],
     revisionHistory: [
       {
         date: new Date().toISOString().split('T')[0],

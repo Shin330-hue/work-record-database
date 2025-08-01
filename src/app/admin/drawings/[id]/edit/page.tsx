@@ -37,6 +37,7 @@ interface EditFormData {
   workStepsByMachine?: {
     machining?: WorkStep[]
     turning?: WorkStep[]
+    yokonaka?: WorkStep[]
     radial?: WorkStep[]
     other?: WorkStep[]
   }
@@ -48,7 +49,7 @@ interface EditFormData {
   }>
 }
 
-type TabType = 'basic' | 'workSteps' | 'quality' | 'related' | 'contributions' | 'workStepsWithContributions' | 'machining' | 'turning' | 'radial' | 'other'
+type TabType = 'basic' | 'workSteps' | 'quality' | 'related' | 'contributions' | 'workStepsWithContributions' | 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other'
 
 export default function DrawingEdit() {
   const params = useParams()
@@ -94,9 +95,10 @@ export default function DrawingEdit() {
   // タブ定義
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: 'basic', label: '基本情報', icon: '📋' },
-    { id: 'quality', label: '品質・安全', icon: '⚠️' },
+    { id: 'quality', label: 'ヒヤリハット', icon: '⚠️' },
     { id: 'machining', label: `マシニング・追記【${getContributionCount()}件】`, icon: '🔧' },
     { id: 'turning', label: `ターニング・追記【${getContributionCount()}件】`, icon: '🔧' },
+    { id: 'yokonaka', label: `横中・追記【${getContributionCount()}件】`, icon: '🔧' },
     { id: 'radial', label: `ラジアル・追記【${getContributionCount()}件】`, icon: '🔧' },
     { id: 'other', label: `その他・追記【${getContributionCount()}件】`, icon: '🔧' },
     { id: 'related', label: '関連情報', icon: '🔗' }
@@ -202,6 +204,7 @@ export default function DrawingEdit() {
           workStepsByMachine: workInstruction.workStepsByMachine || {
             machining: workInstruction.workSteps || [],  // 後方互換性
             turning: [],
+            yokonaka: [],
             radial: [],
             other: []
           },
@@ -424,13 +427,41 @@ export default function DrawingEdit() {
     })
   }
 
-  // 作業ステップ操作ハンドラー
-  const addWorkStep = () => {
+  // 作業ステップ操作ハンドラー（workStepsByMachine対応）
+  const addWorkStep = (machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
     if (!formData) return
 
+    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
+    if (!machineType) {
+      const newStep: WorkStep = {
+        stepNumber: formData.workSteps.length + 1,
+        title: `ステップ ${formData.workSteps.length + 1}`,
+        description: '',
+        detailedInstructions: [],
+        images: [],
+        videos: [],
+        timeRequired: '30分',
+        warningLevel: 'normal',
+        qualityCheck: {
+          items: []
+        }
+      }
+
+      setFormData(prev => {
+        if (!prev) return prev
+        return {
+          ...prev,
+          workSteps: [...prev.workSteps, newStep]
+        }
+      })
+      return
+    }
+
+    // workStepsByMachine対応
+    const currentSteps = formData.workStepsByMachine?.[machineType] || []
     const newStep: WorkStep = {
-      stepNumber: formData.workSteps.length + 1,
-      title: `ステップ ${formData.workSteps.length + 1}`,
+      stepNumber: currentSteps.length + 1,
+      title: `ステップ ${currentSteps.length + 1}`,
       description: '',
       detailedInstructions: [],
       images: [],
@@ -446,53 +477,114 @@ export default function DrawingEdit() {
       if (!prev) return prev
       return {
         ...prev,
-        workSteps: [...prev.workSteps, newStep]
+        workStepsByMachine: {
+          ...prev.workStepsByMachine,
+          [machineType]: [...currentSteps, newStep]
+        }
       }
     })
   }
 
-  const updateWorkStep = (index: number, updatedStep: WorkStep) => {
+  const updateWorkStep = (index: number, updatedStep: WorkStep, machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
     if (!formData) return
 
+    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
+    if (!machineType) {
+      setFormData(prev => {
+        if (!prev) return prev
+        const newWorkSteps = [...prev.workSteps]
+        newWorkSteps[index] = updatedStep
+        return {
+          ...prev,
+          workSteps: newWorkSteps
+        }
+      })
+      return
+    }
+
+    // workStepsByMachine対応
     setFormData(prev => {
       if (!prev) return prev
-      const newWorkSteps = [...prev.workSteps]
-      newWorkSteps[index] = updatedStep
+      const currentSteps = prev.workStepsByMachine?.[machineType] || []
+      const newSteps = [...currentSteps]
+      newSteps[index] = updatedStep
       return {
         ...prev,
-        workSteps: newWorkSteps
+        workStepsByMachine: {
+          ...prev.workStepsByMachine,
+          [machineType]: newSteps
+        }
       }
     })
   }
 
-  const deleteWorkStep = (index: number) => {
+  const deleteWorkStep = (index: number, machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
     if (!formData) return
     
     if (!confirm('このステップを削除しますか？')) return
 
+    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
+    if (!machineType) {
+      setFormData(prev => {
+        if (!prev) return prev
+        const newWorkSteps = prev.workSteps.filter((_, i) => i !== index)
+        // ステップ番号を再調整
+        return {
+          ...prev,
+          workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+        }
+      })
+      return
+    }
+
+    // workStepsByMachine対応
     setFormData(prev => {
       if (!prev) return prev
-      const newWorkSteps = prev.workSteps.filter((_, i) => i !== index)
+      const currentSteps = prev.workStepsByMachine?.[machineType] || []
+      const newSteps = currentSteps.filter((_, i) => i !== index)
       // ステップ番号を再調整
       return {
         ...prev,
-        workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+        workStepsByMachine: {
+          ...prev.workStepsByMachine,
+          [machineType]: newSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+        }
       }
     })
   }
 
-  const moveWorkStep = (fromIndex: number, toIndex: number) => {
+  const moveWorkStep = (fromIndex: number, toIndex: number, machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
     if (!formData) return
 
+    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
+    if (!machineType) {
+      setFormData(prev => {
+        if (!prev) return prev
+        const newWorkSteps = [...prev.workSteps]
+        const [movedStep] = newWorkSteps.splice(fromIndex, 1)
+        newWorkSteps.splice(toIndex, 0, movedStep)
+        // ステップ番号を再調整
+        return {
+          ...prev,
+          workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+        }
+      })
+      return
+    }
+
+    // workStepsByMachine対応
     setFormData(prev => {
       if (!prev) return prev
-      const newWorkSteps = [...prev.workSteps]
-      const [movedStep] = newWorkSteps.splice(fromIndex, 1)
-      newWorkSteps.splice(toIndex, 0, movedStep)
+      const currentSteps = [...(prev.workStepsByMachine?.[machineType] || [])]
+      const [movedStep] = currentSteps.splice(fromIndex, 1)
+      currentSteps.splice(toIndex, 0, movedStep)
       // ステップ番号を再調整
       return {
         ...prev,
-        workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+        workStepsByMachine: {
+          ...prev.workStepsByMachine,
+          [machineType]: currentSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
+        }
       }
     })
   }
@@ -996,48 +1088,8 @@ export default function DrawingEdit() {
           {/* 作業詳細 */}
           <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
             <h2 className="text-xl font-semibold text-white mb-6">作業詳細</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="custom-form-label">
-                  難易度 <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={formData.difficulty}
-                  onChange={(e) => setFormData(prev => prev ? { 
-                    ...prev, 
-                    difficulty: e.target.value as '初級' | '中級' | '上級' 
-                  } : prev)}
-                  className="custom-form-input"
-                  required
-                >
-                  <option value="初級">初級</option>
-                  <option value="中級">中級</option>
-                  <option value="上級">上級</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="custom-form-label">
-                  推定時間 <span className="text-red-500">*</span>
-                </label>
-                <div className="flex">
-                  <input
-                    type="number"
-                    value={formData.estimatedTime}
-                    onChange={(e) => setFormData(prev => prev ? { ...prev, estimatedTime: e.target.value } : prev)}
-                    className="custom-form-input text-sm rounded-r-none"
-                    min="1"
-                    max="9999"
-                    required
-                  />
-                  <span className="px-3 py-2 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600">
-                    分
-                  </span>
-                </div>
-              </div>
-            </div>
 
-            <div className="mt-6">
+            <div>
               <label className="custom-form-label mb-3">
                 機械種別 <span className="text-red-500">*</span>
               </label>
@@ -1070,6 +1122,39 @@ export default function DrawingEdit() {
               <p className="text-xs text-gray-500 mt-1">
                 作業に必要な工具をカンマ区切りで入力してください
               </p>
+            </div>
+
+            <div className="mt-6">
+              <label className="custom-form-label">
+                注意事項
+              </label>
+              <div className="space-y-2">
+                {formData.overview.warnings.map((warning, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={warning}
+                      onChange={(e) => handleWarningChange(index, e.target.value)}
+                      className="custom-form-input"
+                      placeholder="注意事項を入力..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeWarning(index)}
+                      className="custom-rect-button red tiny"
+                    >
+                      削除
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addWarning}
+                  className="custom-rect-button emerald small"
+                >
+                  <span>+ 注意事項を追加</span>
+                </button>
+              </div>
             </div>
 
             <div className="mt-6">
@@ -1285,10 +1370,10 @@ export default function DrawingEdit() {
             </>
           )}
 
-          {/* 品質・安全タブ */}
+          {/* ヒヤリハットタブ */}
           {activeTab === 'quality' && (
             <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-              <h2 className="text-xl font-semibold text-white mb-6">⚠️ 品質・安全</h2>
+              <h2 className="text-xl font-semibold text-white mb-6">⚠️ ヒヤリハット</h2>
               
               {/* ヒヤリハット事例セクション */}
               <div className="mb-8">
@@ -1326,243 +1411,21 @@ export default function DrawingEdit() {
             </div>
           )}
 
-          {/* 作業手順タブ */}
-          {activeTab === 'workSteps' && (
-            <div className="space-y-6">
-              {/* 概要セクション */}
-              <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-                <h2 className="text-lg font-semibold text-white mb-4">🔧 作業手順概要</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="custom-form-label">
-                      準備時間
-                    </label>
-                    <div className="flex">
-                      <input
-                        type="number"
-                        value={formData.overview.preparationTime}
-                        onChange={(e) => setFormData(prev => prev ? {
-                          ...prev,
-                          overview: { ...prev.overview, preparationTime: e.target.value }
-                        } : prev)}
-                        className="custom-form-input rounded-r-none"
-                        style={{ padding: '10px 14px', fontSize: '1rem' }}
-                        min="0"
-                        max="9999"
-                      />
-                      <span className="px-3 py-2.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600" style={{ fontSize: '1rem' }}>
-                        分
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="custom-form-label">
-                      加工時間
-                    </label>
-                    <div className="flex">
-                      <input
-                        type="number"
-                        value={formData.overview.processingTime}
-                        onChange={(e) => setFormData(prev => prev ? {
-                          ...prev,
-                          overview: { ...prev.overview, processingTime: e.target.value }
-                        } : prev)}
-                        className="custom-form-input rounded-r-none"
-                        style={{ padding: '10px 14px', fontSize: '1rem' }}
-                        min="0"
-                        max="9999"
-                      />
-                      <span className="px-3 py-2.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600" style={{ fontSize: '1rem' }}>
-                        分
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <label className="custom-form-label">
-                    注意事項
-                  </label>
-                  <div className="space-y-2">
-                    {formData.overview.warnings.map((warning, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <input
-                          type="text"
-                          value={warning}
-                          onChange={(e) => handleWarningChange(index, e.target.value)}
-                          className="custom-form-input"
-                          placeholder="注意事項を入力..."
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeWarning(index)}
-                          className="custom-rect-button red tiny"
-                        >
-                          削除
-                        </button>
-                      </div>
-                    ))}
-                    <button
-                      type="button"
-                      onClick={addWarning}
-                      className="custom-rect-button emerald small"
-                    >
-                      <span>+ 注意事項を追加</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* 作業ステップセクション */}
-              <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-white">
-                    作業ステップ ({formData.workSteps.length}件)
-                  </h3>
-                  <button
-                    type="button"
-                    onClick={addWorkStep}
-                    className="custom-rect-button emerald small"
-                  >
-                    <span>+ ステップ追加</span>
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {formData.workSteps.map((step, index) => (
-                    <WorkStepEditor
-                      key={index}
-                      step={step}
-                      index={index}
-                      onUpdate={(updatedStep) => updateWorkStep(index, updatedStep)}
-                      onDelete={() => deleteWorkStep(index)}
-                      onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1) : undefined}
-                      onMoveDown={index < formData.workSteps.length - 1 ? () => moveWorkStep(index, index + 1) : undefined}
-                      uploadingFiles={uploadingFiles}
-                      onFileUpload={handleFileUpload}
-                      onFileRemove={removeStepFile}
-                      actualFiles={actualFiles}
-                      onImageClick={(images, currentIndex) => {
-                        setCurrentImages(images);
-                        setCurrentImageIndex(currentIndex);
-                        setLightboxOpen(true);
-                      }}
-                    />
-                  ))}
-                  
-                  {formData.workSteps.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* マシニングタブ */}
           {activeTab === 'machining' && (
             <div className="grid grid-cols-2 gap-4">
-              {/* 左側: 作業手順（既存の作業手順タブの内容をそのまま） */}
+              {/* 左側: 作業手順 */}
               <div className="space-y-6 overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
-                {/* 概要セクション */}
-                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-                  <h2 className="text-lg font-semibold text-white mb-4">🔧 作業手順概要</h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="custom-form-label text-sm">
-                        準備時間
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="number"
-                          value={formData.overview.preparationTime}
-                          onChange={(e) => setFormData(prev => prev ? {
-                            ...prev,
-                            overview: { ...prev.overview, preparationTime: e.target.value }
-                          } : prev)}
-                          className="custom-form-input rounded-r-none"
-                          style={{ padding: '10px 14px', fontSize: '1rem' }}
-                          min="0"
-                          max="9999"
-                        />
-                        <span className="px-3 py-2.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600" style={{ fontSize: '1rem' }}>
-                          分
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="custom-form-label text-sm">
-                        加工時間
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="number"
-                          value={formData.overview.processingTime}
-                          onChange={(e) => setFormData(prev => prev ? {
-                            ...prev,
-                            overview: { ...prev.overview, processingTime: e.target.value }
-                          } : prev)}
-                          className="custom-form-input rounded-r-none"
-                          style={{ padding: '10px 14px', fontSize: '1rem' }}
-                          min="0"
-                          max="9999"
-                        />
-                        <span className="px-3 py-2.5 bg-gray-100 border border-l-0 border-gray-300 rounded-r-md text-gray-600" style={{ fontSize: '1rem' }}>
-                          分
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6">
-                    <label className="custom-form-label text-sm">
-                      注意事項
-                    </label>
-                    <div className="space-y-2">
-                      {formData.overview.warnings.map((warning, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <input
-                            type="text"
-                            value={warning}
-                            onChange={(e) => handleWarningChange(index, e.target.value)}
-                            className="custom-form-input text-sm py-1.5"
-                            style={{ padding: '8px 12px', fontSize: '0.875rem' }}
-                            placeholder="注意事項を入力..."
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeWarning(index)}
-                            className="custom-rect-button red tiny"
-                          >
-                            削除
-                          </button>
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={addWarning}
-                        className="custom-rect-button emerald small"
-                      >
-                        <span>+ 注意事項を追加</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
                 {/* 作業ステップセクション */}
                 <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-base font-semibold text-white">
-                      作業ステップ ({formData.workSteps.length}件)
+                      作業ステップ ({(formData.workStepsByMachine?.machining || formData.workSteps || []).length}件)
                     </h3>
                     <button
                       type="button"
-                      onClick={addWorkStep}
+                      onClick={() => addWorkStep('machining')}
                       className="custom-rect-button emerald small"
                     >
                       <span>+ ステップ追加</span>
@@ -1570,15 +1433,15 @@ export default function DrawingEdit() {
                   </div>
 
                   <div className="space-y-4">
-                    {formData.workSteps.map((step, index) => (
+                    {(formData.workStepsByMachine?.machining || formData.workSteps || []).map((step, index) => (
                       <WorkStepEditor
                         key={index}
                         step={step}
                         index={index}
-                        onUpdate={(updatedStep) => updateWorkStep(index, updatedStep)}
-                        onDelete={() => deleteWorkStep(index)}
-                        onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1) : undefined}
-                        onMoveDown={index < formData.workSteps.length - 1 ? () => moveWorkStep(index, index + 1) : undefined}
+                        onUpdate={(updatedStep) => updateWorkStep(index, updatedStep, 'machining')}
+                        onDelete={() => deleteWorkStep(index, 'machining')}
+                        onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'machining') : undefined}
+                        onMoveDown={index < (formData.workStepsByMachine?.machining || formData.workSteps || []).length - 1 ? () => moveWorkStep(index, index + 1, 'machining') : undefined}
                         uploadingFiles={uploadingFiles}
                         onFileUpload={handleFileUpload}
                         onFileRemove={removeStepFile}
@@ -1591,7 +1454,7 @@ export default function DrawingEdit() {
                       />
                     ))}
                     
-                    {formData.workSteps.length === 0 && (
+                    {(formData.workStepsByMachine?.machining || formData.workSteps || []).length === 0 && (
                       <div className="text-center py-8 text-gray-500">
                         作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
                       </div>
@@ -1777,15 +1640,225 @@ export default function DrawingEdit() {
             <div className="grid grid-cols-2 gap-4">
               {/* 左側: 作業手順 */}
               <div className="space-y-6 overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+                {/* 作業ステップセクション */}
                 <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-                  <h2 className="text-lg font-semibold text-white mb-4">🔧 ターニング作業手順</h2>
-                  {formData.workStepsByMachine?.turning && formData.workStepsByMachine.turning.length > 0 ? (
-                    <div>工程表示エリア</div>
-                  ) : (
-                    <div className="text-gray-400 text-center py-8">
-                      ターニングの作業手順はまだ登録されていません
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-base font-semibold text-white">
+                      🔧 ターニング作業ステップ ({(formData.workStepsByMachine?.turning || []).length}件)
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => addWorkStep('turning')}
+                      className="custom-rect-button emerald small"
+                    >
+                      <span>+ ステップ追加</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {(formData.workStepsByMachine?.turning || []).map((step, index) => (
+                      <WorkStepEditor
+                        key={index}
+                        step={step}
+                        index={index}
+                        onUpdate={(updatedStep) => updateWorkStep(index, updatedStep, 'turning')}
+                        onDelete={() => deleteWorkStep(index, 'turning')}
+                        onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'turning') : undefined}
+                        onMoveDown={index < (formData.workStepsByMachine?.turning || []).length - 1 ? () => moveWorkStep(index, index + 1, 'turning') : undefined}
+                        uploadingFiles={uploadingFiles}
+                        onFileUpload={handleFileUpload}
+                        onFileRemove={removeStepFile}
+                        actualFiles={actualFiles}
+                        onImageClick={(images, currentIndex) => {
+                          setCurrentImages(images);
+                          setCurrentImageIndex(currentIndex);
+                          setLightboxOpen(true);
+                        }}
+                      />
+                    ))}
+                    
+                    {(formData.workStepsByMachine?.turning || []).length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {/* 右側: 追記 */}
+              <div className="space-y-4 overflow-y-auto pl-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                  <h2 className="text-lg font-semibold text-white mb-4">💬 追記情報管理</h2>
+                  
+                  <div className="mb-8">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-semibold text-white">
+                        追記一覧 【{contributions?.contributions.filter(c => c.status === 'active').length || 0}件】
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => window.open(`/instruction/${drawingNumber}`, '_blank')}
+                        className="custom-rect-button blue small"
+                      >
+                        <span>作業手順を確認</span>
+                      </button>
                     </div>
-                  )}
+              
+                    {contributions && contributions.contributions.filter(c => c.status === 'active').length > 0 ? (
+                      <div className="space-y-4">
+                        {contributions.contributions
+                          .filter(c => c.status === 'active')
+                          .map((contribution) => {
+                            // 元の配列でのインデックスを取得
+                            const originalIndex = contributions.contributions.findIndex(c => c.id === contribution.id)
+                            return (
+                          <div key={contribution.id} className="border border-gray-600 rounded-lg p-4 bg-gray-700/50">
+                            <div className="flex justify-between items-start mb-3">
+                              <div className="flex items-center space-x-3">
+                                <span className="text-sm font-medium text-white">
+                                  {contribution.userName}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  {new Date(contribution.timestamp).toLocaleString('ja-JP')}
+                                </span>
+                                <span className="text-xs text-gray-400">
+                                  対象: {contribution.targetSection === 'overview' ? '概要' : 
+                                         contribution.targetSection === 'step' ? `ステップ ${contribution.stepNumber}` : 
+                                         '全般'}
+                                </span>
+                              </div>
+                            </div>
+                            
+                            <div className="text-sm text-gray-300 mb-3 whitespace-pre-wrap">
+                              {contribution.content.text}
+                            </div>
+                            
+                            {contribution.content.files && contribution.content.files.length > 0 && (
+                              <div className="mt-3">
+                                {/* 画像ファイル */}
+                                {contribution.content.files.filter(f => f.fileType === 'image').length > 0 && (
+                                  <div className="mb-3">
+                                    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                                      {contribution.content.files.filter(f => f.fileType === 'image').map((file, fileIndex) => (
+                                        <div
+                                          key={`img-${fileIndex}`}
+                                          className="bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+                                          onClick={() => {
+                                            // この追記の全画像URLを収集
+                                            const imageUrls = (contribution.content.files || [])
+                                              .filter(f => f.fileType === 'image')
+                                              .map(f => `/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(f.filePath)}`);
+                                            const currentIndex = (contribution.content.files || [])
+                                              .filter(f => f.fileType === 'image')
+                                              .findIndex(f => f.filePath === file.filePath);
+                                            setCurrentImages(imageUrls);
+                                            setCurrentImageIndex(currentIndex);
+                                            setLightboxOpen(true);
+                                          }}
+                                        >
+                                          <img
+                                            src={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
+                                            alt={file.originalFileName}
+                                            className="w-full h-full object-cover pointer-events-none"
+                                          />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* 動画ファイル */}
+                                {contribution.content.files.filter(f => f.fileType === 'video').length > 0 && (
+                                  <div className="flex flex-wrap gap-2">
+                                    {contribution.content.files.filter(f => f.fileType === 'video').map((file, fileIndex) => (
+                                      <a
+                                        key={`vid-${fileIndex}`}
+                                        href={`/api/files?drawingNumber=${drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center px-3 py-1 text-xs rounded bg-purple-600 text-white hover:opacity-80"
+                                      >
+                                        🎥 {file.originalFileName}
+                                      </a>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            
+                            <div className="flex space-x-2 mt-3">
+                              {contribution.status !== 'merged' && (
+                                <button
+                                  type="button"
+                                  className="custom-rect-button red small"
+                                  onClick={() => handleMergeContribution(originalIndex)}
+                                >
+                                  <span>追記情報から消す</span>
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )})}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        追記はありません
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 横中タブ */}
+          {activeTab === 'yokonaka' && (
+            <div className="grid grid-cols-2 gap-4">
+              {/* 左側: 作業手順 */}
+              <div className="space-y-6 overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+                {/* 作業ステップセクション */}
+                <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-base font-semibold text-white">
+                      🔧 横中作業ステップ ({(formData.workStepsByMachine?.yokonaka || []).length}件)
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => addWorkStep('yokonaka')}
+                      className="custom-rect-button emerald small"
+                    >
+                      <span>+ ステップ追加</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {(formData.workStepsByMachine?.yokonaka || []).map((step, index) => (
+                      <WorkStepEditor
+                        key={index}
+                        step={step}
+                        index={index}
+                        onUpdate={(updatedStep) => updateWorkStep(index, updatedStep, 'yokonaka')}
+                        onDelete={() => deleteWorkStep(index, 'yokonaka')}
+                        onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'yokonaka') : undefined}
+                        onMoveDown={index < (formData.workStepsByMachine?.yokonaka || []).length - 1 ? () => moveWorkStep(index, index + 1, 'yokonaka') : undefined}
+                        uploadingFiles={uploadingFiles}
+                        onFileUpload={handleFileUpload}
+                        onFileRemove={removeStepFile}
+                        actualFiles={actualFiles}
+                        onImageClick={(images, currentIndex) => {
+                          setCurrentImages(images);
+                          setCurrentImageIndex(currentIndex);
+                          setLightboxOpen(true);
+                        }}
+                      />
+                    ))}
+                    
+                    {(formData.workStepsByMachine?.yokonaka || []).length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               {/* 右側: 追記 */}
@@ -1919,15 +1992,49 @@ export default function DrawingEdit() {
             <div className="grid grid-cols-2 gap-4">
               {/* 左側: 作業手順 */}
               <div className="space-y-6 overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+                {/* 作業ステップセクション */}
                 <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-                  <h2 className="text-lg font-semibold text-white mb-4">🔧 ラジアル作業手順</h2>
-                  {formData.workStepsByMachine?.radial && formData.workStepsByMachine.radial.length > 0 ? (
-                    <div>工程表示エリア</div>
-                  ) : (
-                    <div className="text-gray-400 text-center py-8">
-                      ラジアルの作業手順はまだ登録されていません
-                    </div>
-                  )}
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-base font-semibold text-white">
+                      🔧 ラジアル作業ステップ ({(formData.workStepsByMachine?.radial || []).length}件)
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => addWorkStep('radial')}
+                      className="custom-rect-button emerald small"
+                    >
+                      <span>+ ステップ追加</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {(formData.workStepsByMachine?.radial || []).map((step, index) => (
+                      <WorkStepEditor
+                        key={index}
+                        step={step}
+                        index={index}
+                        onUpdate={(updatedStep) => updateWorkStep(index, updatedStep, 'radial')}
+                        onDelete={() => deleteWorkStep(index, 'radial')}
+                        onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'radial') : undefined}
+                        onMoveDown={index < (formData.workStepsByMachine?.radial || []).length - 1 ? () => moveWorkStep(index, index + 1, 'radial') : undefined}
+                        uploadingFiles={uploadingFiles}
+                        onFileUpload={handleFileUpload}
+                        onFileRemove={removeStepFile}
+                        actualFiles={actualFiles}
+                        onImageClick={(images, currentIndex) => {
+                          setCurrentImages(images);
+                          setCurrentImageIndex(currentIndex);
+                          setLightboxOpen(true);
+                        }}
+                      />
+                    ))}
+                    
+                    {(formData.workStepsByMachine?.radial || []).length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               {/* 右側: 追記 */}
@@ -2061,15 +2168,49 @@ export default function DrawingEdit() {
             <div className="grid grid-cols-2 gap-4">
               {/* 左側: 作業手順 */}
               <div className="space-y-6 overflow-y-auto pr-4" style={{ maxHeight: 'calc(100vh - 150px)' }}>
+                {/* 作業ステップセクション */}
                 <div className="bg-gray-800 p-6 rounded-lg shadow border border-gray-700">
-                  <h2 className="text-lg font-semibold text-white mb-4">🔧 その他作業手順</h2>
-                  {formData.workStepsByMachine?.other && formData.workStepsByMachine.other.length > 0 ? (
-                    <div>工程表示エリア</div>
-                  ) : (
-                    <div className="text-gray-400 text-center py-8">
-                      その他の作業手順はまだ登録されていません
-                    </div>
-                  )}
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-base font-semibold text-white">
+                      🔧 その他作業ステップ ({(formData.workStepsByMachine?.other || []).length}件)
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => addWorkStep('other')}
+                      className="custom-rect-button emerald small"
+                    >
+                      <span>+ ステップ追加</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {(formData.workStepsByMachine?.other || []).map((step, index) => (
+                      <WorkStepEditor
+                        key={index}
+                        step={step}
+                        index={index}
+                        onUpdate={(updatedStep) => updateWorkStep(index, updatedStep, 'other')}
+                        onDelete={() => deleteWorkStep(index, 'other')}
+                        onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'other') : undefined}
+                        onMoveDown={index < (formData.workStepsByMachine?.other || []).length - 1 ? () => moveWorkStep(index, index + 1, 'other') : undefined}
+                        uploadingFiles={uploadingFiles}
+                        onFileUpload={handleFileUpload}
+                        onFileRemove={removeStepFile}
+                        actualFiles={actualFiles}
+                        onImageClick={(images, currentIndex) => {
+                          setCurrentImages(images);
+                          setCurrentImageIndex(currentIndex);
+                          setLightboxOpen(true);
+                        }}
+                      />
+                    ))}
+                    
+                    {(formData.workStepsByMachine?.other || []).length === 0 && (
+                      <div className="text-center py-8 text-gray-500">
+                        作業ステップがありません。「+ ステップ追加」ボタンで追加してください。
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               {/* 右側: 追記 */}
@@ -2514,13 +2655,6 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
   const [isDragOver, setIsDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const warningLevels = ['normal', 'caution', 'important', 'critical'] as const
-  const warningLevelLabels = {
-    normal: '通常',
-    caution: '注意',
-    important: '重要',
-    critical: '危険'
-  }
 
   const handleDetailedInstructionChange = (instIndex: number, value: string) => {
     const newInstructions = [...step.detailedInstructions]
@@ -2598,33 +2732,17 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
       {isExpanded && (
         <div className="p-4 space-y-4">
           {/* 基本情報 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="custom-form-label text-sm">
-                ステップタイトル
-              </label>
-              <input
-                type="text"
-                value={step.title}
-                onChange={(e) => onUpdate({ ...step, title: e.target.value })}
-                className="custom-form-input"
-                style={{ padding: '10px 14px', fontSize: '1rem' }}
-              />
-            </div>
-            
-            <div>
-              <label className="custom-form-label text-sm">
-                所要時間
-              </label>
-              <input
-                type="text"
-                value={step.timeRequired}
-                onChange={(e) => onUpdate({ ...step, timeRequired: e.target.value })}
-                className="custom-form-input"
-                style={{ padding: '10px 14px', fontSize: '1rem' }}
-                placeholder="30分"
-              />
-            </div>
+          <div>
+            <label className="custom-form-label text-sm">
+              ステップタイトル
+            </label>
+            <input
+              type="text"
+              value={step.title}
+              onChange={(e) => onUpdate({ ...step, title: e.target.value })}
+              className="custom-form-input"
+              style={{ padding: '10px 14px', fontSize: '1rem' }}
+            />
           </div>
 
           <div>
@@ -2641,23 +2759,6 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
             />
           </div>
 
-          <div>
-            <label className="custom-form-label text-sm">
-              警告レベル
-            </label>
-            <select
-              value={step.warningLevel}
-              onChange={(e) => onUpdate({ ...step, warningLevel: e.target.value as WorkStep['warningLevel'] })}
-              className="custom-form-input"
-              style={{ padding: '10px 14px', fontSize: '1rem' }}
-            >
-              {warningLevels.map(level => (
-                <option key={level} value={level}>
-                  {warningLevelLabels[level]}
-                </option>
-              ))}
-            </select>
-          </div>
 
           {/* 詳細手順 */}
           <div>

@@ -238,7 +238,7 @@ export interface NearMissItem {
 export interface WorkInstruction {
   metadata: InstructionMetadata
   overview: InstructionOverview
-  workSteps: WorkStep[]
+  workSteps?: WorkStep[]  // 後方互換性のためオプショナルに変更
   workStepsByMachine?: {
     machining?: WorkStep[]
     turning?: WorkStep[]

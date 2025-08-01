@@ -9,16 +9,6 @@ interface WorkStepProps {
   getStepFiles: (stepNumber: number) => Promise<{ images: string[], videos: string[], programs: string[] }>
 }
 
-// 警告レベルの翻訳関数
-const getWarningLevelText = (level: string): string => {
-  switch (level) {
-    case 'normal': return '通常'
-    case 'caution': return '注意'
-    case 'important': return '重要'
-    case 'critical': return '緊急'
-    default: return level
-  }
-}
 
 // 切削条件プロパティの翻訳関数
 const getPropertyText = (prop: string): string => {
@@ -91,8 +81,6 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
         <div className="flex items-center gap-4 flex-1">
           <div className="text-sm font-bold text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-lg">第{step.stepNumber}工程</div>
           <div className="text-base font-semibold text-white">{step.title}</div>
-          <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">所要時間: {step.timeRequired}</span>
-          <span className="ml-4 text-emerald-200/80 text-sm bg-emerald-500/10 px-2 py-1 rounded">{getWarningLevelText(step.warningLevel)}</span>
         </div>
         <div className="text-emerald-300 text-lg">
           {isExpanded ? '▼' : '▶'}

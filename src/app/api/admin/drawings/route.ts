@@ -37,13 +37,6 @@ function validateDrawingData(data: NewDrawingData): { valid: boolean; errors: st
     errors.push('製品カテゴリは必須です')
   }
   
-  if (!data.difficulty) {
-    errors.push('難易度は必須です')
-  }
-  
-  if (!data.estimatedTime) {
-    errors.push('推定時間は必須です')
-  }
   
   if (!data.machineType?.trim()) {
     errors.push('機械種別は必須です')
@@ -254,8 +247,8 @@ export async function POST(request: NextRequest) {
           title: processedData.title,
           companyId: processedData.companyId,
           productId: processedData.productId,
-          difficulty: processedData.difficulty,
-          estimatedTime: processedData.estimatedTime,
+          difficulty: processedData.difficulty || '中級',
+          estimatedTime: processedData.estimatedTime || '180',
           machineType: processedData.machineType,
           description: processedData.description,
           warnings: processedData.warnings

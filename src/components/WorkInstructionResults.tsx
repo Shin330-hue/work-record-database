@@ -25,7 +25,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       return instruction.workStepsByMachine[machine]!.length
     }
     // 後方互換性: workStepsByMachineがない場合は、既存のworkStepsをマシニングとして扱う
-    return machine === 'machining' ? instruction.workSteps.length : 0
+    return machine === 'machining' && instruction.workSteps ? instruction.workSteps.length : 0
   }
 
   const [activeTab, setActiveTab] = useState<MachineType>('machining')
@@ -147,7 +147,6 @@ export default function WorkInstructionResults({ instruction, contributions, onB
             <div className="text-lg font-medium text-white mb-1">《会社》 {instruction.metadata.companyName || '-'}</div>
             <div className="text-lg font-medium text-white mb-2">《製品》 {instruction.metadata.productName || '-'}</div>
             <div className="flex flex-col gap-2 text-emerald-200/70 text-sm mt-2">
-              <span>《所要時間》 {instruction.metadata.estimatedTime}</span>
               <span>《使用機械》 {
                 Array.isArray(instruction.metadata.machineType) 
                   ? instruction.metadata.machineType.join(', ')
@@ -170,7 +169,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           border: '1px solid rgba(250, 204, 21, 0.3)',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
         }}>
-          <h3 className="font-bold text-yellow-300 mb-6" style={{ fontSize: '1.5rem' }}>【❤️あなたのヒヤリハット】</h3>
+          <h3 className="font-bold text-yellow-300 mb-6" style={{ fontSize: '1.5rem' }}>【⚠️ ヒヤリハット】</h3>
           <div className="relative">
             {/* 縦線 */}
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-yellow-500/30"></div>
@@ -371,10 +370,6 @@ export default function WorkInstructionResults({ instruction, contributions, onB
             </ul>
           </div>
         )}
-        <div className="flex flex-wrap gap-6 text-emerald-200/80 text-sm mt-2">
-          <span style={{ fontWeight: 600 }}>《準備時間》 {instruction.overview.preparationTime}</span>
-          <span style={{ fontWeight: 600 }}>《加工時間》 {instruction.overview.processingTime}</span>
-        </div>
         
         {/* 概要への追記表示 */}
         {contributions && (
@@ -529,9 +524,9 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       {/* タブコンテンツ */}
       {activeTab === 'machining' && (
         <div style={{ marginBottom: '50px' }}>
-          {(instruction.workStepsByMachine?.machining || instruction.workSteps).length > 0 ? (
+          {(instruction.workStepsByMachine?.machining || instruction.workSteps || []).length > 0 ? (
             <div className="work-steps">
-              {(instruction.workStepsByMachine?.machining || instruction.workSteps).map((step, index) => (
+              {(instruction.workStepsByMachine?.machining || instruction.workSteps || []).map((step, index) => (
                 <WorkStep
                   key={index}
                   step={step}
