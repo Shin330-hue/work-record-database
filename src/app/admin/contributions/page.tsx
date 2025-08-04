@@ -7,6 +7,7 @@ import { loadRecentContributions } from '@/lib/dataLoader'
 import { ContributionData } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
 import Link from 'next/link'
+import Image from 'next/image'
 import { LoadingSpinner } from '@/components/admin/feedback'
 
 interface ContributionWithDrawing {
@@ -302,9 +303,11 @@ export default function ContributionsManagementPage() {
                                 openLightbox(imageUrls, clickedIndex)
                               }}
                             >
-                              <img
+                              <Image
                                 src={`/api/files?drawingNumber=${item.drawingNumber}&contributionFile=${encodeURIComponent(file.filePath)}`}
                                 alt={`追記画像 ${fileIndex + 1}`}
+                                width={200}
+                                height={200}
                                 className="w-full h-full object-cover"
                               />
                             </div>

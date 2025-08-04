@@ -58,7 +58,7 @@ export default function InstructionPage({ params }: InstructionPageProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="text-center text-lg text-emerald-200 py-20">読み込み中...</div>
           </div>
@@ -70,7 +70,7 @@ export default function InstructionPage({ params }: InstructionPageProps) {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="text-center text-red-400 py-20">{error}</div>
             <button
@@ -88,7 +88,7 @@ export default function InstructionPage({ params }: InstructionPageProps) {
   if (!workInstruction) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex flex-col items-center justify-center min-h-screen">
             <div className="text-center text-red-400 py-20">作業手順が見つかりません</div>
             <button
@@ -104,16 +104,14 @@ export default function InstructionPage({ params }: InstructionPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col items-center justify-center min-h-screen">
-          <WorkInstructionResults
-            instruction={workInstruction}
-            contributions={contributions}
-            onBack={handleBackToSearch}
-            onRelatedDrawingClick={handleRelatedDrawingClick}
-          />
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <WorkInstructionResults
+          instruction={workInstruction}
+          contributions={contributions}
+          onBack={handleBackToSearch}
+          onRelatedDrawingClick={handleRelatedDrawingClick}
+        />
       </div>
     </div>
   )

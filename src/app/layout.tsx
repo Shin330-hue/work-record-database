@@ -10,6 +10,12 @@ export const metadata: Metadata = {
   description: '図面の作業手順・図番を検索できるデータベースシステム',
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
+
 export default function RootLayout({
   children,
 }: {

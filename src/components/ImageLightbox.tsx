@@ -21,6 +21,9 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
   altText = "拡大画像"
 }) => {
   const slides = images.map((src) => ({ src, alt: altText }));
+  
+  // モバイル判定
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
   return (
     <Lightbox
@@ -28,7 +31,7 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
       close={onClose}
       slides={slides}
       index={currentIndex}
-      plugins={[Zoom, Thumbnails]}
+      plugins={isMobile ? [Zoom] : [Zoom, Thumbnails]}
       zoom={{
         maxZoomPixelRatio: 3,
         zoomInMultiplier: 2,
@@ -50,6 +53,11 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
       render={{
         buttonPrev: images.length <= 1 ? () => null : undefined,
         buttonNext: images.length <= 1 ? () => null : undefined,
+      }}
+      styles={{
+        container: { backgroundColor: "rgba(0, 0, 0, 0.95)" },
+        // モバイルでの画像サイズ調整
+        slide: isMobile ? { padding: "0 10px" } : undefined,
       }}
     />
   );

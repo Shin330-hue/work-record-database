@@ -288,7 +288,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           {overviewFiles.images.length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-emerald-200 mb-3">《画像》</h3>
-              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {overviewFiles.images.map((image, i) => (
                   <div key={`overview-img-${i}`}
                     className="media-item bg-black/30 rounded-lg overflow-hidden border border-emerald-500/20 shadow-lg aspect-square flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
@@ -312,7 +312,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           {overviewFiles.videos.length > 0 && (
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-emerald-200 mb-3">《動画》</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {overviewFiles.videos.map((video, i) => (
                   <div key={`overview-vid-${i}`}
                     className="media-item bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg aspect-video flex items-center justify-center">
@@ -396,7 +396,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
               select-none
               shadow-lg hover:shadow-xl
               min-h-[60px]
-              min-w-[280px]
+              sm:min-w-[280px]
             "
           >
             <span className="text-xl font-black">✚</span>
