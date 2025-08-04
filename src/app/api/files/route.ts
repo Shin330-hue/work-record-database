@@ -41,6 +41,12 @@ export async function GET(request: NextRequest) {
   const fileName = searchParams.get('fileName')
 
   try {
+    console.log('API /api/files called with params:', {
+      drawingNumber,
+      folderType,
+      subFolder,
+      fileName
+    })
     
     // 単一ファイル配信（優先処理）
     if (fileName && drawingNumber && folderType) {
@@ -73,11 +79,13 @@ export async function GET(request: NextRequest) {
       else if (ext === '.avi') mimeType = 'video/avi'
       else if (ext === '.mov') mimeType = 'video/mov'
       else if (ext === '.wmv') mimeType = 'video/wmv'
+      else if (ext === '.pdf') mimeType = 'application/pdf'
 
       return new NextResponse(fileBuffer, {
         headers: {
           'Content-Type': mimeType,
-          'Cache-Control': 'public, max-age=3600'
+          'Cache-Control': 'public, max-age=3600',
+          'Content-Disposition': 'inline'
         }
       })
     }
@@ -115,11 +123,13 @@ export async function GET(request: NextRequest) {
       else if (ext === '.webm') mimeType = 'video/webm'
       else if (ext === '.avi') mimeType = 'video/avi'
       else if (ext === '.mov') mimeType = 'video/mov'
+      else if (ext === '.pdf') mimeType = 'application/pdf'
 
       return new NextResponse(fileBuffer, {
         headers: {
           'Content-Type': mimeType,
-          'Cache-Control': 'public, max-age=3600'
+          'Cache-Control': 'public, max-age=3600',
+          'Content-Disposition': 'inline'
         }
       })
     }

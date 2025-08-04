@@ -30,18 +30,20 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({
       index={currentIndex}
       plugins={[Zoom, Thumbnails]}
       zoom={{
-        maxZoomPixelRatio: 3,
+        maxZoomPixelRatio: 5,
         zoomInMultiplier: 2,
         doubleTapDelay: 300,
+        scrollToZoom: false,
       }}
       thumbnails={{
         position: "bottom",
-        width: 120,
-        height: 80,
+        width: 80,
+        height: 60,
         border: 0,
         borderRadius: 4,
         padding: 4,
-        gap: 16,
+        gap: 8,
+        showToggle: true,
       }}
       carousel={{
         finite: false,
