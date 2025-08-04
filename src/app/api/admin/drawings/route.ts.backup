@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { 
+  createDrawingDirectoryStructure, 
+  generateBasicInstruction, 
+  saveInstructionFile,
   checkMultipleDrawingNumbers
 } from '@/lib/drawingUtils'
 import { 
+  createMultipleDrawings, 
+  DataTransaction,
   NewDrawingData
 } from '@/lib/dataTransaction'
-import { 
-  processDrawingsWithTransaction 
-} from '@/lib/drawingRegistrationTransaction'
 
 
 // 入力データバリデーション
@@ -136,40 +138,27 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // 新しいトランザクション処理を使用
-    const transactionResult = await processDrawingsWithTransaction(drawingsData)
-    
-    if (!transactionResult.success) {
-      // エラー時は全てロールバック済み
+    // 1. データ処理とファイル更新
+    const dataResult = await createMultipleDrawings(drawingsData)
+    if (!dataResult.success) {
       return NextResponse.json(
-        { 
-          error: 'データ処理中にエラーが発生しました', 
-          details: transactionResult.errors,
-          logs: process.env.NODE_ENV === 'development' ? transactionResult.logs : undefined
-        },
+        { error: 'データ処理中にエラーが発生しました', details: dataResult.errors },
         { status: 500 }
       )
     }
     
-    // 成功した図番のPDF/プログラムファイル処理（オプショナル）
+    // 2. フォルダ階層作成とファイル処理
     const processResults: Array<{
       drawingNumber: string
       success: boolean
       error?: string
-      fileUploads?: {
-        pdf?: { success: boolean; count: number }
-        program?: { success: boolean; count: number }
-      }
     }> = []
     
-    for (const processedData of transactionResult.processed) {
-      const result: typeof processResults[0] = {
-        drawingNumber: processedData.drawingNumber,
-        success: true,
-        fileUploads: {}
-      }
-      
+    for (const processedData of dataResult.processed) {
       try {
+        // フォルダ階層作成
+        await createDrawingDirectoryStructure(processedData.drawingNumber)
+        
         // PDFファイル処理（複数対応）
         const pdfFiles: File[] = []
         let pdfIndex = 0
@@ -199,7 +188,9 @@ export async function POST(request: NextRequest) {
           )
           
           if (uploadResponse.ok) {
-            result.fileUploads.pdf = { success: true, count: pdfFiles.length }
+            // 検索インデックスのPDFフラグ更新
+            const transaction = new DataTransaction()
+            await transaction.updateSearchIndexForPdf(processedData.drawingNumber)
           } else {
             // エラーの詳細をログ出力
             const errorText = await uploadResponse.text()
@@ -208,7 +199,7 @@ export async function POST(request: NextRequest) {
               statusText: uploadResponse.statusText,
               error: errorText
             })
-            result.fileUploads.pdf = { success: false, count: 0 }
+            // エラーでも処理は継続（部分的な成功を許可）
           }
         }
         
@@ -239,43 +230,70 @@ export async function POST(request: NextRequest) {
             }
           )
           
-          if (uploadResponse.ok) {
-            result.fileUploads.program = { success: true, count: programFiles.length }
-          } else {
+          if (!uploadResponse.ok) {
             const errorText = await uploadResponse.text()
             console.error(`プログラムファイルアップロードエラー: ${processedData.drawingNumber}`, {
               status: uploadResponse.status,
               statusText: uploadResponse.statusText,
               error: errorText
             })
-            result.fileUploads.program = { success: false, count: 0 }
+            // エラーでも処理は継続（PDFと同様の挙動）
           }
         }
         
+        // 基本的なinstruction.json作成
+        const instruction = generateBasicInstruction({
+          drawingNumber: processedData.drawingNumber,
+          title: processedData.title,
+          companyId: processedData.companyId,
+          productId: processedData.productId,
+          difficulty: processedData.difficulty || '中級',
+          estimatedTime: processedData.estimatedTime || '180',
+          machineType: processedData.machineType,
+          description: processedData.description,
+          warnings: processedData.warnings
+        })
+        
+        await saveInstructionFile(processedData.drawingNumber, instruction)
+        
+        processResults.push({
+          drawingNumber: processedData.drawingNumber,
+          success: true
+        })
+        
       } catch (error) {
-        console.error(`ファイルアップロード処理エラー (${processedData.drawingNumber}):`, error)
+        console.error(`図番処理エラー (${processedData.drawingNumber}):`, error)
+        processResults.push({
+          drawingNumber: processedData.drawingNumber,
+          success: false,
+          error: error instanceof Error ? error.message : '不明なエラー'
+        })
       }
-      
-      processResults.push(result)
     }
     
     // 3. 整合性チェック
     const { validateMultipleDrawings } = await import('@/lib/drawingUtils')
     const validationResult = await validateMultipleDrawings(
-      transactionResult.processed.map(p => p.drawingNumber)
+      processResults.filter(r => r.success).map(r => r.drawingNumber)
     )
     
     // 4. 成功・失敗のサマリー
+    const successful = processResults.filter(r => r.success)
+    const failed = processResults.filter(r => !r.success)
+    
     const response = {
-      success: true, // 図番登録自体は成功
+      success: failed.length === 0,
       summary: {
         total: drawingsData.length,
-        successful: transactionResult.processed.length,
-        failed: 0
+        successful: successful.length,
+        failed: failed.length
       },
       results: processResults,
-      validation: validationResult,
-      transactionLogs: process.env.NODE_ENV === 'development' ? transactionResult.logs : undefined
+      validation: validationResult
+    }
+    
+    if (failed.length > 0) {
+      return NextResponse.json(response, { status: 207 }) // 207 Multi-Status
     }
     
     return NextResponse.json(response, { status: 201 })
