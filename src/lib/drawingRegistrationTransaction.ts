@@ -84,7 +84,7 @@ export class DrawingRegistrationTransaction {
         const originalContent = await fs.readFile(filePath, 'utf-8')
         this.backupFiles.set(filePath, originalContent)
         this.logOperation('backup_file', filePath, true)
-      } catch (error) {
+      } catch {
         // ファイルが存在しない場合は新規作成扱い
         this.createdFiles.push(filePath)
       }
@@ -213,7 +213,7 @@ export class DrawingRegistrationTransaction {
         // ディレクトリが空の場合のみ削除
         await fs.rmdir(dirPath)
         this.logOperation('rollback_delete_dir', dirPath, true)
-      } catch (error) {
+      } catch {
         // ディレクトリが空でない場合は、再帰的に削除を試みる
         try {
           await fs.rm(dirPath, { recursive: true, force: true })

@@ -88,7 +88,7 @@ async function verifyTransactionBehavior() {
       // エラーを発生させる
       throw new Error('意図的なエラー')
     } catch (e) {
-      console.log(`\n⚠️ エラー発生: ${e.message}`)
+      console.log(`\n⚠️ エラー発生: ${e instanceof Error ? e.message : String(e)}`)
       await transaction2.rollback()
     }
     

@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
           )
           
           if (uploadResponse.ok) {
-            result.fileUploads.pdf = { success: true, count: pdfFiles.length }
+            result.fileUploads!.pdf = { success: true, count: pdfFiles.length }
           } else {
             // エラーの詳細をログ出力
             const errorText = await uploadResponse.text()
@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
               statusText: uploadResponse.statusText,
               error: errorText
             })
-            result.fileUploads.pdf = { success: false, count: 0 }
+            result.fileUploads!.pdf = { success: false, count: 0 }
           }
         }
         
@@ -240,7 +240,7 @@ export async function POST(request: NextRequest) {
           )
           
           if (uploadResponse.ok) {
-            result.fileUploads.program = { success: true, count: programFiles.length }
+            result.fileUploads!.program = { success: true, count: programFiles.length }
           } else {
             const errorText = await uploadResponse.text()
             console.error(`プログラムファイルアップロードエラー: ${processedData.drawingNumber}`, {
@@ -248,7 +248,7 @@ export async function POST(request: NextRequest) {
               statusText: uploadResponse.statusText,
               error: errorText
             })
-            result.fileUploads.program = { success: false, count: 0 }
+            result.fileUploads!.program = { success: false, count: 0 }
           }
         }
         
