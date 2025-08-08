@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { WorkInstruction, WorkStep as WorkStepType } from '@/lib/dataLoader'
 import { ImageLightbox } from './ImageLightbox'
+import { getStepFolderName } from '@/lib/machineTypeUtils'
 
 interface WorkStepProps {
   step: WorkStepType
   instruction: WorkInstruction
   getStepFiles: (stepNumber: number) => Promise<{ images: string[], videos: string[], programs: string[] }>
+  machineType?: string  // 機械種別を追加
 }
 
 
@@ -23,7 +25,7 @@ const getPropertyText = (prop: string): string => {
   }
 }
 
-export default function WorkStep({ step, instruction, getStepFiles }: WorkStepProps) {
+export default function WorkStep({ step, instruction, getStepFiles, machineType }: WorkStepProps) {
   const [stepFiles, setStepFiles] = useState<{ images: string[], videos: string[], programs: string[] }>({ images: [], videos: [], programs: [] })
   const [isLoading, setIsLoading] = useState(true)
   // ライトボックス用の状態
@@ -118,7 +120,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                   setLightboxOpen(true);
                 }}>
                 <Image
-                  src={`/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=images&subFolder=step_0${step.stepNumber}&fileName=${encodeURIComponent(image)}`}
+                  src={`/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=images&subFolder=${machineType ? getStepFolderName(step.stepNumber, machineType) : `step_0${step.stepNumber}`}&fileName=${encodeURIComponent(image)}`}
                   alt={`第${step.stepNumber}工程 - ${image}`}
                   width={200}
                   height={200}
@@ -138,7 +140,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
                   preload="metadata"
                 >
                   <source 
-                    src={`/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=videos&subFolder=step_0${step.stepNumber}&fileName=${encodeURIComponent(video)}`}
+                    src={`/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=videos&subFolder=${machineType ? getStepFolderName(step.stepNumber, machineType) : `step_0${step.stepNumber}`}&fileName=${encodeURIComponent(video)}`}
                     type="video/mp4"
                   />
                   <p className="p-4 text-center text-emerald-200">
@@ -286,7 +288,7 @@ export default function WorkStep({ step, instruction, getStepFiles }: WorkStepPr
       {stepFiles.images.length > 0 && (
         <ImageLightbox
           images={stepFiles.images.map(image => 
-            `/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=images&subFolder=step_0${step.stepNumber}&fileName=${encodeURIComponent(image)}`
+            `/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=images&subFolder=${machineType ? getStepFolderName(step.stepNumber, machineType) : `step_0${step.stepNumber}`}&fileName=${encodeURIComponent(image)}`
           )}
           isOpen={lightboxOpen}
           currentIndex={currentImageIndex}

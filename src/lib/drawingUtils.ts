@@ -42,24 +42,12 @@ export async function createDrawingDirectoryStructure(drawingNumber: string): Pr
   const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber)
   const basePath = path.join(getDataPath(), 'work-instructions', `drawing-${safeDrawingNumber}`)
   
-  // 運用手順書準拠の必須フォルダ一覧
+  // 必須フォルダ一覧（ステップフォルダは編集画面で必要時に作成）
   const requiredDirectories = [
     'images/overview',
-    'images/step_01',
-    'images/step_02',
-    'images/step_03',
     'videos/overview',
-    'videos/step_01',
-    'videos/step_02',
-    'videos/step_03',
     'pdfs/overview',      // PDFファイルはここに配置
-    'pdfs/step_01',
-    'pdfs/step_02',
-    'pdfs/step_03',
-    'programs/overview',   // dxfファイルはここに配置
-    'programs/step_01',
-    'programs/step_02',
-    'programs/step_03',
+    'programs/overview',   // プログラムファイルはここに配置
     'contributions/files/images',  // 追記用
     'contributions/files/videos'   // 追記用
   ]

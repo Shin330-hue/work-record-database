@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
+import { getMachineTypeKey, getStepFolderName } from '@/lib/machineTypeUtils'
 
 interface EditFormData {
   drawingNumber: string
@@ -64,22 +65,32 @@ export default function DrawingEdit() {
   const [uploadingFiles, setUploadingFiles] = useState<{[key: string]: boolean}>({})
   const [actualFiles, setActualFiles] = useState<{
     overview: { images: string[], videos: string[], pdfs: string[], programs: string[] },
-    steps: { [key: string]: { images: string[], videos: string[] } } // キーを文字列に変更（機械種別_インデックス）
+    steps: { [key: string]: { images: string[], videos: string[] } }, // 後方互換性のため残す
+    stepsByMachine?: {  // 機械種別ごとのステップファイル
+      machining?: { images: string[], videos: string[] }[],
+      turning?: { images: string[], videos: string[] }[],
+      yokonaka?: { images: string[], videos: string[] }[],
+      radial?: { images: string[], videos: string[] }[],
+      other?: { images: string[], videos: string[] }[]
+    }
   }>({
     overview: { images: [], videos: [], pdfs: [], programs: [] },
-    steps: {}
+    steps: {},
+    stepsByMachine: {}
   })
   // 削除予定ファイルの管理
   const [deletedFiles, setDeletedFiles] = useState<{
     fileName: string
     stepNumber: string
     fileType: string
+    machineType?: string  // 機械種別を追加
   }[]>([])
   // アップロード予定ファイルの管理
   const [pendingUploads, setPendingUploads] = useState<{
     file: File
     stepNumber: string
     fileType: string
+    machineType?: string  // 機械種別を追加
     previewUrl?: string
   }[]>([])
   // ライトボックス用の状態
@@ -277,36 +288,66 @@ export default function DrawingEdit() {
           pdfs: overviewPdfsData.data?.files || overviewPdfsData.files || [],
           programs: overviewProgramsData.data?.files || overviewProgramsData.files || []
         },
-        steps: {}
+        steps: {},
+        stepsByMachine: {}  // 機械種別ごとのファイル
       }
 
-      // 各ステップのファイルを取得（実際のステップ数に基づいて動的に取得）
+      // 各ステップのファイルを取得（機械種別ごとに）
       if (formData) {
-        // 全てのworkStepsを統合して最大ステップ数を計算
-        const allSteps = [
-          ...(formData.workSteps || []),
-          ...(formData.workStepsByMachine?.machining || []),
-          ...(formData.workStepsByMachine?.turning || []),
-          ...(formData.workStepsByMachine?.yokonaka || []),
-          ...(formData.workStepsByMachine?.radial || []),
-          ...(formData.workStepsByMachine?.other || [])
+        // 機械種別ごとにファイルを取得
+        const machineTypes = [
+          { key: 'machining', name: 'マシニング' },
+          { key: 'turning', name: 'ターニング' },
+          { key: 'yokonaka', name: '横中' },
+          { key: 'radial', name: 'ラジアル' },
+          { key: 'other', name: 'その他' }
         ]
-        const maxSteps = Math.max(allSteps.length, 10) // 最低10ステップ分は確保
         
-        for (let i = 0; i < maxSteps; i++) {
-          const stepNum = String(i + 1).padStart(2, '0')
+        for (const machineType of machineTypes) {
+          const steps = formData.workStepsByMachine?.[machineType.key as keyof typeof formData.workStepsByMachine] || []
           
-          // ステップ画像を取得
-          const stepImagesRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${stepNum}`)
-          const stepImagesData = await stepImagesRes.json()
-          
-          // ステップ動画を取得
-          const stepVideosRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${stepNum}`)
-          const stepVideosData = await stepVideosRes.json()
+          if (steps.length > 0) {
+            newActualFiles.stepsByMachine![machineType.key as keyof typeof newActualFiles.stepsByMachine] = []
+            
+            for (let i = 0; i < steps.length; i++) {
+              const folderName = getStepFolderName(i + 1, machineType.name)
+              
+              // ステップ画像を取得
+              const stepImagesRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=${folderName}`)
+              const stepImagesData = await stepImagesRes.json()
+              
+              // ステップ動画を取得
+              const stepVideosRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=${folderName}`)
+              const stepVideosData = await stepVideosRes.json()
 
-          newActualFiles.steps[i] = {
-            images: stepImagesData.data?.files || stepImagesData.files || [],
-            videos: stepVideosData.data?.files || stepVideosData.files || []
+              // 機械種別ごとの配列に追加
+              newActualFiles.stepsByMachine![machineType.key as keyof typeof newActualFiles.stepsByMachine]!.push({
+                images: stepImagesData.data?.files || stepImagesData.files || [],
+                videos: stepVideosData.data?.files || stepVideosData.files || []
+              })
+            }
+          }
+        }
+        
+        // 旧形式のworkSteps（後方互換性）
+        if (formData.workSteps && formData.workSteps.length > 0) {
+          for (let i = 0; i < formData.workSteps.length; i++) {
+            const stepNum = String(i + 1).padStart(2, '0')
+            
+            // ステップ画像を取得
+            const stepImagesRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${stepNum}`)
+            const stepImagesData = await stepImagesRes.json()
+            
+            // ステップ動画を取得
+            const stepVideosRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${stepNum}`)
+            const stepVideosData = await stepVideosRes.json()
+
+            newActualFiles.steps[stepIndex] = {
+              images: stepImagesData.data?.files || stepImagesData.files || [],
+              videos: stepVideosData.data?.files || stepVideosData.files || []
+            }
+            
+            stepIndex++
           }
         }
       }
@@ -373,7 +414,8 @@ export default function DrawingEdit() {
                 body: JSON.stringify({
                   fileName: file.fileName,
                   stepNumber: file.stepNumber,
-                  fileType: file.fileType
+                  fileType: file.fileType,
+                  machineType: file.machineType  // 機械種別を追加
                 })
               })
               
@@ -401,6 +443,9 @@ export default function DrawingEdit() {
             formDataUpload.append('file', upload.file)
             formDataUpload.append('stepNumber', upload.stepNumber)
             formDataUpload.append('fileType', upload.fileType)
+            if (upload.machineType) {
+              formDataUpload.append('machineType', upload.machineType)
+            }
             
             try {
               const uploadResponse = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
@@ -734,7 +779,7 @@ export default function DrawingEdit() {
   }
 
   // ファイル操作ハンドラー
-  const handleFileUpload = async (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null) => {
+  const handleFileUpload = async (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null, machineType?: string) => {
     if (!files || !formData) return
 
     // アップロード予定に追加（実際のアップロードは更新時）
@@ -747,6 +792,7 @@ export default function DrawingEdit() {
         file,
         stepNumber: (stepIndex + 1).toString(),
         fileType,
+        machineType,  // 機械種別を保存
         previewUrl
       })
     }
@@ -758,22 +804,61 @@ export default function DrawingEdit() {
       .filter(upload => upload.fileType === fileType)
       .map(upload => upload.previewUrl || `[保留] ${upload.file.name}`)
 
-    setActualFiles(prev => ({
-      ...prev,
-      steps: {
-        ...prev.steps,
-        [stepIndex]: {
-          ...prev.steps[stepIndex] || { images: [], videos: [] },
-          [fileType]: [...(prev.steps[stepIndex]?.[fileType] || []), ...previewFileNames]
+    // 機械種別に応じてactualFilesを更新
+    if (machineType) {
+      const machineKey = getMachineTypeKey(machineType)
+      setActualFiles(prev => {
+        const newStepsByMachine = { ...prev.stepsByMachine }
+        if (!newStepsByMachine[machineKey as keyof typeof newStepsByMachine]) {
+          newStepsByMachine[machineKey as keyof typeof newStepsByMachine] = []
         }
-      }
-    }))
+        const machineSteps = [...(newStepsByMachine[machineKey as keyof typeof newStepsByMachine] || [])]
+        
+        // ステップが存在しない場合は初期化
+        while (machineSteps.length <= stepIndex) {
+          machineSteps.push({ images: [], videos: [] })
+        }
+        
+        // ファイルを追加
+        machineSteps[stepIndex] = {
+          ...machineSteps[stepIndex],
+          [fileType]: [...(machineSteps[stepIndex][fileType] || []), ...previewFileNames]
+        }
+        
+        newStepsByMachine[machineKey as keyof typeof newStepsByMachine] = machineSteps
+        
+        return {
+          ...prev,
+          stepsByMachine: newStepsByMachine
+        }
+      })
+    } else {
+      // 後方互換性のための旧形式更新
+      setActualFiles(prev => ({
+        ...prev,
+        steps: {
+          ...prev.steps,
+          [stepIndex]: {
+            ...prev.steps[stepIndex] || { images: [], videos: [] },
+            [fileType]: [...(prev.steps[stepIndex]?.[fileType] || []), ...previewFileNames]
+          }
+        }
+      }))
+    }
   }
 
-  const removeStepFile = async (stepIndex: number, fileType: 'images' | 'videos', fileIndex: number) => {
-    if (!actualFiles.steps[stepIndex] || !actualFiles.steps[stepIndex][fileType][fileIndex]) return
-
-    const fileName = actualFiles.steps[stepIndex][fileType][fileIndex]
+  const removeStepFile = async (stepIndex: number, fileType: 'images' | 'videos', fileIndex: number, machineType?: string) => {
+    // 機械種別に応じてファイルを取得
+    let fileName: string
+    if (machineType && actualFiles.stepsByMachine) {
+      const machineKey = getMachineTypeKey(machineType)
+      const machineSteps = actualFiles.stepsByMachine[machineKey as keyof typeof actualFiles.stepsByMachine]
+      if (!machineSteps || !machineSteps[stepIndex] || !machineSteps[stepIndex][fileType][fileIndex]) return
+      fileName = machineSteps[stepIndex][fileType][fileIndex]
+    } else {
+      if (!actualFiles.steps[stepIndex] || !actualFiles.steps[stepIndex][fileType][fileIndex]) return
+      fileName = actualFiles.steps[stepIndex][fileType][fileIndex]
+    }
     
     // blob URLの場合は新規アップロード予定ファイル
     if (fileName.startsWith('blob:')) {
@@ -802,21 +887,42 @@ export default function DrawingEdit() {
       setDeletedFiles(prev => [...prev, {
         fileName,
         stepNumber: (stepIndex + 1).toString(),
-        fileType
+        fileType,
+        machineType  // 機械種別を追加
       }])
     }
 
     // UIから削除（実際の削除は更新時）
-    setActualFiles(prev => ({
-      ...prev,
-      steps: {
-        ...prev.steps,
-        [stepIndex]: {
-          ...prev.steps[stepIndex],
-          [fileType]: prev.steps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
+    if (machineType && actualFiles.stepsByMachine) {
+      const machineKey = getMachineTypeKey(machineType)
+      setActualFiles(prev => {
+        const newStepsByMachine = { ...prev.stepsByMachine }
+        const machineSteps = [...(newStepsByMachine![machineKey as keyof typeof newStepsByMachine] || [])]
+        if (machineSteps[stepIndex]) {
+          machineSteps[stepIndex] = {
+            ...machineSteps[stepIndex],
+            [fileType]: machineSteps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
+          }
+          newStepsByMachine![machineKey as keyof typeof newStepsByMachine] = machineSteps
         }
-      }
-    }))
+        return {
+          ...prev,
+          stepsByMachine: newStepsByMachine
+        }
+      })
+    } else {
+      // 後方互換性のための旧形式更新
+      setActualFiles(prev => ({
+        ...prev,
+        steps: {
+          ...prev.steps,
+          [stepIndex]: {
+            ...prev.steps[stepIndex],
+            [fileType]: prev.steps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
+          }
+        }
+      }))
+    }
   }
 
   // PDF・プログラムファイルの削除処理
@@ -1660,9 +1766,10 @@ export default function DrawingEdit() {
                         onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'machining') : undefined}
                         onMoveDown={index < (formData.workStepsByMachine?.machining || formData.workSteps || []).length - 1 ? () => moveWorkStep(index, index + 1, 'machining') : undefined}
                         uploadingFiles={uploadingFiles}
-                        onFileUpload={handleFileUpload}
+                        onFileUpload={(stepIndex, fileType, files) => handleFileUpload(stepIndex, fileType, files, 'マシニング')}
                         onFileRemove={removeStepFile}
                         actualFiles={actualFiles}
+                        machineType="マシニング"
                         onImageClick={(images, currentIndex) => {
                           setCurrentImages(images);
                           setCurrentImageIndex(currentIndex);
@@ -1888,9 +1995,10 @@ export default function DrawingEdit() {
                         onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'turning') : undefined}
                         onMoveDown={index < (formData.workStepsByMachine?.turning || []).length - 1 ? () => moveWorkStep(index, index + 1, 'turning') : undefined}
                         uploadingFiles={uploadingFiles}
-                        onFileUpload={handleFileUpload}
+                        onFileUpload={(stepIndex, fileType, files) => handleFileUpload(stepIndex, fileType, files, 'ターニング')}
                         onFileRemove={removeStepFile}
                         actualFiles={actualFiles}
+                        machineType="ターニング"
                         onImageClick={(images, currentIndex) => {
                           setCurrentImages(images);
                           setCurrentImageIndex(currentIndex);
@@ -2108,9 +2216,10 @@ export default function DrawingEdit() {
                         onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'yokonaka') : undefined}
                         onMoveDown={index < (formData.workStepsByMachine?.yokonaka || []).length - 1 ? () => moveWorkStep(index, index + 1, 'yokonaka') : undefined}
                         uploadingFiles={uploadingFiles}
-                        onFileUpload={handleFileUpload}
+                        onFileUpload={(stepIndex, fileType, files) => handleFileUpload(stepIndex, fileType, files, '横中')}
                         onFileRemove={removeStepFile}
                         actualFiles={actualFiles}
+                        machineType="横中"
                         onImageClick={(images, currentIndex) => {
                           setCurrentImages(images);
                           setCurrentImageIndex(currentIndex);
@@ -2328,9 +2437,10 @@ export default function DrawingEdit() {
                         onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'radial') : undefined}
                         onMoveDown={index < (formData.workStepsByMachine?.radial || []).length - 1 ? () => moveWorkStep(index, index + 1, 'radial') : undefined}
                         uploadingFiles={uploadingFiles}
-                        onFileUpload={handleFileUpload}
+                        onFileUpload={(stepIndex, fileType, files) => handleFileUpload(stepIndex, fileType, files, 'ラジアル')}
                         onFileRemove={removeStepFile}
                         actualFiles={actualFiles}
+                        machineType="ラジアル"
                         onImageClick={(images, currentIndex) => {
                           setCurrentImages(images);
                           setCurrentImageIndex(currentIndex);
@@ -2548,9 +2658,10 @@ export default function DrawingEdit() {
                         onMoveUp={index > 0 ? () => moveWorkStep(index, index - 1, 'other') : undefined}
                         onMoveDown={index < (formData.workStepsByMachine?.other || []).length - 1 ? () => moveWorkStep(index, index + 1, 'other') : undefined}
                         uploadingFiles={uploadingFiles}
-                        onFileUpload={handleFileUpload}
+                        onFileUpload={(stepIndex, fileType, files) => handleFileUpload(stepIndex, fileType, files, 'その他')}
                         onFileRemove={removeStepFile}
                         actualFiles={actualFiles}
+                        machineType="その他"
                         onImageClick={(images, currentIndex) => {
                           setCurrentImages(images);
                           setCurrentImageIndex(currentIndex);
@@ -3060,22 +3171,48 @@ interface WorkStepEditorProps {
   onMoveUp?: () => void
   onMoveDown?: () => void
   uploadingFiles: {[key: string]: boolean}
-  onFileUpload: (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null) => void
-  onFileRemove: (stepIndex: number, fileType: 'images' | 'videos', fileIndex: number) => void
+  onFileUpload: (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null, machineType?: string) => void
+  onFileRemove: (stepIndex: number, fileType: 'images' | 'videos', fileIndex: number, machineType?: string) => void
   actualFiles: {
     overview: { images: string[], videos: string[] },
-    steps: { [key: number]: { images: string[], videos: string[] } }
+    steps: { [key: number]: { images: string[], videos: string[] } },
+    stepsByMachine?: {
+      machining?: { images: string[], videos: string[] }[],
+      turning?: { images: string[], videos: string[] }[],
+      yokonaka?: { images: string[], videos: string[] }[],
+      radial?: { images: string[], videos: string[] }[],
+      other?: { images: string[], videos: string[] }[]
+    }
   }
   onImageClick: (images: string[], currentIndex: number) => void
+  machineType?: string  // 機械種別を追加
 }
 
-function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown, uploadingFiles, onFileUpload, onFileRemove, actualFiles, onImageClick }: WorkStepEditorProps) {
+function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown, uploadingFiles, onFileUpload, onFileRemove, actualFiles, onImageClick, machineType }: WorkStepEditorProps) {
   // 親コンポーネントから渡される図番を取得
   const params = useParams()
   const drawingNumber = params.id as string
   const [isExpanded, setIsExpanded] = useState(false)
   const [isDragOver, setIsDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  
+  // 機械種別に応じたフォルダ名を生成
+  const stepFolderName = machineType 
+    ? getStepFolderName(index + 1, machineType)
+    : `step_${String(index + 1).padStart(2, '0')}`
+  
+  // 機械種別に応じたファイルを取得
+  const getStepFiles = () => {
+    if (machineType && actualFiles.stepsByMachine) {
+      const machineKey = getMachineTypeKey(machineType)
+      const machineSteps = actualFiles.stepsByMachine[machineKey as keyof typeof actualFiles.stepsByMachine]
+      return machineSteps?.[index] || { images: [], videos: [] }
+    }
+    // 後方互換性のためのフォールバック
+    return actualFiles.steps[index] || { images: [], videos: [] }
+  }
+  
+  const stepFiles = getStepFiles()
 
 
   const handleDetailedInstructionChange = (instIndex: number, value: string) => {
@@ -3590,7 +3727,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                     dataTransfer.items.add(file)
                     
                     // 既存のアップロード処理を呼び出し
-                    onFileUpload(index, 'images', dataTransfer.files)
+                    onFileUpload(index, 'images', dataTransfer.files, machineType)
                   } catch (error) {
                     console.error('画像の転送に失敗しました:', error)
                     alert('画像の転送に失敗しました')
@@ -3608,24 +3745,23 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
               }}
             >
               <label className="custom-form-label">
-                画像 ({(actualFiles.steps[index]?.images || []).length}件)
+                画像 ({stepFiles.images.length}件)
               </label>
               <div>
-                {(actualFiles.steps[index]?.images || []).length > 0 && (
+                {stepFiles.images.length > 0 && (
                   <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2 mb-4">
-                    {(actualFiles.steps[index]?.images || []).map((image, imgIndex) => (
+                    {stepFiles.images.map((image, imgIndex) => (
                       <div key={imgIndex} className="relative group">
                         <div className="aspect-square bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200"
                           onClick={() => {
-                            const stepImages = actualFiles.steps[index]?.images || [];
-                            const imageUrls = stepImages.map(img => 
-                              img.startsWith('blob:') ? img : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(img)}`
+                            const imageUrls = stepFiles.images.map(img => 
+                              img.startsWith('blob:') ? img : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=${stepFolderName}&fileName=${encodeURIComponent(img)}`
                             );
-                            const currentIdx = stepImages.indexOf(image);
+                            const currentIdx = stepFiles.images.indexOf(image);
                             onImageClick(imageUrls, currentIdx);
                           }}>
                           <img
-                            src={image.startsWith('blob:') ? image : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(image)}`}
+                            src={image.startsWith('blob:') ? image : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=${stepFolderName}&fileName=${encodeURIComponent(image)}`}
                             alt={`ステップ画像 - ${image}`}
                             className="w-full h-full object-cover"
                             onError={(e) => {
@@ -3642,7 +3778,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                         </div>
                         <button
                           type="button"
-                          onClick={() => onFileRemove(index, 'images', imgIndex)}
+                          onClick={() => onFileRemove(index, 'images', imgIndex, machineType)}
                           className="absolute top-0.5 right-0.5 bg-red-600 text-white rounded px-1.5 py-0.5 text-xs opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700"
                         >
                           削除
@@ -3661,12 +3797,12 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                   type="file"
                   multiple
                   accept="image/*"
-                  onChange={(e) => onFileUpload(index, 'images', e.target.files)}
+                  onChange={(e) => onFileUpload(index, 'images', e.target.files, machineType)}
                   className="hidden"
                 />
                 <div 
                   className={`custom-dropzone ${isDragOver ? 'dragover' : ''} ${
-                    (actualFiles.steps[index]?.images || []).length > 0 ? 'custom-dropzone-compact' : ''
+                    stepFiles.images.length > 0 ? 'custom-dropzone-compact' : ''
                   }`}
                   onClick={() => fileInputRef.current?.click()}
                 >
@@ -3675,14 +3811,14 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                       {isDragOver ? '📥' : '📷'}
                     </div>
                     <p className="custom-dropzone-text">
-                      {(actualFiles.steps[index]?.images || []).length > 0 
+                      {stepFiles.images.length > 0 
                         ? '画像を追加' 
                         : 'ここに画像をドロップ'}
                     </p>
                     <p className="custom-dropzone-subtext">
                       または、クリックしてファイルを選択
                     </p>
-                    {(actualFiles.steps[index]?.images || []).length === 0 && (
+                    {stepFiles.images.length === 0 && (
                       <p className="custom-dropzone-subtext">
                         追記情報からドラッグ&ドロップも可能です
                       </p>
@@ -3695,18 +3831,18 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
             {/* 動画セクション */}
             <div>
               <label className="custom-form-label">
-                動画 ({(actualFiles.steps[index]?.videos || []).length}件)
+                動画 ({stepFiles.videos.length}件)
               </label>
               <div>
-                {(actualFiles.steps[index]?.videos || []).length > 0 ? (
+                {stepFiles.videos.length > 0 ? (
                   <div className="space-y-2">
-                    {(actualFiles.steps[index]?.videos || []).map((video, vidIndex) => (
+                    {stepFiles.videos.map((video, vidIndex) => (
                       <div key={vidIndex} className="border border-gray-200 rounded-md bg-gray-50 p-3">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm text-gray-700 font-medium">{video}</span>
                           <button
                             type="button"
-                            onClick={() => onFileRemove(index, 'videos', vidIndex)}
+                            onClick={() => onFileRemove(index, 'videos', vidIndex, machineType)}
                             className="custom-rect-button red tiny"
                           >
                             削除
@@ -3719,7 +3855,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                             key={video}
                           >
                             <source
-                              src={`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(video)}`}
+                              src={`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=${stepFolderName}&fileName=${encodeURIComponent(video)}`}
                               type="video/mp4"
                             />
                             お使いのブラウザは動画をサポートしていません。
@@ -3739,7 +3875,7 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                     type="file"
                     accept="video/*"
                     multiple
-                    onChange={(e) => onFileUpload(index, 'videos', e.target.files)}
+                    onChange={(e) => onFileUpload(index, 'videos', e.target.files, machineType)}
                     className="hidden"
                     id={`video-upload-${index}`}
                   />

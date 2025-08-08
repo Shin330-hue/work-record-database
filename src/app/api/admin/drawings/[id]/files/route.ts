@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { getDataPath } from '@/lib/admin/utils'
+import { getStepFolderName } from '@/lib/machineTypeUtils'
 
 
 // ファイルアップロード
@@ -25,6 +26,7 @@ export async function POST(
     const file = formData.get('file') as File
     const stepNumber = formData.get('stepNumber') as string
     const fileType = formData.get('fileType') as string
+    const machineType = formData.get('machineType') as string | null  // 機械種別を取得
 
     if (!file || !stepNumber || !fileType) {
       return NextResponse.json(
@@ -48,12 +50,23 @@ export async function POST(
     
     // 保存先パス
     const dataPath = getDataPath()
+    let subFolder: string
+    
+    if (stepNumber === '0') {
+      subFolder = 'overview'
+    } else {
+      // 機械種別が指定されている場合は新形式、そうでない場合は旧形式
+      subFolder = machineType 
+        ? getStepFolderName(stepNumber, machineType)
+        : `step_${stepNumber.padStart(2, '0')}`
+    }
+    
     const targetDir = path.join(
       dataPath,
       'work-instructions',
       `drawing-${drawingNumber}`,
       fileType,
-      stepNumber === '0' ? 'overview' : `step_${stepNumber.padStart(2, '0')}`
+      subFolder
     )
     
     // ディレクトリ作成
@@ -92,7 +105,7 @@ export async function DELETE(
 ) {
   try {
     const { id: drawingNumber } = await params
-    const { fileName, stepNumber, fileType } = await request.json()
+    const { fileName, stepNumber, fileType, machineType } = await request.json()
 
     console.log('削除リクエスト:', { drawingNumber, fileName, stepNumber, fileType })
 
@@ -105,12 +118,23 @@ export async function DELETE(
 
     // ファイル削除
     const dataPath = getDataPath()
+    let subFolder: string
+    if (stepNumber === '0' || stepNumber === 0) {
+      subFolder = 'overview'
+    } else if (machineType) {
+      // 機械種別が指定されている場合は新形式
+      subFolder = getStepFolderName(stepNumber, machineType)
+    } else {
+      // 後方互換性のための旧形式
+      subFolder = `step_${String(stepNumber).padStart(2, '0')}`
+    }
+    
     const filePath = path.join(
       dataPath,
       'work-instructions',
       `drawing-${drawingNumber}`,
       fileType,
-      stepNumber === '0' || stepNumber === 0 ? 'overview' : `step_${String(stepNumber).padStart(2, '0')}`,
+      subFolder,
       fileName
     )
 

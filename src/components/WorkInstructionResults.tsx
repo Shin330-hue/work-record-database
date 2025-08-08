@@ -7,6 +7,7 @@ import WorkStep from './WorkStep'
 import ContributionForm from './ContributionForm'
 import ContributionDisplay from './ContributionDisplay'
 import { ImageLightbox } from './ImageLightbox'
+import { getStepFolderName, getMachineTypeJapanese } from '@/lib/machineTypeUtils'
 
 interface WorkInstructionResultsProps {
   instruction: WorkInstruction
@@ -114,10 +115,14 @@ export default function WorkInstructionResults({ instruction, contributions, onB
 
 
 
-  // ステップごとのファイル一覧を取得する関数
-  const getStepFiles = async (stepNumber: number) => {
+  // ステップごとのファイル一覧を取得する関数（機械種別対応）
+  const getStepFiles = async (stepNumber: number, machineType?: string) => {
     const drawingNumber = instruction.metadata.drawingNumber
-    const stepFolder = `step_0${stepNumber}`
+    
+    // 機械種別付きのフォルダ名を生成
+    const stepFolder = machineType 
+      ? getStepFolderName(stepNumber, getMachineTypeJapanese(machineType))
+      : `step_${stepNumber.toString().padStart(2, '0')}`
     
     const [stepImages, stepVideos, stepPrograms] = await Promise.all([
       getFilesFromFolder(drawingNumber, 'images', stepFolder),
@@ -531,7 +536,8 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   key={index}
                   step={step}
                   instruction={instruction}
-                  getStepFiles={getStepFiles}
+                  getStepFiles={(stepNum) => getStepFiles(stepNum, 'machining')}
+                  machineType="マシニング"
                 />
               ))}
             </div>
@@ -553,7 +559,8 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   key={index}
                   step={step}
                   instruction={instruction}
-                  getStepFiles={getStepFiles}
+                  getStepFiles={(stepNum) => getStepFiles(stepNum, 'turning')}
+                  machineType="ターニング"
                 />
               ))}
             </div>
@@ -575,7 +582,8 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   key={index}
                   step={step}
                   instruction={instruction}
-                  getStepFiles={getStepFiles}
+                  getStepFiles={(stepNum) => getStepFiles(stepNum, 'yokonaka')}
+                  machineType="横中"
                 />
               ))}
             </div>
@@ -597,7 +605,8 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   key={index}
                   step={step}
                   instruction={instruction}
-                  getStepFiles={getStepFiles}
+                  getStepFiles={(stepNum) => getStepFiles(stepNum, 'radial')}
+                  machineType="ラジアル"
                 />
               ))}
             </div>
@@ -619,7 +628,8 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   key={index}
                   step={step}
                   instruction={instruction}
-                  getStepFiles={getStepFiles}
+                  getStepFiles={(stepNum) => getStepFiles(stepNum, 'other')}
+                  machineType="その他"
                 />
               ))}
             </div>
