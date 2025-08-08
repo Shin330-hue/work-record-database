@@ -808,10 +808,15 @@ export default function DrawingEdit() {
     if (machineType) {
       const machineKey = getMachineTypeKey(machineType)
       setActualFiles(prev => {
-        const newStepsByMachine = { ...prev.stepsByMachine }
+        // stepsByMachineが存在しない場合は初期化
+        const newStepsByMachine = { ...(prev.stepsByMachine || {}) }
+        
+        // 対象の機械種別の配列を確実に初期化
         if (!newStepsByMachine[machineKey as keyof typeof newStepsByMachine]) {
           newStepsByMachine[machineKey as keyof typeof newStepsByMachine] = []
         }
+        
+        // 現在の機械種別のステップ配列をコピー
         const machineSteps = [...(newStepsByMachine[machineKey as keyof typeof newStepsByMachine] || [])]
         
         // ステップが存在しない場合は初期化
@@ -819,12 +824,18 @@ export default function DrawingEdit() {
           machineSteps.push({ images: [], videos: [] })
         }
         
-        // ファイルを追加
+        // 現在のステップを明確に取得して更新
+        const currentStep = machineSteps[stepIndex] || { images: [], videos: [] }
         machineSteps[stepIndex] = {
-          ...machineSteps[stepIndex],
-          [fileType]: [...(machineSteps[stepIndex][fileType] || []), ...previewFileNames]
+          images: fileType === 'images' 
+            ? [...(currentStep.images || []), ...previewFileNames]
+            : currentStep.images || [],
+          videos: fileType === 'videos'
+            ? [...(currentStep.videos || []), ...previewFileNames]
+            : currentStep.videos || []
         }
         
+        // 更新した配列を設定
         newStepsByMachine[machineKey as keyof typeof newStepsByMachine] = machineSteps
         
         return {
@@ -879,6 +890,39 @@ export default function DrawingEdit() {
           return true
         })
       })
+      
+      // actualFilesからも削除
+      if (machineType && actualFiles.stepsByMachine) {
+        const machineKey = getMachineTypeKey(machineType)
+        setActualFiles(prev => {
+          const newStepsByMachine = { ...prev.stepsByMachine }
+          const machineSteps = newStepsByMachine[machineKey as keyof typeof newStepsByMachine]
+          if (machineSteps && machineSteps[stepIndex]) {
+            const newMachineSteps = [...machineSteps]
+            newMachineSteps[stepIndex] = {
+              ...newMachineSteps[stepIndex],
+              [fileType]: newMachineSteps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
+            }
+            newStepsByMachine[machineKey as keyof typeof newStepsByMachine] = newMachineSteps
+          }
+          return {
+            ...prev,
+            stepsByMachine: newStepsByMachine
+          }
+        })
+      } else {
+        // 後方互換性のための旧形式更新
+        setActualFiles(prev => ({
+          ...prev,
+          steps: {
+            ...prev.steps,
+            [stepIndex]: {
+              ...prev.steps[stepIndex],
+              [fileType]: prev.steps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
+            }
+          }
+        }))
+      }
     } else {
       // 既存ファイルの場合
       if (!confirm(`${fileName} を削除しますか？（更新ボタンを押すまで実際には削除されません）`)) return
