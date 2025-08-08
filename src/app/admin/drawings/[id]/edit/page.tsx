@@ -64,11 +64,24 @@ export default function DrawingEdit() {
   const [uploadingFiles, setUploadingFiles] = useState<{[key: string]: boolean}>({})
   const [actualFiles, setActualFiles] = useState<{
     overview: { images: string[], videos: string[], pdfs: string[], programs: string[] },
-    steps: { [key: number]: { images: string[], videos: string[] } }
+    steps: { [key: string]: { images: string[], videos: string[] } } // キーを文字列に変更（機械種別_インデックス）
   }>({
     overview: { images: [], videos: [], pdfs: [], programs: [] },
     steps: {}
   })
+  // 削除予定ファイルの管理
+  const [deletedFiles, setDeletedFiles] = useState<{
+    fileName: string
+    stepNumber: string
+    fileType: string
+  }[]>([])
+  // アップロード予定ファイルの管理
+  const [pendingUploads, setPendingUploads] = useState<{
+    file: File
+    stepNumber: string
+    fileType: string
+    previewUrl?: string
+  }[]>([])
   // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImages, setCurrentImages] = useState<string[]>([])
@@ -346,6 +359,75 @@ export default function DrawingEdit() {
       }
       
       if (result.success) {
+        // 削除予定ファイルを実際に削除
+        if (deletedFiles.length > 0) {
+          console.log(`📁 削除予定ファイル: ${deletedFiles.length}件`)
+          
+          for (const file of deletedFiles) {
+            try {
+              const deleteResponse = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  fileName: file.fileName,
+                  stepNumber: file.stepNumber,
+                  fileType: file.fileType
+                })
+              })
+              
+              if (!deleteResponse.ok) {
+                const errorData = await deleteResponse.json()
+                console.error(`ファイル削除エラー: ${file.fileName}`, errorData)
+              } else {
+                console.log(`✅ ファイル削除成功: ${file.fileName}`)
+              }
+            } catch (error) {
+              console.error(`ファイル削除失敗: ${file.fileName}`, error)
+            }
+          }
+          
+          // 削除予定リストをクリア
+          setDeletedFiles([])
+        }
+        
+        // アップロード予定ファイルを実際にアップロード
+        if (pendingUploads.length > 0) {
+          console.log(`📁 アップロード予定ファイル: ${pendingUploads.length}件`)
+          
+          for (const upload of pendingUploads) {
+            const formDataUpload = new FormData()
+            formDataUpload.append('file', upload.file)
+            formDataUpload.append('stepNumber', upload.stepNumber)
+            formDataUpload.append('fileType', upload.fileType)
+            
+            try {
+              const uploadResponse = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
+                method: 'POST',
+                body: formDataUpload
+              })
+              
+              if (!uploadResponse.ok) {
+                const errorData = await uploadResponse.json()
+                console.error(`ファイルアップロードエラー: ${upload.file.name}`, errorData)
+              } else {
+                console.log(`✅ ファイルアップロード成功: ${upload.file.name}`)
+              }
+            } catch (error) {
+              console.error(`ファイルアップロード失敗: ${upload.file.name}`, error)
+            }
+            
+            // プレビューURLのクリーンアップ
+            if (upload.previewUrl) {
+              URL.revokeObjectURL(upload.previewUrl)
+            }
+          }
+          
+          // アップロード予定リストをクリア
+          setPendingUploads([])
+        }
+        
         alert('図番情報が正常に更新されました')
         // データを再読み込みして編集画面に留まる
         await loadEditData()
@@ -655,50 +737,37 @@ export default function DrawingEdit() {
   const handleFileUpload = async (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null) => {
     if (!files || !formData) return
 
-    const uploadKey = `${stepIndex}-${fileType}`
-    setUploadingFiles(prev => ({ ...prev, [uploadKey]: true }))
-
-    const uploadedFiles: string[] = []
-    
+    // アップロード予定に追加（実際のアップロードは更新時）
+    const newPendingUploads = []
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      const formDataUpload = new FormData()
-      formDataUpload.append('file', file)
-      formDataUpload.append('stepNumber', (stepIndex + 1).toString())
-      formDataUpload.append('fileType', fileType)
+      const previewUrl = fileType === 'images' ? URL.createObjectURL(file) : undefined
+      
+      newPendingUploads.push({
+        file,
+        stepNumber: (stepIndex + 1).toString(),
+        fileType,
+        previewUrl
+      })
+    }
 
-      try {
-        const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
-          method: 'POST',
-          body: formDataUpload
-        })
+    setPendingUploads(prev => [...prev, ...newPendingUploads])
 
-        if (response.ok) {
-          const result = await response.json()
-          uploadedFiles.push(result.fileName)
-        } else {
-          console.error('ファイルアップロードエラー:', file.name)
+    // プレビュー用にactualFilesに仮追加（ファイル名の代わりにpreviewUrlを使用）
+    const previewFileNames = newPendingUploads
+      .filter(upload => upload.fileType === fileType)
+      .map(upload => upload.previewUrl || `[保留] ${upload.file.name}`)
+
+    setActualFiles(prev => ({
+      ...prev,
+      steps: {
+        ...prev.steps,
+        [stepIndex]: {
+          ...prev.steps[stepIndex] || { images: [], videos: [] },
+          [fileType]: [...(prev.steps[stepIndex]?.[fileType] || []), ...previewFileNames]
         }
-      } catch (error) {
-        console.error('ファイルアップロード失敗:', error)
       }
-    }
-
-    // 成功したファイルのみ状態に追加
-    if (uploadedFiles.length > 0) {
-      setActualFiles(prev => ({
-        ...prev,
-        steps: {
-          ...prev.steps,
-          [stepIndex]: {
-            ...prev.steps[stepIndex],
-            [fileType]: [...(prev.steps[stepIndex]?.[fileType] || []), ...uploadedFiles]
-          }
-        }
-      }))
-    }
-
-    setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }))
+    }))
   }
 
   const removeStepFile = async (stepIndex: number, fileType: 'images' | 'videos', fileIndex: number) => {
@@ -706,70 +775,69 @@ export default function DrawingEdit() {
 
     const fileName = actualFiles.steps[stepIndex][fileType][fileIndex]
     
-    if (!confirm(`${fileName} を削除しますか？`)) return
-
-    try {
-      const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fileName,
-          stepNumber: stepIndex + 1,
-          fileType
+    // blob URLの場合は新規アップロード予定ファイル
+    if (fileName.startsWith('blob:')) {
+      if (!confirm(`新規アップロード予定ファイルを削除しますか？`)) return
+      
+      // pendingUploadsから削除
+      setPendingUploads(prev => {
+        // 該当するアップロード予定を見つけて削除
+        return prev.filter(upload => {
+          // stepNumberとfileTypeが一致し、previewUrlが一致するものを削除
+          if (upload.stepNumber === (stepIndex + 1).toString() && 
+              upload.fileType === fileType && 
+              upload.previewUrl === fileName) {
+            // blob URLをクリーンアップ
+            URL.revokeObjectURL(fileName)
+            return false
+          }
+          return true
         })
       })
-
-      if (response.ok) {
-        // 状態から削除
-        setActualFiles(prev => ({
-          ...prev,
-          steps: {
-            ...prev.steps,
-            [stepIndex]: {
-              ...prev.steps[stepIndex],
-              [fileType]: prev.steps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
-            }
-          }
-        }))
-      } else {
-        alert('ファイルの削除に失敗しました')
-      }
-    } catch (error) {
-      console.error('ファイル削除エラー:', error)
-      alert('ファイルの削除に失敗しました')
+    } else {
+      // 既存ファイルの場合
+      if (!confirm(`${fileName} を削除しますか？（更新ボタンを押すまで実際には削除されません）`)) return
+      
+      // 削除予定リストに追加
+      setDeletedFiles(prev => [...prev, {
+        fileName,
+        stepNumber: (stepIndex + 1).toString(),
+        fileType
+      }])
     }
+
+    // UIから削除（実際の削除は更新時）
+    setActualFiles(prev => ({
+      ...prev,
+      steps: {
+        ...prev.steps,
+        [stepIndex]: {
+          ...prev.steps[stepIndex],
+          [fileType]: prev.steps[stepIndex][fileType].filter((_, i) => i !== fileIndex)
+        }
+      }
+    }))
   }
 
   // PDF・プログラムファイルの削除処理
   const removePdfOrProgramFile = async (fileName: string, fileType: 'pdfs' | 'programs') => {
-    if (!confirm(`${fileName} を削除しますか？`)) return
+    if (!confirm(`${fileName} を削除しますか？（更新ボタンを押すまで実際には削除されません）`)) return
 
-    try {
-      const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fileName,
-          stepNumber: '0', // overview
-          fileType
-        })
-      })
+    // 削除予定リストに追加
+    setDeletedFiles(prev => [...prev, {
+      fileName,
+      stepNumber: '0',
+      fileType
+    }])
 
-      if (response.ok) {
-        // ファイル一覧を再読み込み
-        await loadActualFiles(drawingNumber)
-      } else {
-        const errorData = await response.json()
-        alert(`削除に失敗しました: ${errorData.error || 'エラーが発生しました'}`)
+    // UIから削除（実際の削除は更新時）
+    setActualFiles(prev => ({
+      ...prev,
+      overview: {
+        ...prev.overview,
+        [fileType]: prev.overview[fileType].filter(f => f !== fileName)
       }
-    } catch (error) {
-      console.error('ファイル削除エラー:', error)
-      alert('ファイルの削除に失敗しました')
-    }
+    }))
   }
 
   // PDF・プログラムファイルの一括アップロード処理
@@ -820,47 +888,32 @@ export default function DrawingEdit() {
   const handleOverviewImageUpload = async (files: FileList | null) => {
     if (!files || !formData) return
 
-    const uploadKey = 'overview-images'
-    setUploadingFiles(prev => ({ ...prev, [uploadKey]: true }))
-
-    const uploadedFiles: string[] = []
-    
+    // アップロード予定に追加（実際のアップロードは更新時）
+    const newPendingUploads = []
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      const formDataUpload = new FormData()
-      formDataUpload.append('file', file)
-      formDataUpload.append('stepNumber', '0') // overview用
-      formDataUpload.append('fileType', 'images')
+      const previewUrl = URL.createObjectURL(file)
+      
+      newPendingUploads.push({
+        file,
+        stepNumber: '0',  // overview用
+        fileType: 'images',
+        previewUrl
+      })
+    }
 
-      try {
-        const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
-          method: 'POST',
-          body: formDataUpload
-        })
+    setPendingUploads(prev => [...prev, ...newPendingUploads])
 
-        if (response.ok) {
-          const result = await response.json()
-          uploadedFiles.push(result.fileName)
-        } else {
-          console.error('ファイルアップロードエラー:', file.name)
-        }
-      } catch (error) {
-        console.error('ファイルアップロード失敗:', error)
+    // プレビュー用にactualFilesに仮追加
+    const previewFileNames = newPendingUploads.map(upload => upload.previewUrl)
+
+    setActualFiles(prev => ({
+      ...prev,
+      overview: {
+        ...prev.overview,
+        images: [...prev.overview.images, ...previewFileNames]
       }
-    }
-
-    // 成功したファイルのみ状態に追加
-    if (uploadedFiles.length > 0) {
-      setActualFiles(prev => ({
-        ...prev,
-        overview: {
-          ...prev.overview,
-          images: [...prev.overview.images, ...uploadedFiles]
-        }
-      }))
-    }
-
-    setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }))
+    }))
   }
 
   const removeOverviewImage = async (imageIndex: number) => {
@@ -868,39 +921,23 @@ export default function DrawingEdit() {
 
     const fileName = actualFiles.overview.images[imageIndex]
     
-    if (!confirm(`${fileName} を削除しますか？`)) return
+    if (!confirm(`${fileName} を削除しますか？（更新ボタンを押すまで実際には削除されません）`)) return
 
-    try {
-      const response = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fileName,
-          stepNumber: '0', // overview用（文字列として送信）
-          fileType: 'images'
-        })
-      })
+    // 削除予定リストに追加
+    setDeletedFiles(prev => [...prev, {
+      fileName,
+      stepNumber: '0',
+      fileType: 'images'
+    }])
 
-      if (response.ok) {
-        // 状態から削除
-        setActualFiles(prev => ({
-          ...prev,
-          overview: {
-            ...prev.overview,
-            images: prev.overview.images.filter((_, i) => i !== imageIndex)
-          }
-        }))
-      } else {
-        const errorData = await response.json()
-        console.error('削除エラー詳細:', errorData)
-        alert(`ファイルの削除に失敗しました: ${errorData.error || 'Unknown error'}`)
+    // UIから削除（実際の削除は更新時）
+    setActualFiles(prev => ({
+      ...prev,
+      overview: {
+        ...prev.overview,
+        images: prev.overview.images.filter((_, i) => i !== imageIndex)
       }
-    } catch (error) {
-      console.error('ファイル削除エラー:', error)
-      alert('ファイルの削除に失敗しました')
-    }
+    }))
   }
 
   // テキストをクリップボードにコピー
@@ -1344,7 +1381,7 @@ export default function DrawingEdit() {
                       <div className="aspect-square bg-gray-100 rounded-md overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-gray-200"
                         onClick={() => {
                           const imageUrls = actualFiles.overview.images.map(img => 
-                            `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(img)}`
+                            img.startsWith('blob:') ? img : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(img)}`
                           );
                           const currentIdx = actualFiles.overview.images.indexOf(image);
                           setCurrentImages(imageUrls);
@@ -1352,7 +1389,7 @@ export default function DrawingEdit() {
                           setLightboxOpen(true);
                         }}>
                         <img
-                          src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`}
+                          src={image.startsWith('blob:') ? image : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=overview&fileName=${encodeURIComponent(image)}`}
                           alt={`概要画像 - ${image}`}
                           className="w-full h-full object-cover"
                           onError={(e) => {
@@ -1406,6 +1443,147 @@ export default function DrawingEdit() {
               </div>
             </div>
           </div>
+          
+          {/* アップロード予定ファイル表示（基本情報タブの概要画像のみ） */}
+          {activeTab === 'basic' && pendingUploads.filter(u => u.stepNumber === '0').length > 0 && (
+            <div className="bg-blue-900 p-4 rounded-lg shadow border border-blue-700 mt-4">
+              <h3 className="text-lg font-semibold text-blue-300 mb-2">
+                📤 概要画像アップロード予定 ({pendingUploads.filter(u => u.stepNumber === '0').length}件)
+              </h3>
+              <p className="text-sm text-blue-200 mb-3">
+                以下のファイルは更新ボタンを押すとアップロードされます。
+              </p>
+              <div className="space-y-2">
+                {pendingUploads.filter(u => u.stepNumber === '0').map((upload, filteredIndex) => {
+                  // 元の配列でのインデックスを取得
+                  const actualIndex = pendingUploads.findIndex(u => u === upload)
+                  return (
+                    <div key={actualIndex} className="flex items-center justify-between bg-gray-800 p-2 rounded">
+                      <div className="flex items-center space-x-2">
+                        {upload.previewUrl && (
+                          <img 
+                            src={upload.previewUrl} 
+                            alt={upload.file.name}
+                            className="w-10 h-10 object-cover rounded"
+                          />
+                        )}
+                        <span className="text-sm text-gray-300">
+                          {upload.file.name} ({upload.fileType})
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // アップロード予定から削除
+                          setPendingUploads(prev => prev.filter((_, i) => i !== actualIndex))
+                        
+                          // プレビューURLのクリーンアップ
+                          if (upload.previewUrl) {
+                            URL.revokeObjectURL(upload.previewUrl)
+                          
+                            // actualFilesからも削除
+                            if (upload.stepNumber === '0') {
+                              // 概要画像の場合
+                              setActualFiles(prev => ({
+                                ...prev,
+                                overview: {
+                                  ...prev.overview,
+                                  images: prev.overview.images.filter(
+                                    f => f !== upload.previewUrl
+                                  )
+                              }
+                            }))
+                            } else {
+                              // ステップ画像の場合
+                              const stepIndex = parseInt(upload.stepNumber) - 1
+                              setActualFiles(prev => ({
+                                ...prev,
+                                steps: {
+                                  ...prev.steps,
+                                  [stepIndex]: {
+                                    ...prev.steps[stepIndex],
+                                    [upload.fileType]: prev.steps[stepIndex]?.[upload.fileType as 'images' | 'videos']?.filter(
+                                      f => f !== upload.previewUrl && f !== `[保留] ${upload.file.name}`
+                                    ) || []
+                                  }
+                                }
+                              }))
+                            }
+                          }
+                        }}
+                        className="text-xs px-2 py-1 bg-gray-700 text-gray-300 rounded hover:bg-gray-600"
+                      >
+                        取り消し
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+          
+          {/* 削除予定ファイル表示 */}
+          {deletedFiles.length > 0 && (
+            <div className="bg-yellow-900 p-4 rounded-lg shadow border border-yellow-700 mt-4">
+              <h3 className="text-lg font-semibold text-yellow-300 mb-2">
+                ⚠️ 削除予定ファイル ({deletedFiles.length}件)
+              </h3>
+              <p className="text-sm text-yellow-200 mb-3">
+                以下のファイルは更新ボタンを押すと削除されます。
+              </p>
+              <div className="space-y-2">
+                {deletedFiles.map((file, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-800 p-2 rounded">
+                    <span className="text-sm text-gray-300">
+                      {file.fileName} ({file.fileType})
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // 削除予定から取り消し
+                        setDeletedFiles(prev => prev.filter((_, i) => i !== index))
+                        // UIに復元
+                        if (file.stepNumber === '0') {
+                          if (file.fileType === 'images') {
+                            setActualFiles(prev => ({
+                              ...prev,
+                              overview: {
+                                ...prev.overview,
+                                images: [...prev.overview.images, file.fileName]
+                              }
+                            }))
+                          } else if (file.fileType === 'pdfs' || file.fileType === 'programs') {
+                            setActualFiles(prev => ({
+                              ...prev,
+                              overview: {
+                                ...prev.overview,
+                                [file.fileType]: [...prev.overview[file.fileType as 'pdfs' | 'programs'], file.fileName]
+                              }
+                            }))
+                          }
+                        } else {
+                          const stepIndex = parseInt(file.stepNumber) - 1
+                          setActualFiles(prev => ({
+                            ...prev,
+                            steps: {
+                              ...prev.steps,
+                              [stepIndex]: {
+                                ...prev.steps[stepIndex] || { images: [], videos: [] },
+                                [file.fileType]: [...(prev.steps[stepIndex]?.[file.fileType as 'images' | 'videos'] || []), file.fileName]
+                              }
+                            }
+                          }))
+                        }
+                      }}
+                      className="text-xs px-2 py-1 bg-gray-700 text-gray-300 rounded hover:bg-gray-600"
+                    >
+                      取り消し
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
             </>
           )}
 
@@ -3441,13 +3619,13 @@ function WorkStepEditor({ step, index, onUpdate, onDelete, onMoveUp, onMoveDown,
                           onClick={() => {
                             const stepImages = actualFiles.steps[index]?.images || [];
                             const imageUrls = stepImages.map(img => 
-                              `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(img)}`
+                              img.startsWith('blob:') ? img : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(img)}`
                             );
                             const currentIdx = stepImages.indexOf(image);
                             onImageClick(imageUrls, currentIdx);
                           }}>
                           <img
-                            src={`/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(image)}`}
+                            src={image.startsWith('blob:') ? image : `/api/files?drawingNumber=${drawingNumber}&folderType=images&subFolder=step_${String(index + 1).padStart(2, '0')}&fileName=${encodeURIComponent(image)}`}
                             alt={`ステップ画像 - ${image}`}
                             className="w-full h-full object-cover"
                             onError={(e) => {

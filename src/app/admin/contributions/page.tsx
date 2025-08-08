@@ -3,7 +3,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { loadRecentContributions } from '@/lib/dataLoader'
+import { loadAllContributions } from '@/lib/dataLoader'
 import { ContributionData } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
 import Link from 'next/link'
@@ -37,7 +37,7 @@ export default function ContributionsManagementPage() {
   const loadData = async () => {
     try {
       // 全追記情報を読み込み（limit=1000で実質全件取得）
-      const allContributions = await loadRecentContributions(1000)
+      const allContributions = await loadAllContributions(1000)
       setContributions(allContributions)
     } catch (error) {
       console.error('データ読み込みエラー:', error)

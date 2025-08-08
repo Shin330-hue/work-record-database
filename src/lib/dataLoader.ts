@@ -478,9 +478,8 @@ export const loadRecentContributions = async (limit: number = 10): Promise<{ dra
     const contributionPromises = searchIndex.drawings.map(async (drawing) => {
       try {
         const contributionFile = await loadContributions(drawing.drawingNumber)
-        // activeステータスの追記のみを返す
+        // すべてのステータスの追記を返す（管理画面用）
         return contributionFile.contributions
-          .filter(contribution => contribution.status === 'active')
           .map(contribution => ({
             drawingNumber: drawing.drawingNumber,
             contribution,
@@ -505,6 +504,48 @@ export const loadRecentContributions = async (limit: number = 10): Promise<{ dra
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('最新追記データの読み込みに失敗:', error)
+    }
+    return []
+  }
+}
+
+// 全図番の全追記データを取得（管理画面用：全ステータス）
+export const loadAllContributions = async (limit: number = 1000): Promise<{ drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[]> => {
+  try {
+    // 検索インデックスから全図番を取得
+    const searchIndex = await loadSearchIndex()
+    const allContributions: { drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[] = []
+
+    // 各図番の追記データを並列取得
+    const contributionPromises = searchIndex.drawings.map(async (drawing) => {
+      try {
+        const contributionFile = await loadContributions(drawing.drawingNumber)
+        // 全ステータスの追記を返す（管理画面用）
+        return contributionFile.contributions
+          .map(contribution => ({
+            drawingNumber: drawing.drawingNumber,
+            contribution,
+            drawingTitle: drawing.title
+          }))
+      } catch {
+        return []
+      }
+    })
+
+    const results = await Promise.all(contributionPromises)
+    results.forEach(contributions => {
+      allContributions.push(...contributions)
+    })
+
+    // 投稿日時でソートして最新順に
+    allContributions.sort((a, b) => 
+      new Date(b.contribution.timestamp).getTime() - new Date(a.contribution.timestamp).getTime()
+    )
+
+    return allContributions.slice(0, limit)
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('全追記データの読み込みに失敗:', error)
     }
     return []
   }
