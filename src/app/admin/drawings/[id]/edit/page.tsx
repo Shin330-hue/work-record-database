@@ -304,10 +304,11 @@ export default function DrawingEdit() {
         ]
         
         for (const machineType of machineTypes) {
-          const steps = formData.workStepsByMachine?.[machineType.key as keyof typeof formData.workStepsByMachine] || []
+          const machineKey = machineType.key as 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other'
+          const steps = formData.workStepsByMachine?.[machineKey] || []
           
           if (steps.length > 0) {
-            newActualFiles.stepsByMachine![machineType.key as keyof typeof newActualFiles.stepsByMachine] = []
+            const stepFiles: { images: string[], videos: string[] }[] = []
             
             for (let i = 0; i < steps.length; i++) {
               const folderName = getStepFolderName(i + 1, machineType.name)
@@ -321,10 +322,15 @@ export default function DrawingEdit() {
               const stepVideosData = await stepVideosRes.json()
 
               // 機械種別ごとの配列に追加
-              newActualFiles.stepsByMachine![machineType.key as keyof typeof newActualFiles.stepsByMachine]!.push({
+              stepFiles.push({
                 images: stepImagesData.data?.files || stepImagesData.files || [],
                 videos: stepVideosData.data?.files || stepVideosData.files || []
               })
+            }
+            
+            // 機械種別ごとの配列を設定
+            if (newActualFiles.stepsByMachine) {
+              newActualFiles.stepsByMachine[machineKey] = stepFiles
             }
           }
         }
@@ -342,12 +348,10 @@ export default function DrawingEdit() {
             const stepVideosRes = await fetch(`/api/files?drawingNumber=${drawingNumber}&folderType=videos&subFolder=step_${stepNum}`)
             const stepVideosData = await stepVideosRes.json()
 
-            newActualFiles.steps[stepIndex] = {
+            newActualFiles.steps[`step_${(i + 1).toString().padStart(2, '0')}`] = {
               images: stepImagesData.data?.files || stepImagesData.files || [],
               videos: stepVideosData.data?.files || stepVideosData.files || []
             }
-            
-            stepIndex++
           }
         }
       }
@@ -783,7 +787,7 @@ export default function DrawingEdit() {
     if (!files || !formData) return
 
     // アップロード予定に追加（実際のアップロードは更新時）
-    const newPendingUploads = []
+    const newPendingUploads: typeof pendingUploads = []
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       const previewUrl = fileType === 'images' ? URL.createObjectURL(file) : undefined
@@ -1039,7 +1043,7 @@ export default function DrawingEdit() {
     if (!files || !formData) return
 
     // アップロード予定に追加（実際のアップロードは更新時）
-    const newPendingUploads = []
+    const newPendingUploads: typeof pendingUploads = []
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       const previewUrl = URL.createObjectURL(file)
@@ -1055,7 +1059,9 @@ export default function DrawingEdit() {
     setPendingUploads(prev => [...prev, ...newPendingUploads])
 
     // プレビュー用にactualFilesに仮追加
-    const previewFileNames = newPendingUploads.map(upload => upload.previewUrl)
+    const previewFileNames = newPendingUploads
+      .filter(upload => upload.previewUrl)
+      .map(upload => upload.previewUrl!)
 
     setActualFiles(prev => ({
       ...prev,
@@ -1604,7 +1610,7 @@ export default function DrawingEdit() {
                 以下のファイルは更新ボタンを押すとアップロードされます。
               </p>
               <div className="space-y-2">
-                {pendingUploads.filter(u => u.stepNumber === '0').map((upload, filteredIndex) => {
+                {pendingUploads.filter(u => u.stepNumber === '0').map((upload) => {
                   // 元の配列でのインデックスを取得
                   const actualIndex = pendingUploads.findIndex(u => u === upload)
                   return (
