@@ -82,6 +82,19 @@ export default function Home() {
             </div>
           )}
 
+          {/* 田中工業GPTボタン */}
+          <div className="w-full max-w-[800px] mx-auto mb-8">
+            <button
+              onClick={() => router.push('/chat')}
+              className="custom-rect-button purple w-full flex items-center justify-center gap-3"
+              style={{ background: 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}
+            >
+              <span style={{ fontSize: '1.5rem' }}>🤖</span>
+              <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>田中工業GPT</span>
+              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>- 加工の相談はこちら</span>
+            </button>
+          </div>
+
           {/* 会社選択セクション */}
           <div className="w-full max-w-[800px] mx-auto">
             {/* タイトルと検索バーの並び */}

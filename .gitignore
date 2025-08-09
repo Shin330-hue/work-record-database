@@ -88,3 +88,7 @@ CLAUDE.md
 
 # Claude一時作業ファイル（セッション間の引き継ぎ用）
 doc/doc_for_claude/
+
+# Ollamaテスト関連ファイル
+test-ollama*.js
+pull-model.js
