@@ -598,6 +598,145 @@ body::before {
   border: 1px solid rgba(16, 185, 129, 0.5); /* エメラルド色のボーダー */
 }
 
+/* 作業手順アコーディオン */
+.work-step-accordion {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.work-step-accordion.closed {
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.5), rgba(16, 185, 129, 0.3));
+  border: 2px solid rgba(52, 211, 153, 0.5);
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
+}
+
+.work-step-accordion.closed:hover {
+  border-color: rgba(52, 211, 153, 0.7);
+  box-shadow: 0 10px 20px rgba(52, 211, 153, 0.2);
+  transform: translateY(-2px);
+}
+
+.work-step-accordion.expanded {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.4), rgba(147, 51, 234, 0.3));
+  border: 2px solid rgba(147, 51, 234, 0.6);
+  box-shadow: 0 20px 40px rgba(147, 51, 234, 0.15);
+}
+
+.work-step-header {
+  padding: 18px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.work-step-header:active {
+  transform: scale(0.99);
+}
+
+.work-step-header.closed {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.2));
+}
+
+.work-step-header.closed:hover {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.3), rgba(52, 211, 153, 0.3));
+}
+
+.work-step-header.expanded {
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.3), rgba(167, 139, 250, 0.3));
+  border-bottom: 2px solid rgba(147, 51, 234, 0.4);
+}
+
+.work-step-badge {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .work-step-badge {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+}
+
+.work-step-badge.closed {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.6), rgba(6, 95, 70, 0.6));
+  color: #86efac;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.work-step-badge.expanded {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.6), rgba(79, 70, 229, 0.6));
+  color: #c7d2fe;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+}
+
+.work-step-chevron {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+}
+
+.work-step-chevron.expanded {
+  transform: rotate(180deg);
+}
+
+/* 作業手順の内容テキスト */
+.work-step-content {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem;
+  color: white;
+}
+
+@media (max-width: 640px) {
+  .work-step-content {
+    font-size: 1rem; /* 16px */
+    line-height: 1.5rem;
+  }
+}
+
+.work-step-detail-list {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #86efac;
+}
+
+.work-step-section-title {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .work-step-section-title {
+    font-size: 1.125rem; /* 18px */
+  }
+}
+
+/* 切削条件のアコーディオン見出し */
+.cutting-condition-title {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  color: #1f2937; /* グレー900（ほぼ黒） */
+  text-transform: capitalize;
+}
+
+@media (max-width: 640px) {
+  .cutting-condition-title {
+    font-size: 1rem; /* 16px */
+  }
+}
+
+/* 旧スタイル（互換性のため残す） */
 .work-step {
   background: rgba(30, 30, 50, 0.6);
   border-radius: 15px;

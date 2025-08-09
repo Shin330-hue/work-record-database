@@ -74,31 +74,65 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
 
   return (
     <>
-      <div className="work-step mb-10 bg-white/10 backdrop-blur-md rounded-2xl border border-emerald-500/20 shadow-lg overflow-hidden">
+      <div className={`work-step-accordion ${isExpanded ? 'expanded' : 'closed'}`}>
       {/* ヘッダー部分（クリックでトグル） */}
       <div 
-        className="flex items-center gap-3 p-4 cursor-pointer hover:bg-white/5 transition-colors"
+        className={`work-step-header ${isExpanded ? 'expanded' : 'closed'} flex items-center gap-3`}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center gap-4 flex-1">
-          <div className="text-sm font-bold text-emerald-300 bg-emerald-500/20 px-2.5 py-0.5 rounded-lg">第{step.stepNumber}工程</div>
-          <div className="text-base font-semibold text-white">{step.title}</div>
+        {/* 左側：工程番号バッジとタイトル */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+          <div className={`work-step-badge ${isExpanded ? 'expanded' : 'closed'} flex-shrink-0`}>
+            第{step.stepNumber}工程
+          </div>
+          <div className="mx-2" /> {/* スペーサー */}
+          <div className={`text-lg sm:text-xl font-bold truncate ${
+            isExpanded ? 'text-purple-100' : 'text-white'
+          }`}>
+            【{step.title}】
+          </div>
         </div>
-        <div className="text-emerald-300 text-lg">
-          {isExpanded ? '▼' : '▶'}
+        
+        {/* 右側：展開インジケーター */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {/* タップヒント（スマホでも少し見える） */}
+          <span className={`text-xs transition-opacity duration-200 ${
+            isExpanded ? 'text-purple-200 opacity-60' : 'text-emerald-200 opacity-40'
+          } sm:opacity-0 sm:hover:opacity-100`}>
+            タップで{isExpanded ? '閉じる' : '開く'}
+          </span>
+          
+          {/* 展開アイコン */}
+          <svg 
+            className={`work-step-chevron ${isExpanded ? 'expanded' : ''} ${
+              isExpanded ? 'text-purple-300' : 'text-emerald-300'
+            }`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
       </div>
       
       {/* 本文部分（展開時のみ表示） */}
-      {isExpanded && (
-        <div className="px-6 pb-6">
-          <div className="text-white mb-3 text-sm">{step.description}</div>
+      <div 
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{
+          maxHeight: isExpanded ? '2000px' : '0px',
+          opacity: isExpanded ? 1 : 0
+        }}
+      >
+        <div className="px-6 pb-6 pt-4">
+          {/* 手順説明 */}
+          <div className="work-step-content mb-4">{step.description}</div>
       
       {/* 詳細手順 */}
       {step.detailedInstructions && step.detailedInstructions.length > 0 && (
-        <div className="bg-emerald-500/10 rounded-xl p-4 mb-3 border border-emerald-500/20">
-          <h4 className="text-base font-semibold text-emerald-200 mb-2">詳細手順</h4>
-          <ul className="list-decimal pl-5 text-emerald-100 space-y-1.5 text-sm">
+        <div className="bg-emerald-500/10 rounded-xl p-4 mb-4 border border-emerald-500/20">
+          <h4 className="work-step-section-title">《詳細手順》</h4>
+          <ul className="list-decimal pl-5 work-step-detail-list space-y-2">
             {step.detailedInstructions.map((inst, i) => (
               <li key={i}>{inst}</li>
             ))}
@@ -108,9 +142,12 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
       
       {/* 画像・動画・プログラムファイル */}
       {!isLoading && (stepFiles.images.length > 0 || stepFiles.videos.length > 0 || stepFiles.programs.length > 0) && (
-        <div className="mt-6" style={{ display: 'block' }}>
-          <h4 className="text-base font-semibold text-emerald-200 mb-3 block">メディア</h4>
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <>
+          {/* セクション区切り線 */}
+          <div className="my-6 border-t-2 border-purple-400/30"></div>
+          
+          <div className="mt-4" style={{ display: 'block' }}>
+            <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {/* 画像ギャラリー */}
             {stepFiles.images.map((image, i) => (
               <div key={`img-${i}`} 
@@ -151,26 +188,31 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
             ))}
           </div>
         </div>
+        </>
       )}
       
       {/* 切削条件 */}
       {step.cuttingConditions && (
-        <div className="cutting-conditions mt-6 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
-          <h4 className="text-base font-semibold text-emerald-200 mb-2">《切削条件》</h4>
-          <div className="space-y-2">
+        <>
+          {/* セクション区切り線 */}
+          <div className="my-6 border-t-2 border-purple-400/30"></div>
+          
+          <div className="cutting-conditions mt-4 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
+            <h4 className="work-step-section-title">《切削条件》</h4>
+            <div className="space-y-2">
             {Object.entries(step.cuttingConditions).map(([key, condition]) => {
               const isExpanded = expandedConditions[key] ?? false;
               return (
                 <div key={key} className="border border-emerald-500/20 rounded-lg overflow-hidden">
                   <button
                     className="w-full flex items-center justify-between bg-black/20 hover:bg-black/30 transition-colors"
-                    style={{ padding: '10px 14px' }}
+                    style={{ padding: '12px 16px' }}
                     onClick={() => setExpandedConditions(prev => ({ ...prev, [key]: !prev[key] }))}
                   >
-                    <span className="font-semibold text-emerald-300 text-sm">
+                    <span className="cutting-condition-title">
                       {key.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-emerald-400 text-base">
+                    <span className="text-emerald-400 text-xl">
                       {isExpanded ? '−' : '+'}
                     </span>
                   </button>
@@ -195,33 +237,38 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
             })}
           </div>
         </div>
+        </>
       )}
       
       {/* 品質確認 */}
       {step.qualityCheck && (
-        <div className="quality-check mt-4 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
-          <h4 className="text-base font-semibold text-emerald-200 mb-3">品質確認</h4>
-          <div className="space-y-4">
+        <>
+          {/* セクション区切り線 */}
+          <div className="my-6 border-t-2 border-purple-400/30"></div>
+          
+          <div className="quality-check mt-4 bg-yellow-500/10 rounded-xl p-4 border border-yellow-500/30">
+            <h4 className="work-step-section-title">《品質確認》</h4>
+          <div className="space-y-2">
             {/* 新形式のデータ構造に対応 */}
             {step.qualityCheck.items && step.qualityCheck.items.length > 0 ? (
               step.qualityCheck.items.map((item, index) => (
-                <div key={index} className="bg-black/20 rounded-lg p-3 border border-emerald-500/10">
-                  <div className="text-emerald-100 space-y-1.5">
-                    <div className="text-sm font-medium text-emerald-200">{item.checkPoint}</div>
+                <div key={index} className="border border-yellow-500/20 rounded-lg overflow-hidden">
+                  <div className="bg-black/20 p-3">
+                    <div className="text-white font-medium mb-2 text-base">{item.checkPoint}</div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                       {item.tolerance && (
                         <div>
-                          <span className="text-emerald-300">公差:</span> {item.tolerance}
+                          <span className="text-yellow-300">公差:</span> {item.tolerance}
                         </div>
                       )}
                       {item.surfaceRoughness && (
                         <div>
-                          <span className="text-emerald-300">表面粗さ:</span> {item.surfaceRoughness}
+                          <span className="text-yellow-300">表面粗さ:</span> {item.surfaceRoughness}
                         </div>
                       )}
                       {item.inspectionTool && (
                         <div>
-                          <span className="text-emerald-300">検査工具:</span> {item.inspectionTool}
+                          <span className="text-yellow-300">検査工具:</span> {item.inspectionTool}
                         </div>
                       )}
                     </div>
@@ -234,9 +281,13 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const oldQualityCheck = step.qualityCheck as any;
                 return oldQualityCheck.checkPoints && (
-                  <div className="text-emerald-100 text-sm space-y-2">
-                    <div><span className="font-medium">確認項目:</span> {oldQualityCheck.checkPoints.join(', ')}</div>
-                    <div><span className="font-medium">検査工具:</span> {oldQualityCheck.inspectionTools?.join(', ')}</div>
+                  <div className="border border-yellow-500/20 rounded-lg overflow-hidden">
+                    <div className="bg-black/20 p-3">
+                      <div className="text-white text-sm space-y-2">
+                        <div><span className="font-medium text-yellow-300">確認項目:</span> {oldQualityCheck.checkPoints.join(', ')}</div>
+                        <div><span className="font-medium text-yellow-300">検査工具:</span> {oldQualityCheck.inspectionTools?.join(', ')}</div>
+                      </div>
+                    </div>
                   </div>
                 );
               })()
@@ -264,24 +315,30 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
             </div>
           )}
         </div>
+        </>
       )}
       
       {/* 備考 */}
       {step.notes && step.notes.length > 0 && (
-        <div className="mt-4 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
-          <h4 className="text-base font-semibold text-emerald-200 mb-3">備考</h4>
-          <div className="space-y-3">
-            {step.notes.map((note, index) => (
-              <div key={index} className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
-                <p className="text-emerald-100 text-sm">{note}</p>
+        <>
+          {/* セクション区切り線 */}
+          <div className="my-6 border-t-2 border-purple-400/30"></div>
+          
+          <div className="mt-4 bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/20">
+            <h4 className="work-step-section-title">《備考》</h4>
+            <div className="space-y-3">
+              {step.notes.map((note, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0"></div>
+                  <p className="work-step-detail-list">{note}</p>
               </div>
             ))}
           </div>
         </div>
+        </>
       )}
         </div>
-      )}
+      </div>
       </div>
 
       {/* 画像ライトボックス */}
