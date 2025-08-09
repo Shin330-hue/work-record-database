@@ -27,6 +27,7 @@
 | `drawingNumber` | string | 条件付き | 図番（作業手順用） |
 | `folderType` | string | ○ | フォルダタイプ: 'images', 'videos', 'pdfs', 'programs' |
 | `subFolder` | string | - | サブフォルダ |
+| `machineType` | string | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
 | `ideaCategory` | string | 条件付き | 加工アイデアカテゴリ |
 | `ideaId` | string | 条件付き | 加工アイデアID |
 | `contributionFile` | string | - | 追加投稿ファイル名（単一ファイル配信用） |
@@ -287,6 +288,7 @@
 | `file` | File | ○ | アップロードファイル |
 | `stepNumber` | string | ○ | ステップ番号（0=概要） |
 | `fileType` | string | ○ | ファイルタイプ: 'images', 'videos' |
+| `machineType` | string | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
 
 **制限事項**
 - 最大ファイルサイズ: 50MB
@@ -316,7 +318,8 @@
 {
   "fileName": "2025-07-20T10-00-00-000Z-image.jpg",
   "stepNumber": "1",
-  "fileType": "images"
+  "fileType": "images",
+  "machineType": "machining"
 }
 ```
 
@@ -342,6 +345,7 @@
 |---|---|---|---|
 | `files` | File[] | ○ | アップロードファイル（複数可） |
 | `stepNumber` | string | ○ | ステップ番号（0=概要、1以上=各ステップ） |
+| `machineType` | string | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
 
 **対応ファイル形式**
 - **画像**: jpg, jpeg, png, gif, webp
@@ -358,6 +362,11 @@
 - **画像・動画**: タイムスタンプを付加（例: `2025-07-22T10-00-00-000Z-image.jpg`）
 - **PDF・プログラム**: オリジナルファイル名を保持（例: `ABC-123.pdf`、`O1234.nc`）
 - 重複時は番号を付加（例: `ABC-123_1.pdf`）
+
+**フォルダ構造（機械種別対応）**
+- **概要**: `overview/`
+- **機械種別ステップ（新形式）**: `step_01_machining/`、`step_01_turning/`、`step_01_yokonaka/`、`step_01_radial/`、`step_01_other/`
+- **旧形式（後方互換性）**: `step_01/`、`step_02/`
 
 **レスポンス例（成功）**
 ```json
@@ -458,5 +467,6 @@ curl -X GET http://localhost:3000/api/admin/drawings \
 ## 更新履歴
 
 - 2025-07-20: 初版作成
-- 複数ファイルアップロード対応
-- 管理画面API追加
+- 2025-07-22: 複数ファイルアップロード対応、管理画面API追加
+- 2025-08-08: 機械種別パラメータ追加、フォルダ構造の詳細化
+- 2025-08-09: ドキュメント最新化
