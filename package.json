@@ -7,7 +7,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "mask-data": "node scripts/mask-data.js",
+    "mask-ui": "node scripts/mask-ui-text.js",
+    "mask-all": "npm run mask-data && npm run mask-ui",
+    "restore-ui": "node scripts/mask-ui-text.js restore"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

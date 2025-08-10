@@ -9,6 +9,7 @@ export interface ExtractedKeywords {
   processes: string[]
   drawings: string[]
   companies: string[]
+  showAll?: boolean
 }
 
 export interface SearchResult {
@@ -60,17 +61,42 @@ export interface SearchStatistics {
 export function extractKeywords(text: string): ExtractedKeywords {
   const lowerText = text.toLowerCase()
   
-  // 材質キーワード
-  const materials = ['ss400', 'sus304', 's45c', 'アルミ', 'アルミニウム', 'al', 'ステンレス']
-    .filter(material => lowerText.includes(material))
+  // 全件表示を要求するクエリパターンの検出
+  const showAllPatterns = [
+    '全図番', '全ての図番', 'すべての図番', '図番を全て', '図番の数', '何件', '何個',
+    '全部', 'すべて', '一覧', 'リスト', 'list all', 'show all', 'total'
+  ]
+  const isShowAllRequest = showAllPatterns.some(pattern => lowerText.includes(pattern))
   
-  // 機械種別キーワード  
-  const machines = ['マシニング', 'ターニング', '横中', 'ラジアル', 'その他', 'machining', 'turning']
-    .filter(machine => lowerText.includes(machine))
+  // 材質キーワード（大幅拡張）
+  const materials = [
+    'ss400', 'sus304', 'sus316', 's45c', 'sph', 'sus', 'ss', 'stainless',
+    'アルミ', 'アルミニウム', 'al', 'aluminum', 'ステンレス', 'ステン',
+    'ドラル', 'dural', '真鍮', '黄銅', 'brass', '銅', 'copper',
+    '鉄', 'iron', '鋼', 'steel', '炭素鋼', 'carbon'
+  ].filter(material => lowerText.includes(material))
   
-  // 加工プロセスキーワード
-  const processes = ['切削', '穴あけ', 'タップ', 'あり溝', 'フライス', '旋盤', '研削']
-    .filter(process => lowerText.includes(process))
+  // 機械種別キーワード（拡張＋類似語）
+  const machines = [
+    'マシニング', 'machining', 'mc', 'マシニングセンタ', 'マシニングセンター',
+    'ターニング', 'turning', 'cnc旋盤', '旋盤', 'lathe',
+    '横中', 'よこなか', '横中ぐり', 'horizontal',
+    'ラジアル', 'radial', 'ラジアル', 'ボール盤', 'drill',
+    'その他', 'other', '手仕上げ', '研削', 'grinding'
+  ].filter(machine => lowerText.includes(machine))
+  
+  // 加工プロセスキーワード（大幅拡張）
+  const processes = [
+    '切削', '加工', '機械加工', 'machining', 'cutting',
+    '穴あけ', '穴開け', 'drilling', 'drill', 'ボーリング', 'boring',
+    'タップ', 'tap', 'tapping', 'ねじ切り', 'thread',
+    'あり溝', '溝', 'slot', 'slotting', 'キー溝', 'keyway',
+    'フライス', 'milling', '正面フライス', 'end mill', 'エンドミル',
+    '旋盤', 'turning', '外径', '内径', '端面', '溝入れ',
+    '研削', 'grinding', '仕上げ', 'finish', 'finishing',
+    '面取り', 'chamfer', 'バリ取り', 'deburring', 'バリ除去',
+    '測定', '検査', 'measurement', 'inspection'
+  ].filter(process => lowerText.includes(process))
   
   // 図番パターン（数字とハイフンを含む）
   const drawingPattern = /[A-Za-z0-9\-_]{5,}/g
@@ -86,7 +112,8 @@ export function extractKeywords(text: string): ExtractedKeywords {
     machines, 
     processes,
     drawings,
-    companies
+    companies,
+    showAll: isShowAllRequest
   }
 }
 
@@ -211,7 +238,8 @@ async function searchCompanies(keywords: ExtractedKeywords): Promise<CompanyMatc
       }
     }
     
-    return matches.sort((a, b) => b.relevanceScore - a.relevanceScore).slice(0, 10)
+    const limit = keywords.showAll ? 20 : 10
+    return matches.sort((a, b) => b.relevanceScore - a.relevanceScore).slice(0, limit)
     
   } catch (error) {
     console.error('Company search error:', error)
@@ -263,6 +291,11 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
         const title = metadata.title || ''
         const machineTypes = metadata.machineType || []
         
+        // 全件表示モードの場合、すべてに基本スコアを付与
+        if (keywords.showAll) {
+          relevanceScore = 1
+        }
+        
         // 材質マッチ（タイトルから推定）
         if (keywords.materials.some(m => 
           title.toLowerCase().includes(m.toLowerCase())
@@ -291,6 +324,16 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
           relevanceScore += 2
         }
         
+        // 曖昧マッチ - タイトル内のキーワード検索を緩和
+        if (relevanceScore === 0 || keywords.showAll) {
+          const titleWords = title.toLowerCase().split(/[\s\-_（）()]/);
+          if (keywords.materials.length === 0 && keywords.machines.length === 0 && 
+              keywords.processes.length === 0 && keywords.drawings.length === 0) {
+            // キーワードが何も抽出されない場合も表示対象に
+            relevanceScore = Math.max(relevanceScore, 0.5)
+          }
+        }
+        
         if (relevanceScore > 0) {
           matches.push({
             drawingNumber: metadata.drawingNumber || dir.name,
@@ -310,7 +353,9 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
       }
     }
     
-    return matches.sort((a, b) => b.relevanceScore - a.relevanceScore).slice(0, 10)
+    // 全件表示モードの場合は制限を緩和
+    const limit = keywords.showAll ? 50 : 10
+    return matches.sort((a, b) => b.relevanceScore - a.relevanceScore).slice(0, limit)
     
   } catch (error) {
     console.error('Drawing search error:', error)

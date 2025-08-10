@@ -82,7 +82,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* 田中工業AIボタン */}
+          {/* サンプル工業AIボタン */}
           <div className="w-full max-w-[800px] mx-auto mb-8">
             <button
               onClick={() => router.push('/chat')}
@@ -90,7 +90,7 @@ export default function Home() {
               style={{ background: 'linear-gradient(135deg, #8b5cf6, #ec4899)' }}
             >
               <span style={{ fontSize: '1.5rem' }}>🤖</span>
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>田中工業AI</span>
+              <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>サンプル工業AI</span>
               <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>- 加工の相談はこちら</span>
             </button>
           </div>

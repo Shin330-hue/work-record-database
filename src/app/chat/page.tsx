@@ -19,7 +19,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'こんにちは！田中工業AIです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
+      content: 'こんにちは！サンプル工業AIです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
       timestamp: new Date()
     }
   ])
@@ -82,7 +82,7 @@ export default function ChatPage() {
     setMessages([
       {
         role: 'assistant',
-        content: 'こんにちは！田中工業AIです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
+        content: 'こんにちは！サンプル工業AIです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
         timestamp: new Date()
       }
     ])
@@ -165,91 +165,147 @@ export default function ChatPage() {
       <div className="container mx-auto px-4 py-6 h-screen flex flex-col">
         {/* ヘッダー */}
         <div className="bg-black/40 rounded-xl p-4 mb-4 border border-purple-500/30">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span style={{ fontSize: '2rem' }}>🤖</span>
-              <h1 className="text-2xl font-bold text-white">田中工業AI</h1>
-              <span className="text-purple-300 text-sm">- 加工技術アシスタント</span>
+          {/* タイトル行 */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2 md:gap-3">
+              <span className="text-xl md:text-2xl">🤖</span>
+              <h1 className="text-lg md:text-2xl font-bold text-white">サンプル工業AI</h1>
+              <span className="hidden sm:inline-block text-purple-300 text-xs md:text-sm">- 加工技術アシスタント</span>
             </div>
             
-            {/* モデル選択プルダウンとボタン群 */}
-            <div className="flex items-center gap-3">
-              <select
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                className="bg-black/40 text-white rounded-lg px-3 py-2 border border-purple-500/30 focus:border-purple-400/50 focus:outline-none text-sm"
-              >
-                {models.map((model) => (
-                  <option key={model.id} value={model.id}>
-                    {model.name}
-                  </option>
-                ))}
-              </select>
-              <button
-                onClick={() => setEnableRAG(!enableRAG)}
-                className={`custom-rect-button ${enableRAG ? 'green' : 'gray'} small`}
-                title="社内データベース検索を有効/無効"
-              >
-                <span>{enableRAG ? '🧠 RAG:ON' : '🧠 RAG:OFF'}</span>
-              </button>
+            {/* ナビゲーションボタン（スマホでも常に表示） */}
+            <div className="flex items-center gap-2">
               <button
                 onClick={handleNewChat}
-                className="custom-rect-button purple small"
+                className="custom-rect-button purple small text-xs md:text-sm"
                 title="新規チャットを開始"
               >
-                <span>🆕 新規</span>
+                <span className="hidden sm:inline">🆕 新規</span>
+                <span className="sm:hidden">🆕</span>
               </button>
               <button
                 onClick={() => router.push('/')}
-                className="custom-rect-button gray small"
+                className="custom-rect-button gray small text-xs md:text-sm"
               >
-                <span>ホームに戻る</span>
+                <span className="hidden sm:inline">ホームに戻る</span>
+                <span className="sm:hidden">🏠</span>
+              </button>
+            </div>
+          </div>
+          
+          {/* コントロール行 */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            {/* モデル選択 */}
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <span className="text-purple-300 text-sm whitespace-nowrap">モデル:</span>
+              <div className="relative flex-1 sm:flex-initial min-w-0">
+                <select
+                  value={selectedModel}
+                  onChange={(e) => setSelectedModel(e.target.value)}
+                  className="custom-chat-select w-full pr-10"
+                >
+                  {models.map((model) => (
+                    <option key={model.id} value={model.id} className="bg-gray-800 text-white">
+                      {model.name}
+                    </option>
+                  ))}
+                </select>
+                {/* カスタム矢印アイコン */}
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            
+            {/* RAG機能切り替え */}
+            <div className="flex items-center gap-2">
+              <span className="text-purple-300 text-sm whitespace-nowrap">社内データ:</span>
+              <button
+                onClick={() => setEnableRAG(!enableRAG)}
+                className={`custom-rect-button ${enableRAG ? 'emerald' : 'gray'} small`}
+                title="社内データベース検索を有効/無効"
+              >
+                <span>{enableRAG ? '🧠 ON' : '🧠 OFF'}</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* チャットエリア */}
-        <div className="flex-1 bg-black/30 rounded-xl border border-purple-500/20 overflow-hidden flex flex-col">
+        <div className="flex-1 bg-gradient-to-b from-black/40 to-black/20 rounded-2xl border border-purple-500/20 shadow-2xl backdrop-blur-sm overflow-hidden flex flex-col">
           {/* メッセージ表示エリア */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
               >
-                <div
-                  className={`max-w-[70%] rounded-xl p-4 ${
-                    message.role === 'user'
-                      ? 'bg-purple-600/40 border border-purple-500/30'
-                      : 'bg-emerald-600/20 border border-emerald-500/30'
-                  }`}
-                >
+                {/* AIメッセージの場合は左寄せ、アバター左側 */}
+                {message.role === 'assistant' && (
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">
-                      {message.role === 'user' ? '👤' : '🤖'}
-                    </span>
-                    <div className="flex-1">
-                      <p className="text-white whitespace-pre-wrap" style={{ fontSize: '1rem', lineHeight: '1.6' }}>
+                    {/* AIアバター */}
+                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                      <span className="text-xl">🤖</span>
+                    </div>
+                    
+                    {/* メッセージバブル */}
+                    <div className="chat-bubble-ai">
+                      <p className="chat-bubble-text">
                         {message.content}
                       </p>
-                      <p className="text-xs mt-2 opacity-50 text-gray-300">
-                        {message.timestamp.toLocaleTimeString('ja-JP')}
+                      <div className="flex items-center gap-2 chat-bubble-timestamp">
+                        <p className="text-emerald-300">
+                          {message.timestamp.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                        {enableRAG && (
+                          <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">
+                            🧠 社内データ活用
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* ユーザーメッセージの場合は右寄せ、アバター右側 */}
+                {message.role === 'user' && (
+                  <div className="flex items-start gap-3 flex-row-reverse">
+                    {/* ユーザーアバター */}
+                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                      <span className="text-xl">👤</span>
+                    </div>
+                    
+                    {/* メッセージバブル */}
+                    <div className="chat-bubble-user">
+                      <p className="chat-bubble-text">
+                        {message.content}
+                      </p>
+                      <p className="chat-bubble-timestamp text-purple-300 text-right">
+                        {message.timestamp.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             ))}
+            
+            {/* ローディング表示 */}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-emerald-600/20 border border-emerald-500/30 rounded-xl p-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">🤖</span>
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+              <div className="flex justify-start animate-fadeIn">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-lg">🤖</span>
+                  </div>
+                  <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 backdrop-blur-sm border border-emerald-500/20 rounded-2xl rounded-tl-sm px-4 py-3 shadow-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-300 text-sm">考え中</span>
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -259,25 +315,42 @@ export default function ChatPage() {
           </div>
 
           {/* 入力エリア */}
-          <form onSubmit={handleSubmit} className="p-4 border-t border-purple-500/20">
-            <div className="flex gap-3">
+          <form onSubmit={handleSubmit} className="p-6 bg-gradient-to-br from-black/60 via-black/40 to-black/30 backdrop-blur-md border-t border-purple-500/10">
+            <div className="flex items-center gap-4">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="メッセージを入力..."
                 disabled={isLoading}
-                className="flex-1 bg-black/40 text-white rounded-xl px-6 py-4 border border-purple-500/30 focus:border-purple-400/50 focus:outline-none disabled:opacity-50"
-                style={{ fontSize: '1rem' }}
+                className="custom-chat-input flex-1"
               />
+              
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
-                className="custom-rect-button purple disabled:opacity-50"
+                className="custom-chat-send-button"
               >
-                <span>送信</span>
+                {isLoading ? (
+                  <>
+                    <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span className="hidden sm:inline font-semibold">送信中...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-xl">🚀</span>
+                    <span className="hidden sm:inline font-semibold">送信</span>
+                  </>
+                )}
               </button>
             </div>
+            
+            {/* 入力中のヒント */}
+            {input.trim() && (
+              <div className="mt-3 text-xs text-purple-300/60 animate-fadeIn">
+                💡 Enterキーでも送信できます
+              </div>
+            )}
           </form>
         </div>
 

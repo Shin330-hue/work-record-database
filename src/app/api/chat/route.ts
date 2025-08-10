@@ -23,7 +23,7 @@ const AVAILABLE_MODELS = [
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 // システムプロンプトを共通化
-const systemPrompt = `あなたは「田中工業AI」という名前の、機械加工と製造業に特化したアシスタントです。
+const systemPrompt = `あなたは「サンプル工業AI」という名前の、機械加工と製造業に特化したアシスタントです。
     
 以下の特徴を持って回答してください：
 - 機械加工（旋盤、マシニング、横中、ラジアル）の専門知識を持つ
@@ -71,7 +71,20 @@ export async function POST(request: NextRequest) {
     
     // プロンプトにRAGコンテキストを追加
     const enhancedSystemPrompt = ragContext 
-      ? `${systemPrompt}\n\n${ragContext}\n\n上記の社内データベース情報も参考にして回答してください。`
+      ? `${systemPrompt}\n\n${ragContext}\n\n【社内データ活用の回答ルール】
+■ 社内データ優先原則
+- 上記の検索結果に該当情報がある場合は、必ずその内容を最優先で回答する
+- 図番、材質、加工条件等の具体的データは検索結果の情報のみ使用する
+- 社内データと矛盾する一般論は避ける
+
+■ 一般知識との組み合わせ
+- 社内データで足りない部分は、機械加工の一般的な知識で補完してOK
+- 「社内データによると〜」「一般的には〜」と情報源を明確に分ける
+- 安全性・品質に関わる重要事項は推測せず「確認が必要です」と案内
+
+■ 具体的な回答例
+✅ 良い例：「社内データでは図番○○でSUS304の切削条件があります。一般的にSUS304は〜の特性があるため、回転数は〜rpm程度が適切です」
+❌ 悪い例：「データにありません」「わかりません」だけの回答`
       : systemPrompt
 
     // Ollamaモデルを使用する場合
