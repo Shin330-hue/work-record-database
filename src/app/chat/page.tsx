@@ -338,7 +338,7 @@ export default function ChatPage() {
                   </>
                 ) : (
                   <>
-                    <span className="text-xl">🚀</span>
+                    <span className="text-xl">↵</span>
                     <span className="hidden sm:inline font-semibold">送信</span>
                   </>
                 )}
