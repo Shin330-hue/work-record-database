@@ -12,7 +12,7 @@ const ENABLE_RAG = process.env.ENABLE_RAG === 'true'
 const AVAILABLE_MODELS = [
   // 実用的な4モデル（Ollamaで確認済み）
   { id: 'gemma3:12b', name: '🧠 賢い - Gemma3 12B', provider: 'ollama' },
-  { id: 'qwen2.5:7b', name: '⚖️ バランス型 - Qwen2.5 7B', provider: 'ollama' },
+  { id: 'qwen2.5:7b-instruct', name: '⚖️ バランス型 - Qwen2.5 7B Instruct', provider: 'ollama' },
   { id: 'gemma3:12b-it-q4_K_M', name: '⚡ 軽量・高速 - Gemma3 Q4', provider: 'ollama' },
   { id: 'qwen2.5:7b-instruct-q4_k_m', name: '💾 省メモリ - Qwen2.5 Q4', provider: 'ollama' }
 ]

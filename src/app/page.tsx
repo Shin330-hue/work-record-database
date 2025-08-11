@@ -91,7 +91,7 @@ export default function Home() {
             >
               <span style={{ fontSize: '1.5rem' }}>🤖</span>
               <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>田中工業GPT</span>
-              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>- 加工の相談はこちら</span>
+              <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>- ちょっと一息つきませんか？</span>
             </button>
           </div>
 
