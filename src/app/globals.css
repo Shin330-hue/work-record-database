@@ -24,7 +24,7 @@
 /* チャット用カスタムフォーム要素 */
 .custom-chat-select {
   appearance: none;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.7) 100%);
   color: white;
   border: 1px solid rgba(147, 51, 234, 0.3);
   border-radius: 12px;
@@ -39,13 +39,24 @@
 
 .custom-chat-select:hover {
   border-color: rgba(147, 51, 234, 0.5);
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
 }
 
 .custom-chat-select:focus {
   outline: none;
   border-color: rgba(147, 51, 234, 0.6);
   box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+}
+
+/* プルダウンオプションのスタイル */
+.custom-chat-select option {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 8px;
+}
+
+.custom-chat-select option:hover {
+  background-color: #2a2a2a;
 }
 
 /* チャット吹き出しスタイル */

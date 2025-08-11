@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { searchKnowledgeBase, formatSearchResults } from '@/lib/knowledge-search'
+import { searchKnowledgeBase, formatSearchResults } from '@/lib/knowledge-search-v2'
 
 // Ollama設定
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
@@ -10,18 +10,18 @@ const ENABLE_RAG = process.env.ENABLE_RAG === 'true'
 
 // 利用可能なモデル一覧
 const AVAILABLE_MODELS = [
-  { id: 'gpt-oss:20b', name: 'GPT-OSS 20B', provider: 'ollama' },
-  { id: 'qwen2.5:7b-instruct-q4_k_m', name: 'Qwen2.5 7B Q4_K_M', provider: 'ollama' },
-  { id: 'llama3.1:8b-instruct-q4_k_m', name: 'Llama3.1 8B Q4_K_M', provider: 'ollama' },
-  { id: 'gemma3:12b', name: 'Gemma3 12B', provider: 'ollama' },
-  { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', provider: 'gemini' }
+  // 実用的な4モデル（Ollamaで確認済み）
+  { id: 'gemma3:12b', name: '🧠 賢い - Gemma3 12B', provider: 'ollama' },
+  { id: 'qwen2.5:7b', name: '⚖️ バランス型 - Qwen2.5 7B', provider: 'ollama' },
+  { id: 'gemma3:12b-it-q4_K_M', name: '⚡ 軽量・高速 - Gemma3 Q4', provider: 'ollama' },
+  { id: 'qwen2.5:7b-instruct-q4_k_m', name: '💾 省メモリ - Qwen2.5 Q4', provider: 'ollama' }
 ]
 
 // Gemini APIキーを環境変数から取得
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 // システムプロンプトを共通化
-const systemPrompt = `あなたは「サンプル工業AI」という名前の、機械加工と製造業に特化したアシスタントです。
+const systemPrompt = `あなたは「田中工業GPT」という名前の、機械加工と製造業に特化したアシスタントです。
     
 以下の特徴を持って回答してください：
 - 機械加工（旋盤、マシニング、横中、ラジアル）の専門知識を持つ

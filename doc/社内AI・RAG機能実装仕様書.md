@@ -1,82 +1,80 @@
 # 社内AI・RAG機能実装仕様書
 
-**作成日**: 2025年1月10日  
-**バージョン**: 1.0  
-**ステータス**: 設計段階  
-**対象システム**: 田中工業AI（作業記録データベース統合）
+**最終更新日**: 2025年8月11日  
+**バージョン**: 2.0  
+**ステータス**: 実装完了  
+**対象システム**: 田中工業GPT（作業記録データベース統合）
 
 ---
 
 ## 📋 概要
 
 ### システム名
-**田中工業AI with RAG** (Retrieval-Augmented Generation)
+**田中工業GPT with RAG** (Retrieval-Augmented Generation)
 
 ### 目的
-現在の作業記録データベースと田中工業AIチャット機能を統合し、社内の製造ノウハウを活用したインテリジェントなAIアシスタントを構築する。
+作業記録データベースとAIチャット機能を統合し、社内の製造ノウハウを活用したインテリジェントなAIアシスタントを構築する。
 
 ### コンセプト
 - **継続的な会話**: チャット形式で自然な対話
 - **社内データ活用**: 既存の図番・作業手順・追記データを検索・参照
-- **コンテキスト維持**: 会話履歴を踏まえた関連情報の提示
-- **現場知見統合**: 追記情報による実践的なアドバイス
+- **ローカルLLM**: Ollamaによる完全ローカル実行（データセキュリティ確保）
+- **高精度検索**: 改良版RAGアルゴリズムによる関連情報の精密検索
 
 ---
 
-## 🎯 機能要件
+## 🎯 実装済み機能
 
-### Phase 1: 基本RAG機能（推定実装時間: 2-3時間）
+### ✅ Phase 1: 基本RAG機能（実装完了）
 
-#### 1.1 データ検索API
-- **エンドポイント**: `/api/knowledge`
-- **機能**: キーワードベースの社内データ検索
+#### 1.1 高度な検索アルゴリズム（knowledge-search-v2.ts）
+- **辞書ベースキーワード抽出**:
+  - 材質（20種類以上、エイリアス対応）
+  - 機械種別（10種類、類似語対応）
+  - 加工プロセス（20種類以上）
+  - 工具、難易度、カテゴリ
+- **重み付けスコアリング**:
+  - 図番完全一致: 10点
+  - 機械種別: 4点
+  - 材質: 4点
+  - 複数項目マッチでブースト（3項目以上で1.5倍）
 - **対象データ**:
   - companies.json（会社・製品情報）
   - instruction.json（作業手順メタデータ）
   - contributions.json（追記情報・現場知見）
 
-#### 1.2 チャット統合
-- **既存APIの拡張**: `/api/chat`
-- **機能**: ユーザーの質問から自動的に関連データを検索・統合
-- **プロンプト拡張**: 検索結果をコンテキストとしてAIに送信
+#### 1.2 ローカルLLM統合（Ollama）
+- **4つの実用モデル**:
+  - 🧠 賢い - Gemma3 12B（高精度）
+  - ⚖️ バランス型 - Qwen2.5 7B
+  - ⚡ 軽量・高速 - Gemma3 Q4（量子化版）
+  - 💾 省メモリ - Qwen2.5 Q4（デフォルト）
+- **完全ローカル実行**: 外部API不要、データ流出なし
 
-#### 1.3 基本検索ロジック
-```javascript
-// キーワード抽出
-materials: ['SS400', 'SUS304', 'アルミ', 'S45C']
-machines: ['マシニング', 'ターニング', '横中', 'ラジアル']  
-processes: ['切削', '穴あけ', 'タップ', 'あり溝']
-companies: ['中央鉄工所', 'サンエイ工業']
-```
+#### 1.3 チャットUI
+- **吹き出し形式**: 視覚的に分かりやすい対話表示
+- **モデル選択**: プルダウンで簡単切り替え
+- **RAG機能切り替え**: ON/OFF可能（デフォルトON）
+- **レスポンシブ対応**: PC/スマホ両対応
 
-### Phase 2: 継続的会話機能（推定実装時間: 3-4時間）
+### ✅ Phase 2: 継続的会話機能（部分実装）
 
 #### 2.1 会話コンテキスト管理
-- **機能**: 全会話履歴からキーワード抽出・累積
-- **対象**:
-  - 言及された図番の記憶
-  - 話題の材質・機械種別の継続
-  - 関連データの自動追加
+- **会話履歴の保持**: セッション中の全会話を記憶
+- **コンテキスト制限**: 直近の会話のみ参照（誤検索防止）
 
 #### 2.2 関連データ自動提示
-- **類似事例検索**: 同じ材質・機械種別の他の図番
-- **関連追記表示**: 該当する現場知見の提示
-- **統計情報生成**: 「○○社で△△件の作業手順があります」
+- **検索結果の詳細表示**:
+  - マッチした項目の明示
+  - 作業ステップ数の表示
+  - 使用工具の一覧
 
-#### 2.3 代名詞対応
-- **自然言語処理**: 「それ」「その図番」「同じ材質で」などに対応
-- **コンテキスト参照**: 前回言及した図番・材質を記憶
+### 🚧 Phase 3: 高度なRAG機能（計画中）
 
-### Phase 3: 高度なRAG機能（推定実装時間: 1-2日）
-
-#### 3.1 ベクトル検索（将来拡張）
-- **埋め込みモデル**: OpenAI text-embedding-3-small
-- **意味検索**: キーワードマッチングを超えた類似度検索
-- **ハイブリッド検索**: キーワード + ベクトル検索の組み合わせ
-
-#### 3.2 画像データ統合
-- **画像解析**: 作業手順画像の内容を検索対象に追加
-- **視覚的情報**: 「この画像のような加工方法」への対応
+#### 3.1 ベクトル検索（設計済み、未実装）
+- **Ollamaの埋め込みモデル**: nomic-embed-text
+- **コサイン類似度**: 意味的な類似性検索
+- **ハイブリッド検索**: キーワード + ベクトル検索
 
 ---
 
@@ -84,91 +82,79 @@ companies: ['中央鉄工所', 'サンエイ工業']
 
 ### データフロー
 ```
-ユーザー質問 
-↓
-キーワード抽出
-↓  
-社内データ検索（companies.json, instruction.json, contributions.json）
-↓
-関連データ統合
-↓
-拡張プロンプト生成
-↓
-AI（Ollama/Gemini）
-↓
-回答生成
+ユーザー質問
+    ↓
+田中工業GPT（/chat）
+    ↓
+キーワード抽出（knowledge-search-v2）
+    ↓  
+社内データ検索
+    ├── companies.json（会社・製品）
+    ├── instruction.json（作業手順）
+    └── contributions.json（追記）
+    ↓
+スコアリング・ランキング
+    ↓
+コンテキスト生成
+    ↓
+Ollama LLM（ローカル）
+    ↓
+回答生成（500文字以内）
 ```
 
-### API設計
-
-#### `/api/knowledge` (新規)
-```typescript
-// GET: データ検索
-interface KnowledgeSearchRequest {
-  query: string
-  context?: string[] // 会話履歴
-  filters?: {
-    companies?: string[]
-    materials?: string[]
-    machines?: string[]
-  }
-}
-
-interface KnowledgeSearchResponse {
-  companies: CompanyInfo[]
-  drawings: DrawingInfo[]
-  contributions: ContributionInfo[]
-  statistics: SearchStatistics
-}
+### ファイル構成
 ```
-
-#### `/api/chat` (既存拡張)
-```typescript
-// POST: チャット（RAG統合）
-interface ChatRequest {
-  messages: Message[]
-  model: string
-  enableRAG?: boolean // RAG機能の有効/無効
-}
+src/
+├── app/
+│   ├── api/
+│   │   └── chat/
+│   │       └── route.ts         # チャットAPI（LLM呼び出し）
+│   └── chat/
+│       └── page.tsx             # チャットUI
+└── lib/
+    ├── knowledge-search-v2.ts   # RAG検索アルゴリズム（改良版）
+    └── knowledge-search.ts      # 旧版（参考）
 ```
 
 ---
 
-## 💾 データ構造
+## 💾 検索対象データ構造
 
-### 検索対象データ
-
-#### 会社・製品情報
+### 作業手順メタデータ（instruction.json）
 ```json
 {
-  "companyName": "有限会社中央鉄工所",
-  "productName": "チェーンソー", 
-  "category": "ブラケット",
-  "drawingCount": 1,
-  "drawings": ["0D127100014"]
+  "metadata": {
+    "drawingNumber": "0D127100014",
+    "title": "ブラケット（チェーンソー）加工手順",
+    "machineType": ["マシニング", "ラジアル"],
+    "toolsRequired": ["Φ100フルバック", "M4タップ"],
+    "difficulty": "上級",
+    "estimatedTime": "500分"
+  }
 }
 ```
 
-#### 作業手順メタデータ
+### 会社・製品情報（companies.json）
 ```json
 {
-  "drawingNumber": "sanei_24K022",
-  "title": "フランジ（アリ溝_SS400_リング）加工手順",
-  "machineType": ["ターニング"],
-  "difficulty": "中級",
-  "estimatedTime": "180分",
-  "materials": ["SS400"]
+  "id": "chuo-tekko",
+  "name": "有限会社中央鉄工所",
+  "products": [{
+    "name": "チェーンソー",
+    "category": "ブラケット",
+    "drawings": ["0D127100014"]
+  }]
 }
 ```
 
-#### 追記情報（現場知見）
+### 追記情報（contributions.json）
 ```json
 {
-  "contributor": "古川達久",
-  "content": "あり溝 送り0.10 切込み0.2",
-  "imageCount": 8,
-  "timestamp": "2025-07-22",
-  "targetDrawing": "sanei_24K022"
+  "drawingNumber": "0D127100014",
+  "userName": "田中",
+  "type": "comment",
+  "text": "バランスが悪いため慎重に吊る",
+  "timestamp": "2025-08-01T10:00:00Z"
 }
 ```
 
@@ -176,64 +162,51 @@ interface ChatRequest {
 
 ## 🔧 実装詳細
 
-### ファイル構成
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── chat/route.ts (既存修正)
-│   │   └── knowledge/route.ts (新規)
-│   └── chat/page.tsx (既存修正)
-├── lib/
-│   ├── knowledge-search.ts (新規)
-│   ├── context-manager.ts (新規)
-│   └── data-aggregator.ts (新規)
-└── types/
-    └── knowledge.ts (新規)
-```
-
-### 主要関数
-
-#### キーワード抽出
-```javascript
-function extractKeywords(text: string): ExtractedKeywords {
+### キーワード抽出関数
+```typescript
+export function extractKeywords(text: string): ExtractedKeywords {
+  // 材質パターン（エイリアス対応）
+  const materialPatterns = {
+    'sus304': ['sus304', 'ｓｕｓ３０４', 'ステンレス304'],
+    'アルミ': ['アルミ', 'アルミニウム', 'al', 'aluminum']
+    // ... 20種類以上
+  }
+  
+  // 機械種別パターン（類似語対応）
+  const machinePatterns = {
+    'マシニング': ['マシニング', 'machining', 'mc', 'マシニングセンタ'],
+    '旋盤': ['旋盤', 'turning', 'ターニング', 'lathe']
+    // ... 10種類
+  }
+  
   return {
-    materials: findMaterials(text),
-    machines: findMachines(text), 
-    processes: findProcesses(text),
-    drawings: findDrawingNumbers(text),
-    companies: findCompanies(text)
+    materials, machines, processes, tools,
+    drawings, companies, difficulties, categories,
+    originalQuery
   }
 }
 ```
 
-#### データ検索
-```javascript  
-function searchWorkInstructions(
+### スコアリング関数
+```typescript
+function calculateRelevanceScore(
   keywords: ExtractedKeywords,
-  context?: ConversationContext
-): SearchResults {
-  const results = {
-    directMatches: [], // 直接マッチ
-    relatedDrawings: [], // 関連図番
-    contributions: [], // 追記データ
-    statistics: {} // 統計情報
+  metadata: any,
+  matchedFields: string[]
+): number {
+  const weights = {
+    drawingNumber: 10,
+    title: 5,
+    machineType: 4,
+    material: 4,
+    tool: 3,
+    process: 3
   }
-  // 実装詳細...
-}
-```
-
-#### コンテキスト管理
-```javascript
-function buildConversationContext(
-  messages: Message[]
-): ConversationContext {
-  return {
-    mentionedDrawings: extractAllDrawings(messages),
-    discussedMaterials: extractAllMaterials(messages),
-    activeTopics: identifyTopics(messages),
-    searchHistory: buildSearchHistory(messages)
-  }
+  
+  // 複数項目マッチでブースト
+  if (matchedFields.length >= 3) score *= 1.5
+  
+  return score
 }
 ```
 
@@ -241,130 +214,111 @@ function buildConversationContext(
 
 ## 🎬 動作例
 
-### シナリオ1: 基本検索
+### 基本検索
 ```
-ユーザー: 「SS400のターニング加工で注意点ある？」
+ユーザー: 「ブラケットの図面は何件ある？」
 
 【内部処理】
-1. キーワード抽出: materials=['SS400'], machines=['ターニング']
-2. データ検索: 2件の図番がマッチ
-3. 追記検索: 3件の現場知見がマッチ
+1. キーワード抽出: categories=['ブラケット']
+2. データ検索: 19件の図番がマッチ
+3. スコアリング: カテゴリマッチで各4点
 
-AI: 「SS400のターニング加工について、社内データから2件の事例があります。
-特にsanei_24K022では古川さんから『溶接部注意』『送り0.10 切込み0.2』
-という現場知見が寄せられています...」
+田中工業GPT: 「ブラケット関連の図面は19件あります。
+主な図番：
+- 0D127100014: ブラケット（チェーンソー）
+- 25417362721: シーサー（R）
+- 0A224000531: 穴あけテーブル
+...」
 ```
 
-### シナリオ2: 継続会話
+### 材質・機械指定検索
 ```
-ユーザー: 「その図番の詳細教えて」
-
-【内部処理】  
-1. 前回会話から図番特定: sanei_24K022
-2. 詳細データ検索: 作業手順、画像、追記全て
-3. 関連データ追加: 同じ材質の他事例
-
-AI: 「図番sanei_24K022の詳細です。
-フランジ（アリ溝_SS400_リング）の加工手順で、推定時間180分...
-関連する類似事例として図番12750800122もあります」
-```
-
-### シナリオ3: 統計・分析
-```
-ユーザー: 「うちの会社でSUS304の事例どのくらいある？」
+ユーザー: 「SUS304の旋盤加工の注意点は？」
 
 【内部処理】
-1. 会社特定: 会話履歴から推定 or 全社検索
-2. 材質フィルタ: SUS304
-3. 統計生成: 件数、機械種別分布、難易度分布
+1. キーワード抽出: materials=['sus304'], machines=['旋盤']
+2. RAG検索: 関連図番と追記情報
+3. コンテキスト生成
 
-AI: 「SUS304の加工事例は全5件あります。
-内訳はマシニング3件、ターニング2件で、
-難易度は中級が多く、平均所要時間は120分です...」
+田中工業GPT: 「SUS304の旋盤加工では以下の点にご注意ください：
+1. 切削速度は80-120m/minが推奨
+2. 切り込みは0.2-0.3mmで開始
+3. クーラントは必須（加工硬化防止）
+社内事例では送り0.10、切込み0.2が安定しています...」
 ```
 
 ---
 
-## 🚀 実装フェーズ
+## 📊 パフォーマンス特性
 
-### Phase 1: 最小実装（2-3時間）
-- [ ] `/api/knowledge` エンドポイント作成
-- [ ] 基本キーワード抽出機能
-- [ ] チャットAPIにRAG統合
-- [ ] 簡単なUI表示（検索中インジケータ）
+### 応答速度
+| 処理 | 時間 |
+|------|------|
+| キーワード抽出 | <50ms |
+| RAG検索 | 200-300ms |
+| LLM応答（省メモリ版） | 2-3秒 |
+| LLM応答（高精度版） | 4-5秒 |
 
-### Phase 2: 継続会話（3-4時間）  
-- [ ] 会話コンテキスト管理
-- [ ] 関連データ自動提示
-- [ ] 代名詞・参照解決
-- [ ] 統計情報生成
-
-### Phase 3: 高度機能（1-2日）
-- [ ] ベクトル検索導入
-- [ ] 画像データ統合
-- [ ] パフォーマンス最適化
-- [ ] 詳細ログ・分析機能
+### メモリ要件
+- 最小: 8GB RAM（量子化版）
+- 推奨: 16GB RAM（フルサイズ版）
 
 ---
 
-## 🔒 技術的考慮事項
+## 🚀 セットアップ手順
 
-### パフォーマンス
-- **キャッシュ機能**: 検索結果の一時保存
-- **インデックス**: よく使われるキーワードのインデックス化
-- **バッチ処理**: 大量データ検索の最適化
+### 1. Ollamaインストール
+```bash
+# https://ollama.ai/download からダウンロード
+```
 
-### セキュリティ
-- **アクセス制御**: 社内ネットワーク限定（既存と同様）
-- **データ検証**: 検索クエリの入力検証
-- **ログ管理**: 検索履歴の適切な管理
+### 2. モデルダウンロード
+```bash
+ollama pull qwen2.5:7b-instruct-q4_k_m  # デフォルト
+ollama pull gemma3:12b  # オプション
+```
 
-### 拡張性
-- **モジュール設計**: 検索エンジンの交換可能性
-- **データソース追加**: 新しいデータ形式への対応
-- **多言語対応**: 英語・ベトナム語への拡張準備
-
----
-
-## 📊 期待効果
-
-### 業務効率化
-- **検索時間短縮**: 自然言語で複雑な条件検索
-- **知見活用**: 散在する現場知識の統合活用
-- **学習促進**: 関連事例の自動提示による知識拡大
-
-### 技術的価値
-- **RAG技術習得**: 最新AI技術の実践的導入
-- **データ活用**: 既存データの価値最大化
-- **システム統合**: AI機能と業務システムの融合
-
-### 組織的効果
-- **知識共有促進**: AIを介した自然な知識伝達
-- **標準化推進**: 類似事例の比較による作業標準化
-- **継続改善**: データに基づく作業手順の最適化
+### 3. 開発サーバー起動
+```bash
+npm run dev
+# http://localhost:3000/chat でアクセス
+```
 
 ---
 
-## 📝 今後の展望
+## 🔒 セキュリティ特性
 
-### 短期目標（1ヶ月）
-- Phase 1の完全実装
-- 基本的なRAG機能の安定稼働
-- ユーザーフィードバック収集
-
-### 中期目標（3ヶ月）
-- Phase 2の完全実装  
-- 継続会話機能の成熟
-- 検索精度の向上
-
-### 長期目標（6ヶ月）
-- Phase 3の高度機能実装
-- 他部門への展開検討
-- 外部システム連携の検討
+1. **完全ローカル実行**: データが外部に送信されない
+2. **アクセス制御**: 管理機能は認証必須
+3. **データマスキング**: テスト環境用の匿名化機能
 
 ---
 
-**最終更新**: 2025年1月10日  
-**次回レビュー**: 実装完了後  
+## 📈 今後の拡張計画
+
+### 短期（1ヶ月）
+- ベクトル検索の実装（nomic-embed-text）
+- 検索精度のさらなる向上
+
+### 中期（3ヶ月）
+- マルチモーダル対応（画像認識）
+- 学習機能（フィードバック活用）
+
+### 長期（6ヶ月）
+- 他部門展開
+- 外部システム連携
+
+---
+
+## 📚 関連ドキュメント
+
+- [プロジェクト概要仕様書](./プロジェクト概要仕様書_v2.0.md)
+- [API仕様書](./API仕様書.md)
+- [ベクトル検索実装ガイド](./doc_for_claude/2025-08-11_ベクトル検索実装ガイド.md)
+- [AI機能4モデル実装作業メモ](./doc_for_claude/2025-08-11_AI機能4モデル実装作業.md)
+
+---
+
+**作成者**: 開発チーム  
 **承認者**: プロジェクトマネージャー  
-**実装担当**: 開発チーム
+**次回レビュー**: 2025年9月1日

@@ -19,15 +19,15 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'こんにちは！サンプル工業AIです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
+      content: 'こんにちは！田中工業GPTです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
       timestamp: new Date()
     }
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [models, setModels] = useState<AIModel[]>([])
-  const [selectedModel, setSelectedModel] = useState<string>('gpt-oss:20b')
-  const [enableRAG, setEnableRAG] = useState<boolean>(false)
+  const [selectedModel, setSelectedModel] = useState<string>('qwen2.5:7b-instruct-q4_k_m')
+  const [enableRAG, setEnableRAG] = useState<boolean>(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
 
@@ -82,7 +82,7 @@ export default function ChatPage() {
     setMessages([
       {
         role: 'assistant',
-        content: 'こんにちは！サンプル工業AIです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
+        content: 'こんにちは！田中工業GPTです。🔧\n\n加工や作業手順について何でもお聞きください。例えば：\n・「SUS304の切削条件を教えて」\n・「アルミの薄物加工のコツは？」\n・「旋盤で真円度を出すには？」',
         timestamp: new Date()
       }
     ])
@@ -169,7 +169,7 @@ export default function ChatPage() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2 md:gap-3">
               <span className="text-xl md:text-2xl">🤖</span>
-              <h1 className="text-lg md:text-2xl font-bold text-white">サンプル工業AI</h1>
+              <h1 className="text-lg md:text-2xl font-bold text-white">田中工業GPT</h1>
               <span className="hidden sm:inline-block text-purple-300 text-xs md:text-sm">- 加工技術アシスタント</span>
             </div>
             
@@ -205,7 +205,7 @@ export default function ChatPage() {
                   className="custom-chat-select w-full pr-10"
                 >
                   {models.map((model) => (
-                    <option key={model.id} value={model.id} className="bg-gray-800 text-white">
+                    <option key={model.id} value={model.id} className="bg-gray-900 text-white">
                       {model.name}
                     </option>
                   ))}
@@ -227,7 +227,7 @@ export default function ChatPage() {
                 className={`custom-rect-button ${enableRAG ? 'emerald' : 'gray'} small`}
                 title="社内データベース検索を有効/無効"
               >
-                <span>{enableRAG ? '🧠 ON' : '🧠 OFF'}</span>
+                <span>{enableRAG ? '🧠 RAG ON' : '🧠 RAG OFF'}</span>
               </button>
             </div>
           </div>
