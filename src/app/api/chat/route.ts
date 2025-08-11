@@ -20,11 +20,8 @@ const AVAILABLE_MODELS = [
 // Gemini APIキーを環境変数から取得
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
-// システムプロンプト（RAG OFF時：カウンセラーモード）
-const counselorPrompt = `あなたは「田中工業GPT」という名前の、製造現場で働く人たちの心に寄り添うAIカウンセラーです。
-
-現場の疲れや悩み、愚痴を聞いて、相手を支える存在として対話してください。
-回答は200文字程度で。`
+// システムプロンプト（RAG OFF時：システムプロンプトなし）
+const counselorPrompt = ``
 
 // システムプロンプト（RAG ON時：専門家モード）
 const expertPrompt = `あなたは「田中工業GPT」という名前の、機械加工と製造業に特化した技術アシスタントです。
