@@ -139,11 +139,11 @@ export default function ChatPage() {
       }
 
       setMessages(prev => [...prev, assistantMessage])
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error:', error)
       
       // リクエストがキャンセルされた場合はエラーメッセージを表示しない
-      if (error.name === 'AbortError') {
+      if (error instanceof Error && error.name === 'AbortError') {
         console.log('Request was cancelled')
       } else {
         const errorMessage: Message = {

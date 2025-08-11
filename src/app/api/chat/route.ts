@@ -2,10 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { searchKnowledgeBase, formatSearchResults } from '@/lib/knowledge-search'
 
-// 使用するAIモデルを環境変数で切り替え
-const USE_OLLAMA = process.env.USE_OLLAMA === 'true'
+// Ollama設定
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434'
-const DEFAULT_OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:20b'
 
 // RAG機能フラグ
 const ENABLE_RAG = process.env.ENABLE_RAG === 'true'
@@ -57,7 +55,7 @@ export async function POST(request: NextRequest) {
     if (shouldUseRAG && messages.length > 0) {
       try {
         const lastMessage = messages[messages.length - 1]
-        const conversationHistory = messages.slice(0, -1).map(m => m.content)
+        const conversationHistory = messages.slice(0, -1).map((m: { content: string }) => m.content)
         
         console.log('🔍 RAG検索開始:', lastMessage.content)
         const searchResults = await searchKnowledgeBase(lastMessage.content, conversationHistory)
@@ -127,7 +125,7 @@ export async function POST(request: NextRequest) {
     const geminiModel = genAI.getGenerativeModel({ model: modelId })
 
     // 会話履歴を構築
-    const conversationHistory = messages.map((msg: any) => 
+    const conversationHistory = messages.map((msg: { role: string; content: string }) => 
       `${msg.role === 'user' ? 'ユーザー' : 'アシスタント'}: ${msg.content}`
     ).join('\n\n')
 

@@ -135,7 +135,7 @@ export async function searchKnowledgeBase(
     const [companyMatches, drawingMatches, contributionMatches] = await Promise.all([
       searchCompanies(keywords),
       searchDrawings(keywords),
-      searchContributions(keywords)
+      searchContributions()
     ])
     
     const statistics: SearchStatistics = {
@@ -326,7 +326,6 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
         
         // 曖昧マッチ - タイトル内のキーワード検索を緩和
         if (relevanceScore === 0 || keywords.showAll) {
-          const titleWords = title.toLowerCase().split(/[\s\-_（）()]/);
           if (keywords.materials.length === 0 && keywords.machines.length === 0 && 
               keywords.processes.length === 0 && keywords.drawings.length === 0) {
             // キーワードが何も抽出されない場合も表示対象に
@@ -347,7 +346,7 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
           })
         }
         
-      } catch (error) {
+      } catch {
         // 個別ファイル読み込みエラーは無視して続行
         continue
       }
@@ -366,7 +365,7 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
 /**
  * 追記データから検索
  */
-async function searchContributions(keywords: ExtractedKeywords): Promise<ContributionMatch[]> {
+async function searchContributions(): Promise<ContributionMatch[]> {
   // TODO: 実装時は既存のcontributionsデータを活用
   return []
 }
