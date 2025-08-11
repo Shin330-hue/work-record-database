@@ -227,7 +227,7 @@ export default function ChatPage() {
                 className={`custom-rect-button ${enableRAG ? 'emerald' : 'gray'} small`}
                 title="社内データベース検索を有効/無効"
               >
-                <span>{enableRAG ? '🧠 RAG ON' : '🧠 RAG OFF'}</span>
+                <span>{enableRAG ? '🔍 図面記録DB検索 ON' : '🔍 図面記録DB検索 OFF'}</span>
               </button>
             </div>
           </div>
@@ -345,26 +345,7 @@ export default function ChatPage() {
               </button>
             </div>
             
-            {/* 入力中のヒント */}
-            {input.trim() && (
-              <div className="mt-3 text-xs text-purple-300/60 animate-fadeIn">
-                💡 Enterキーでも送信できます
-              </div>
-            )}
           </form>
-        </div>
-
-        {/* 使い方のヒントと機能状態表示 */}
-        <div className="mt-4 text-center text-sm text-purple-300/60">
-          💡 ヒント: 具体的な材質や加工方法を含めると、より詳しい回答が得られます
-          <br />
-          📝 回答は500文字以内で簡潔にまとめられます
-          {enableRAG && (
-            <>
-              <br />
-              🧠 社内データベース検索が有効です（図番・材質・加工方法で関連情報を自動検索）
-            </>
-          )}
         </div>
       </div>
     </div>
