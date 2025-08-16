@@ -7,7 +7,7 @@ import { getStepFolderName } from '@/lib/machineTypeUtils'
 interface WorkStepProps {
   step: WorkStepType
   instruction: WorkInstruction
-  getStepFiles: (stepNumber: number) => Promise<{ images: string[], videos: string[], programs: string[] }>
+  getStepFiles: (stepNumber: number) => Promise<{ images: string[], videos: string[], programs: string[], pdfs: string[] }>
   machineType?: string  // 機械種別を追加
 }
 
@@ -26,7 +26,7 @@ const getPropertyText = (prop: string): string => {
 }
 
 export default function WorkStep({ step, instruction, getStepFiles, machineType }: WorkStepProps) {
-  const [stepFiles, setStepFiles] = useState<{ images: string[], videos: string[], programs: string[] }>({ images: [], videos: [], programs: [] })
+  const [stepFiles, setStepFiles] = useState<{ images: string[], videos: string[], programs: string[], pdfs: string[] }>({ images: [], videos: [], programs: [], pdfs: [] })
   const [isLoading, setIsLoading] = useState(true)
   // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -59,7 +59,7 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
     const params = new URLSearchParams({
       drawingNumber,
       folderType: 'programs',
-      subFolder: `step_0${step.stepNumber}`,
+      subFolder: machineType ? getStepFolderName(step.stepNumber, machineType) : `step_0${step.stepNumber}`,
       fileName: filename
     })
     const filePath = `/api/files?${params}`
@@ -70,6 +70,21 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+  }
+
+  // PDFファイルダウンロード関数
+  const downloadPdfFile = (filename: string) => {
+    const drawingNumber = instruction.metadata.drawingNumber
+    const params = new URLSearchParams({
+      drawingNumber,
+      folderType: 'pdfs',
+      subFolder: machineType ? getStepFolderName(step.stepNumber, machineType) : `step_0${step.stepNumber}`,
+      fileName: filename
+    })
+    const filePath = `/api/files?${params}`
+    
+    // PDFの場合は新しいタブで開く
+    window.open(filePath, '_blank')
   }
 
   return (
@@ -140,8 +155,8 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
         </div>
       )}
       
-      {/* 画像・動画・プログラムファイル */}
-      {!isLoading && (stepFiles.images.length > 0 || stepFiles.videos.length > 0 || stepFiles.programs.length > 0) && (
+      {/* 画像・動画・プログラム・PDFファイル */}
+      {!isLoading && (stepFiles.images.length > 0 || stepFiles.videos.length > 0 || stepFiles.programs.length > 0 || stepFiles.pdfs.length > 0) && (
         <>
           {/* セクション区切り線 */}
           <div className="my-6 border-t-2 border-purple-400/30"></div>
@@ -310,6 +325,27 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
                     >
                       <span>📄</span>
                       <span>{program}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* PDFファイル */}
+          {stepFiles.pdfs.length > 0 && (
+            <div className="mb-4">
+              <h5 className="text-md font-medium text-emerald-300 mb-2">図面・資料</h5>
+              <div className="bg-black/30 rounded-lg p-3 border border-emerald-500/20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                  {stepFiles.pdfs.map((pdf, i) => (
+                    <button
+                      key={`step-pdf-${i}`}
+                      onClick={() => downloadPdfFile(pdf)}
+                      className="custom-rect-button red small"
+                    >
+                      <span>🔴</span>
+                      <span>{pdf}</span>
                     </button>
                   ))}
                 </div>

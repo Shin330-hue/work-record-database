@@ -17,8 +17,8 @@ export default function InstructionOverview({
   contributions, 
   onAddContribution 
 }: InstructionOverviewProps) {
-  // 概要画像の状態管理
-  const [overviewFiles, setOverviewFiles] = useState<{ images: string[], videos: string[] }>({ images: [], videos: [] })
+  // 概要ファイルの状態管理
+  const [overviewFiles, setOverviewFiles] = useState<{ images: string[], videos: string[], pdfs: string[] }>({ images: [], videos: [], pdfs: [] })
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
@@ -26,7 +26,7 @@ export default function InstructionOverview({
   const getFilesFromFolder = async (drawingNumber: string, fileType: string, folderName: string): Promise<string[]> => {
     try {
       const encodedFolderName = encodeURIComponent(folderName)
-      const response = await fetch(`/api/files/list?drawingNumber=${encodeURIComponent(drawingNumber)}&folderType=${fileType}&subFolder=${encodedFolderName}`)
+      const response = await fetch(`/api/files?drawingNumber=${encodeURIComponent(drawingNumber)}&folderType=${fileType}&subFolder=${encodedFolderName}`)
       if (response.ok) {
         const data = await response.json()
         return data.files || []
@@ -41,11 +41,12 @@ export default function InstructionOverview({
   useEffect(() => {
     const loadOverviewFiles = async () => {
       const drawingNumber = instruction.metadata.drawingNumber
-      const [images, videos] = await Promise.all([
+      const [images, videos, pdfs] = await Promise.all([
         getFilesFromFolder(drawingNumber, 'images', 'overview'),
-        getFilesFromFolder(drawingNumber, 'videos', 'overview')
+        getFilesFromFolder(drawingNumber, 'videos', 'overview'),
+        getFilesFromFolder(drawingNumber, 'pdfs', 'overview')
       ])
-      setOverviewFiles({ images, videos })
+      setOverviewFiles({ images, videos, pdfs })
     }
     loadOverviewFiles()
   }, [instruction.metadata.drawingNumber])
@@ -93,8 +94,8 @@ export default function InstructionOverview({
         </div>
       )}
       
-      {/* 概要画像・動画表示 */}
-      {(overviewFiles.images.length > 0 || overviewFiles.videos.length > 0) && (
+      {/* 概要ファイル表示 */}
+      {(overviewFiles.images.length > 0 || overviewFiles.videos.length > 0 || overviewFiles.pdfs.length > 0) && (
         <div className="mt-6">
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {/* 概要画像 */}
@@ -133,6 +134,26 @@ export default function InstructionOverview({
                     動画を再生できません。ブラウザが動画形式をサポートしていないか、ファイルが見つかりません。
                   </p>
                 </video>
+              </div>
+            ))}
+            {/* 概要PDF */}
+            {overviewFiles.pdfs.map((pdf, i) => (
+              <div key={`overview-pdf-${i}`} className="bg-black/30 rounded-xl overflow-hidden border border-emerald-500/20 shadow-lg">
+                <div className="p-3 text-xs text-emerald-200 bg-emerald-500/20">
+                  {pdf}
+                </div>
+                <div className="p-4 flex items-center justify-center">
+                  <button
+                    onClick={() => {
+                      const pdfUrl = `/api/files?drawingNumber=${instruction.metadata.drawingNumber}&folderType=pdfs&subFolder=overview&fileName=${encodeURIComponent(pdf)}`
+                      window.open(pdfUrl, '_blank')
+                    }}
+                    className="custom-rect-button red small"
+                  >
+                    <span>🔴</span>
+                    <span>開く</span>
+                  </button>
+                </div>
               </div>
             ))}
           </div>

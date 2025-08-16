@@ -45,10 +45,17 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   const getFilesFromFolder = async (drawingNumber: string, fileType: string, folderName: string): Promise<string[]> => {
     try {
       const encodedFolderName = encodeURIComponent(folderName)
-      const response = await fetch(`/api/files/list?drawingNumber=${encodeURIComponent(drawingNumber)}&folderType=${fileType}&subFolder=${encodedFolderName}`)
+      const url = `/api/files?drawingNumber=${encodeURIComponent(drawingNumber)}&folderType=${fileType}&subFolder=${encodedFolderName}`
+      console.log(`ファイル取得URL: ${url}`) // デバッグログ
+      const response = await fetch(url)
       if (response.ok) {
         const data = await response.json()
+        console.log(`${fileType}ファイル取得成功:`, data.files) // デバッグログ
         return data.files || []
+      } else {
+        console.error(`${fileType}ファイル取得失敗: ${response.status} ${response.statusText}`)
+        const errorText = await response.text()
+        console.error(`エラー詳細: ${errorText}`)
       }
     } catch (error) {
       console.error(`${fileType}ファイル一覧の取得に失敗:`, error)
@@ -64,13 +71,14 @@ export default function WorkInstructionResults({ instruction, contributions, onB
     const machineTypeJapanese = getMachineTypeJapanese(machineType)
     const stepFolder = getStepFolderName(stepNumber, machineTypeJapanese)
     
-    const [stepImages, stepVideos, stepPrograms] = await Promise.all([
+    const [stepImages, stepVideos, stepPrograms, stepPdfs] = await Promise.all([
       getFilesFromFolder(drawingNumber, 'images', stepFolder),
       getFilesFromFolder(drawingNumber, 'videos', stepFolder),
-      getFilesFromFolder(drawingNumber, 'programs', stepFolder)
+      getFilesFromFolder(drawingNumber, 'programs', stepFolder),
+      getFilesFromFolder(drawingNumber, 'pdfs', stepFolder)
     ])
     
-    return { images: stepImages, videos: stepVideos, programs: stepPrograms }
+    return { images: stepImages, videos: stepVideos, programs: stepPrograms, pdfs: stepPdfs }
   }
 
   const handleAddContribution = () => {
