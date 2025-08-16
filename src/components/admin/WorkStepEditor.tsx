@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
-import { WorkStep } from '@/lib/dataLoader'
+import { WorkStep, QualityCheckItem } from '@/lib/dataLoader'
 import { getStepFolderName } from '@/lib/machineTypeUtils'
 
 // 機械種別のキーを正規化する関数
@@ -385,10 +385,14 @@ export default function WorkStepEditor({ step, index, onUpdate, onDelete, onMove
                 <div key={i} className="flex gap-2">
                   <input
                     type="text"
-                    value={item}
+                    value={typeof item === 'string' ? item : item.checkPoint}
                     onChange={(e) => {
                       const newItems = [...(step.qualityCheck?.items || [])]
-                      newItems[i] = e.target.value
+                      if (typeof item === 'string') {
+                        newItems[i] = e.target.value
+                      } else {
+                        newItems[i] = { ...item, checkPoint: e.target.value }
+                      }
                       onUpdate({ 
                         ...step, 
                         qualityCheck: { 
@@ -421,7 +425,7 @@ export default function WorkStepEditor({ step, index, onUpdate, onDelete, onMove
               <button
                 type="button"
                 onClick={() => {
-                  const newItems = [...(step.qualityCheck?.items || []), '']
+                  const newItems: (string | QualityCheckItem)[] = [...(step.qualityCheck?.items || []), { checkPoint: '', tolerance: '', inspectionTool: '' }]
                   onUpdate({ 
                     ...step, 
                     qualityCheck: { 
