@@ -387,7 +387,7 @@ export default function WorkStepEditor({ step, index, onUpdate, onDelete, onMove
                     type="text"
                     value={typeof item === 'string' ? item : item.checkPoint}
                     onChange={(e) => {
-                      const newItems = [...(step.qualityCheck?.items || [])]
+                      const newItems: (string | QualityCheckItem)[] = [...(step.qualityCheck?.items || [])]
                       if (typeof item === 'string') {
                         newItems[i] = e.target.value
                       } else {
@@ -407,7 +407,7 @@ export default function WorkStepEditor({ step, index, onUpdate, onDelete, onMove
                   <button
                     type="button"
                     onClick={() => {
-                      const newItems = (step.qualityCheck?.items || []).filter((_, idx) => idx !== i)
+                      const newItems: (string | QualityCheckItem)[] = (step.qualityCheck?.items || []).filter((_, idx) => idx !== i)
                       onUpdate({ 
                         ...step, 
                         qualityCheck: { 

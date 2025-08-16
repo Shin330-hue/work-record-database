@@ -254,19 +254,21 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
               step.qualityCheck.items.map((item, index) => (
                 <div key={index} className="border border-yellow-500/20 rounded-lg overflow-hidden">
                   <div className="bg-black/20 p-3">
-                    <div className="text-white font-medium mb-2 text-base">{item.checkPoint}</div>
+                    <div className="text-white font-medium mb-2 text-base">
+                      {typeof item === 'string' ? item : item.checkPoint}
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-                      {item.tolerance && (
+                      {typeof item !== 'string' && item.tolerance && (
                         <div>
                           <span className="text-yellow-300">公差:</span> {item.tolerance}
                         </div>
                       )}
-                      {item.surfaceRoughness && (
+                      {typeof item !== 'string' && item.surfaceRoughness && (
                         <div>
                           <span className="text-yellow-300">表面粗さ:</span> {item.surfaceRoughness}
                         </div>
                       )}
-                      {item.inspectionTool && (
+                      {typeof item !== 'string' && item.inspectionTool && (
                         <div>
                           <span className="text-yellow-300">検査工具:</span> {item.inspectionTool}
                         </div>

@@ -201,7 +201,7 @@ export interface QualityCheckItem {
 
 // 品質チェック
 export interface QualityCheck {
-  items: QualityCheckItem[]
+  items: (string | QualityCheckItem)[]
 }
 
 // 関連図番
