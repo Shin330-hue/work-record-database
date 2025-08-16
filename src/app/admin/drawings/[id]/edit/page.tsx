@@ -9,6 +9,7 @@ import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions,
 import { ContributionFile } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
 import { getMachineTypeKey, getStepFolderName } from '@/lib/machineTypeUtils'
+import WorkStepEditor from '@/components/admin/WorkStepEditor'
 
 interface EditFormData {
   drawingNumber: string
