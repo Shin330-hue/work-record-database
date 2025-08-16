@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { searchKnowledgeBase, formatSearchResults } from '@/lib/knowledge-search'
+import { searchKnowledgeBase, formatSearchResults } from '@/lib/knowledge-search-v2'
 
 /**
  * 社内データ検索API
