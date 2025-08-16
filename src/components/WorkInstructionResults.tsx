@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { WorkInstruction } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 import WorkStep from './WorkStep'
@@ -38,7 +38,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   }>({ section: 'general' })
   // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
-  const [currentImages, setCurrentImages] = useState<string[]>([])
+  const [currentImages] = useState<string[]>([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // overview用のファイル一覧を取得する関数
@@ -60,8 +60,9 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   const getStepFiles = async (stepNumber: number, machineType: MachineType) => {
     const drawingNumber = instruction.metadata.drawingNumber
     
-    // 機械種別付きのフォルダ名を生成
-    const stepFolder = getStepFolderName(stepNumber, machineType)
+    // 機械種別を日本語に変換してからフォルダ名を生成
+    const machineTypeJapanese = getMachineTypeJapanese(machineType)
+    const stepFolder = getStepFolderName(stepNumber, machineTypeJapanese)
     
     const [stepImages, stepVideos, stepPrograms] = await Promise.all([
       getFilesFromFolder(drawingNumber, 'images', stepFolder),
@@ -205,8 +206,8 @@ export default function WorkInstructionResults({ instruction, contributions, onB
           drawingNumber={instruction.metadata.drawingNumber}
           targetSection={contributionTarget.section}
           stepNumber={contributionTarget.stepNumber}
-          onClose={() => setShowContributionForm(false)}
-          onSuccess={() => {
+          onCancel={() => setShowContributionForm(false)}
+          onSubmit={() => {
             setShowContributionForm(false)
             // ページをリロードして最新の追記データを取得
             window.location.reload()
