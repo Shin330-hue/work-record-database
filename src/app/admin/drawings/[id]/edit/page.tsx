@@ -11,6 +11,7 @@ import { ImageLightbox } from '@/components/ImageLightbox'
 import { getMachineTypeKey, getStepFolderName } from '@/lib/machineTypeUtils'
 import WorkStepEditor from '@/components/admin/WorkStepEditor'
 import NearMissEditor from '@/components/admin/NearMissEditor'
+import { useEditFormHandlers } from '@/hooks/useEditFormHandlers'
 
 interface EditFormData {
   drawingNumber: string
@@ -31,10 +32,10 @@ interface EditFormData {
   keywords: string[]
   toolsRequired: string[]
   overview: {
+    description: string
     warnings: string[]
     preparationTime: string
     processingTime: string
-    images: string[]
   }
   workSteps: WorkStep[]
   workStepsByMachine?: {
@@ -102,6 +103,23 @@ export default function DrawingEdit() {
 
   // 機械種別の選択肢（新規登録画面と統一）
   const machineTypes = ['マシニング', 'ターニング', '横中', 'ラジアル', 'フライス']
+
+  // 共通ハンドラーの初期化
+  const {
+    handleMachineTypeChange,
+    handleKeywordsChange,
+    handleToolsRequiredChange,
+    handleWarningChange,
+    addWarning,
+    removeWarning,
+    addWorkStep,
+    updateWorkStep,
+    deleteWorkStep,
+    moveWorkStep,
+    handleNearMissChange,
+    addNearMiss,
+    removeNearMiss
+  } = useEditFormHandlers(formData, setFormData)
 
   // 機械種別ごとの工程数と追記数を計算
   // 機械種別ごとの工程数を計算（将来的な使用のため保持）
@@ -217,10 +235,10 @@ export default function DrawingEdit() {
           keywords: searchItem.keywords || [],
           toolsRequired: workInstruction.metadata.toolsRequired || [],
           overview: {
+            description: workInstruction.overview.description || '',
             warnings: workInstruction.overview.warnings || [],
             preparationTime: workInstruction.overview.preparationTime?.replace('分', '') || '30',
-            processingTime: workInstruction.overview.processingTime?.replace('分', '') || '60',
-            images: []  // 実際のファイルはactualFilesで管理
+            processingTime: workInstruction.overview.processingTime?.replace('分', '') || '60'
           },
           workSteps: workInstruction.workSteps?.map(step => ({
             ...step,
@@ -493,296 +511,6 @@ export default function DrawingEdit() {
     }
   }
 
-  const handleMachineTypeChange = (machine: string, checked: boolean) => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      
-      const newMachineTypes = checked
-        ? [...prev.machineType, machine]
-        : prev.machineType.filter(m => m !== machine)
-
-      return {
-        ...prev,
-        machineType: newMachineTypes
-      }
-    })
-  }
-
-  const handleKeywordsChange = (keywordsString: string) => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        keywords: keywordsString.split(',').map(k => k.trim()).filter(k => k)
-      }
-    })
-  }
-
-  const handleToolsRequiredChange = (toolsString: string) => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        toolsRequired: toolsString.split(',').map(t => t.trim()).filter(t => t)
-      }
-    })
-  }
-
-  // 警告事項の配列操作ハンドラー
-  const handleWarningChange = (index: number, value: string) => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      const newWarnings = [...prev.overview.warnings]
-      newWarnings[index] = value
-      return {
-        ...prev,
-        overview: { ...prev.overview, warnings: newWarnings }
-      }
-    })
-  }
-
-  const addWarning = () => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        overview: { ...prev.overview, warnings: [...prev.overview.warnings, ''] }
-      }
-    })
-  }
-
-  const removeWarning = (index: number) => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      const newWarnings = prev.overview.warnings.filter((_, i) => i !== index)
-      return {
-        ...prev,
-        overview: { ...prev.overview, warnings: newWarnings }
-      }
-    })
-  }
-
-  // 作業ステップ操作ハンドラー（workStepsByMachine対応）
-  const addWorkStep = (machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
-    if (!formData) return
-
-    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
-    if (!machineType) {
-      const newStep: WorkStep = {
-        stepNumber: formData.workSteps.length + 1,
-        title: `ステップ ${formData.workSteps.length + 1}`,
-        description: '',
-        detailedInstructions: [],
-        images: [],
-        videos: [],
-        timeRequired: '30分',
-        warningLevel: 'normal',
-        qualityCheck: {
-          items: []
-        }
-      }
-
-      setFormData(prev => {
-        if (!prev) return prev
-        return {
-          ...prev,
-          workSteps: [...prev.workSteps, newStep]
-        }
-      })
-      return
-    }
-
-    // workStepsByMachine対応
-    const currentSteps = formData.workStepsByMachine?.[machineType] || []
-    const newStep: WorkStep = {
-      stepNumber: currentSteps.length + 1,
-      title: `ステップ ${currentSteps.length + 1}`,
-      description: '',
-      detailedInstructions: [],
-      images: [],
-      videos: [],
-      timeRequired: '30分',
-      warningLevel: 'normal',
-      qualityCheck: {
-        items: []
-      }
-    }
-
-    setFormData(prev => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        workStepsByMachine: {
-          ...prev.workStepsByMachine,
-          [machineType]: [...currentSteps, newStep]
-        }
-      }
-    })
-  }
-
-  const updateWorkStep = (index: number, updatedStep: WorkStep, machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
-    if (!formData) return
-
-    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
-    if (!machineType) {
-      setFormData(prev => {
-        if (!prev) return prev
-        const newWorkSteps = [...prev.workSteps]
-        newWorkSteps[index] = updatedStep
-        return {
-          ...prev,
-          workSteps: newWorkSteps
-        }
-      })
-      return
-    }
-
-    // workStepsByMachine対応
-    setFormData(prev => {
-      if (!prev) return prev
-      const currentSteps = prev.workStepsByMachine?.[machineType] || []
-      const newSteps = [...currentSteps]
-      newSteps[index] = updatedStep
-      return {
-        ...prev,
-        workStepsByMachine: {
-          ...prev.workStepsByMachine,
-          [machineType]: newSteps
-        }
-      }
-    })
-  }
-
-  const deleteWorkStep = (index: number, machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
-    if (!formData) return
-    
-    if (!confirm('このステップを削除しますか？')) return
-
-    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
-    if (!machineType) {
-      setFormData(prev => {
-        if (!prev) return prev
-        const newWorkSteps = prev.workSteps.filter((_, i) => i !== index)
-        // ステップ番号を再調整
-        return {
-          ...prev,
-          workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
-        }
-      })
-      return
-    }
-
-    // workStepsByMachine対応
-    setFormData(prev => {
-      if (!prev) return prev
-      const currentSteps = prev.workStepsByMachine?.[machineType] || []
-      const newSteps = currentSteps.filter((_, i) => i !== index)
-      // ステップ番号を再調整
-      return {
-        ...prev,
-        workStepsByMachine: {
-          ...prev.workStepsByMachine,
-          [machineType]: newSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
-        }
-      }
-    })
-  }
-
-  const moveWorkStep = (fromIndex: number, toIndex: number, machineType?: 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other') => {
-    if (!formData) return
-
-    // 後方互換性: machineTypeが指定されていない場合は従来のworkStepsを使用
-    if (!machineType) {
-      setFormData(prev => {
-        if (!prev) return prev
-        const newWorkSteps = [...prev.workSteps]
-        const [movedStep] = newWorkSteps.splice(fromIndex, 1)
-        newWorkSteps.splice(toIndex, 0, movedStep)
-        // ステップ番号を再調整
-        return {
-          ...prev,
-          workSteps: newWorkSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
-        }
-      })
-      return
-    }
-
-    // workStepsByMachine対応
-    setFormData(prev => {
-      if (!prev) return prev
-      const currentSteps = [...(prev.workStepsByMachine?.[machineType] || [])]
-      const [movedStep] = currentSteps.splice(fromIndex, 1)
-      currentSteps.splice(toIndex, 0, movedStep)
-      // ステップ番号を再調整
-      return {
-        ...prev,
-        workStepsByMachine: {
-          ...prev.workStepsByMachine,
-          [machineType]: currentSteps.map((step, i) => ({ ...step, stepNumber: i + 1 }))
-        }
-      }
-    })
-  }
-
-  // ヒヤリハット事例操作ハンドラー
-  const handleNearMissChange = (index: number, field: keyof NearMissItem, value: string) => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      const newNearMiss = [...prev.nearMiss]
-      newNearMiss[index] = { ...newNearMiss[index], [field]: value }
-      return {
-        ...prev,
-        nearMiss: newNearMiss
-      }
-    })
-  }
-
-  const addNearMiss = () => {
-    if (!formData) return
-
-    const newNearMissItem: NearMissItem = {
-      title: '',
-      description: '',
-      cause: '',
-      prevention: '',
-      severity: 'medium'
-    }
-
-    setFormData(prev => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        nearMiss: [...prev.nearMiss, newNearMissItem]
-      }
-    })
-  }
-
-  const removeNearMiss = (index: number) => {
-    if (!formData) return
-
-    setFormData(prev => {
-      if (!prev) return prev
-      const newNearMiss = prev.nearMiss.filter((_, i) => i !== index)
-      return {
-        ...prev,
-        nearMiss: newNearMiss
-      }
-    })
-  }
 
   // ファイル操作ハンドラー
   const handleFileUpload = async (stepIndex: number, fileType: 'images' | 'videos', files: FileList | null, machineType?: string) => {
