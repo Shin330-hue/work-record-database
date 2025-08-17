@@ -39,8 +39,10 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
   useEffect(() => {
     const loadStepFiles = async () => {
       try {
+        console.log(`WorkStep: Loading files for step ${step.stepNumber}, machineType: ${machineType}`)
         setIsLoading(true)
         const files = await getStepFiles(step.stepNumber)
+        console.log(`WorkStep: Loaded files:`, files)
         setStepFiles(files)
       } catch (error) {
         console.error(`Error loading files for step ${step.stepNumber}:`, error)
@@ -50,7 +52,7 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
     }
 
     loadStepFiles()
-  }, [step.stepNumber, getStepFiles])
+  }, [step.stepNumber, getStepFiles, machineType])
 
 
   // ファイルダウンロード関数

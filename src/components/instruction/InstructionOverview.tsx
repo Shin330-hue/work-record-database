@@ -28,8 +28,10 @@ export default function InstructionOverview({
       const encodedFolderName = encodeURIComponent(folderName)
       const response = await fetch(`/api/files?drawingNumber=${encodeURIComponent(drawingNumber)}&folderType=${fileType}&subFolder=${encodedFolderName}`)
       if (response.ok) {
-        const data = await response.json()
-        return data.files || []
+        const responseData = await response.json()
+        // APIレスポンス構造を正しく処理
+        const files = responseData.success ? responseData.data.files : responseData.files
+        return files || []
       }
     } catch (error) {
       console.error(`${fileType}ファイル一覧の取得に失敗:`, error)

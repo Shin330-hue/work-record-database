@@ -49,9 +49,12 @@ export default function WorkInstructionResults({ instruction, contributions, onB
       console.log(`ファイル取得URL: ${url}`) // デバッグログ
       const response = await fetch(url)
       if (response.ok) {
-        const data = await response.json()
-        console.log(`${fileType}ファイル取得成功:`, data.files) // デバッグログ
-        return data.files || []
+        const responseData = await response.json()
+        console.log(`${fileType}ファイル取得成功:`, responseData) // レスポンス全体をログ
+        // APIレスポンス構造を正しく処理
+        const files = responseData.success ? responseData.data.files : responseData.files
+        console.log(`${fileType}ファイル配列:`, files) // ファイル配列をログ
+        return files || []
       } else {
         console.error(`${fileType}ファイル取得失敗: ${response.status} ${response.statusText}`)
         const errorText = await response.text()
@@ -66,10 +69,12 @@ export default function WorkInstructionResults({ instruction, contributions, onB
   // ステップごとのファイル一覧を取得する関数（機械種別対応）
   const getStepFiles = async (stepNumber: number, machineType: MachineType) => {
     const drawingNumber = instruction.metadata.drawingNumber
+    console.log(`getStepFiles called: stepNumber=${stepNumber}, machineType=${machineType}`)
     
     // 機械種別を日本語に変換してからフォルダ名を生成
     const machineTypeJapanese = getMachineTypeJapanese(machineType)
     const stepFolder = getStepFolderName(stepNumber, machineTypeJapanese)
+    console.log(`stepFolder generated: ${stepFolder}, machineTypeJapanese: ${machineTypeJapanese}`)
     
     const [stepImages, stepVideos, stepPrograms, stepPdfs] = await Promise.all([
       getFilesFromFolder(drawingNumber, 'images', stepFolder),
