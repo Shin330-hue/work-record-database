@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 管理機能が無効の場合
+    // 管理ページが無効の場合
     if (process.env.ADMIN_ENABLED !== 'true') {
       return NextResponse.json(
-        { error: '管理機能が無効です' },
+        { error: '管理ページが無効です' },
         { status: 403 }
       )
     }
@@ -25,7 +25,9 @@ export async function POST(request: NextRequest) {
     if (process.env.USE_FILE_AUTH === 'true') {
       try {
         const authFilePath = path.join(process.cwd(), process.env.AUTH_FILE_PATH || '')
-        const authData = JSON.parse(fs.readFileSync(authFilePath, 'utf-8'))
+        const raw = fs.readFileSync(authFilePath, 'utf-8')
+        const sanitized = raw.replace(/^\uFEFF/, '')
+        const authData = JSON.parse(sanitized)
         
         const user = authData.passwords.find((u: { password: string; enabled: boolean; id: string; name: string }) => 
           u.password === password && u.enabled

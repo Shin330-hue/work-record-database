@@ -1,5 +1,5 @@
-'use client'
-import { useState } from 'react'
+﻿'use client'
+import { useEffect, useState } from 'react'
 
 interface ContributionFormProps {
   drawingNumber: string
@@ -8,6 +8,21 @@ interface ContributionFormProps {
   onSubmit: () => void
   onCancel: () => void
 }
+
+type EmployeeOption = {
+  id: string
+  name: string
+  displayName: string
+}
+
+type EmployeesApiResponse = {
+  employees?: Array<{
+    id?: string
+    name?: string
+    displayName?: string
+  }>
+}
+
 
 export default function ContributionForm({ 
   drawingNumber, 
@@ -21,6 +36,62 @@ export default function ContributionForm({
   const [text, setText] = useState('')
   const [files, setFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [employees, setEmployees] = useState<EmployeeOption[]>([])
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('')
+  const [isEmployeesLoading, setIsEmployeesLoading] = useState(true)
+  const [employeeLoadError, setEmployeeLoadError] = useState<string | null>(null)
+
+  const showEmployeeSelect = employees.length > 0 && !employeeLoadError
+
+  useEffect(() => {
+    let cancelled = false
+
+    const fetchEmployees = async () => {
+      setIsEmployeesLoading(true)
+      setEmployeeLoadError(null)
+      try {
+        const response = await fetch('/api/employees', { cache: 'no-store' })
+        if (!response.ok) {
+          throw new Error(`Failed to load employees (status: ${response.status})`)
+        }
+
+        const data = (await response.json()) as EmployeesApiResponse
+        if (cancelled) {
+          return
+        }
+
+        const employeesRaw = Array.isArray(data?.employees) ? data.employees : []
+        const normalized = employeesRaw
+          .filter((employee): employee is { id: string; name: string; displayName?: string } => {
+            return typeof employee?.id === 'string' && typeof employee?.name === 'string'
+          })
+          .map((employee) => ({
+            id: employee.id,
+            name: employee.name,
+            displayName: employee.displayName ?? employee.name,
+          }))
+
+        setEmployees(normalized)
+      } catch (error) {
+        console.error('従業員リストの読み込みに失敗しました:', error)
+        if (!cancelled) {
+          setEmployees([])
+          setEmployeeLoadError('従業員リストの読み込みに失敗しました')
+        }
+      } finally {
+        if (!cancelled) {
+          setIsEmployeesLoading(false)
+        }
+      }
+    }
+
+    fetchEmployees()
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
 
   const validateClientFiles = (files: File[]): { valid: boolean; error?: string } => {
     const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
@@ -86,8 +157,19 @@ export default function ContributionForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!userName || (!text && files.length === 0)) {
-      alert('👤 お名前と内容（またはファイル）を入力してください！\n\nあなたの貴重な経験をみんなで共有しましょう✨')
+    const trimmedText = text.trim()
+    const hasFiles = files.length > 0
+    const selectedEmployee = employees.find((employee) => employee.id === selectedEmployeeId)
+    const effectiveUserId = showEmployeeSelect ? (selectedEmployee?.id ?? '') : userName.trim()
+    const effectiveUserName = showEmployeeSelect ? (selectedEmployee?.name ?? '') : userName.trim()
+
+    if (!effectiveUserId || !effectiveUserName) {
+      alert('👤 従業員を選択してください。')
+      return
+    }
+
+    if (!trimmedText && !hasFiles) {
+      alert('👤 従業員と内容（またはファイル）を入力してください。\n\nあなたの貴重な経験をみんなで共有しましょう！')
       return
     }
 
@@ -96,15 +178,15 @@ export default function ContributionForm({
     try {
       const formData = new FormData()
       formData.append('drawingNumber', drawingNumber)
-      formData.append('userId', userName) // userNameをuserIdとして使用
-      formData.append('userName', userName)
+      formData.append('userId', effectiveUserId)
+      formData.append('userName', effectiveUserName)
       formData.append('type', type)
       formData.append('targetSection', targetSection)
       if (stepNumber) {
         formData.append('stepNumber', stepNumber.toString())
       }
-      if (text) {
-        formData.append('text', text)
+      if (trimmedText) {
+        formData.append('text', trimmedText)
       }
       
       // 複数ファイルを追加
@@ -155,16 +237,48 @@ export default function ContributionForm({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              お名前 <span className="text-red-500">*</span>
+              投稿者 <span className="text-red-500">*</span>
             </label>
-            <input
-              type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-              className="custom-form-input"
-              placeholder="例: 田中太郎"
-              required
-            />
+            {showEmployeeSelect ? (
+              <>
+                <select
+                  value={selectedEmployeeId}
+                  onChange={(e) => setSelectedEmployeeId(e.target.value)}
+                  className="custom-form-select"
+                  required
+                  disabled={isEmployeesLoading || isSubmitting}
+                >
+                  <option value="" disabled>
+                    {isEmployeesLoading ? '従業員リストを読み込み中...' : '名前を選択してください'}
+                  </option>
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>
+                      {employee.displayName}
+                    </option>
+                  ))}
+                </select>
+                {isEmployeesLoading && (
+                  <p className="text-xs text-gray-500 mt-1">従業員リストを読み込み中です...</p>
+                )}
+              </>
+            ) : (
+              <>
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className="custom-form-input"
+                  placeholder="例: 田中太郎"
+                  required
+                  disabled={isSubmitting}
+                />
+                {employeeLoadError && (
+                  <p className="text-xs text-amber-600 mt-1">
+                    従業員リストを読み込めなかったため、手入力に切り替えています。
+                  </p>
+                )}
+              </>
+            )}
           </div>
 
           <div>
@@ -175,6 +289,7 @@ export default function ContributionForm({
               value={type}
               onChange={(e) => setType(e.target.value as typeof type)}
               className="custom-form-select"
+              disabled={isSubmitting}
             >
               <option value="comment">コメント・注意点</option>
               <option value="image">画像追加</option>
@@ -194,6 +309,7 @@ export default function ContributionForm({
               className="custom-form-textarea"
               placeholder="気づいた点、改善提案、注意事項など..."
               required={files.length === 0}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -207,6 +323,7 @@ export default function ContributionForm({
               onChange={handleFilesChange}
               accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/webm,video/avi,video/mov"
               className="custom-file-input"
+              disabled={isSubmitting}
             />
             <p className="text-xs text-gray-500 mt-1">
               📋 制限: 最大10ファイル、各ファイル50MB以下、総容量100MB以下<br/>
@@ -227,6 +344,7 @@ export default function ContributionForm({
                       type="button"
                       onClick={() => removeFile(index)}
                       className="text-red-500 hover:text-red-700 ml-2 px-4 py-2 rounded-lg text-base touch-manipulation hover:bg-red-50"
+                      disabled={isSubmitting}
                     >
                       削除
                     </button>
@@ -251,7 +369,7 @@ export default function ContributionForm({
             <button
               type="submit"
               className="custom-rect-button blue"
-              disabled={isSubmitting}
+              disabled={isSubmitting || (showEmployeeSelect && !selectedEmployeeId)}
             >
               <span>{isSubmitting ? '投稿中...' : '投稿'}</span>
             </button>
@@ -261,3 +379,4 @@ export default function ContributionForm({
     </div>
   )
 }
+
