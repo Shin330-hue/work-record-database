@@ -418,7 +418,7 @@ export default function NewDrawingPage() {
                   </label>
                   <input
                     type="file"
-                    accept=".nc,.min,.dxf,.dwg,.mcam,.txt"
+                    accept=".nc,.min,.dxf,.dwg,.mcam,.txt,.zip,.stp,.step"
                     multiple
                     onChange={(e) => updateProgramFiles(index, e.target.files)}
                     className="custom-file-input"
@@ -429,7 +429,7 @@ export default function NewDrawingPage() {
                     </div>
                   )}
                   <p className="mt-1 text-xs text-gray-500">
-                    NCプログラム、dxfファイルなど図面データ
+                    NC programs, dxf/STEP, ZIP files and other drawing assets
                   </p>
                 </div>
                 {/* 1. 会社名 */}

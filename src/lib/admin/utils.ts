@@ -72,9 +72,9 @@ export const generateTimestampedFileName = (originalName: string, extension: str
  * プログラムファイルの拡張子リスト
  */
 export const PROGRAM_EXTENSIONS = [
-  '.nc', '.txt', '.tap', '.pgm', '.mpf', 
+  '.nc', '.txt', '.tap', '.pgm', '.mpf',
   '.ptp', '.gcode', '.cnc', '.min', '.eia',
-  '.dxf', '.dwg', '.mcam'
+  '.dxf', '.dwg', '.mcam', '.zip', '.stp', '.step'
 ] as const
 
 /**

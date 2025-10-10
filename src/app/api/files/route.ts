@@ -199,7 +199,7 @@ export async function GET(request: NextRequest) {
         case 'pdfs':
           return extension === 'pdf'
         case 'programs':
-          return ['nc', 'min', 'cam', 'dxf', 'dwg', 'stp'].includes(extension || '')
+          return ['nc', 'min', 'cam', 'dxf', 'dwg', 'stp', 'step', 'zip'].includes(extension || '')
         default:
           return true
       }

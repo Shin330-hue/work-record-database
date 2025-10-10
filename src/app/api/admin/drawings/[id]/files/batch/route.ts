@@ -20,85 +20,126 @@ function determineFileTypeForBatch(file: File): 'images' | 'videos' | 'pdfs' | '
 }
 
 // ファイル検証
-function validateFile(file: File): { valid: boolean; error?: string } {
-  const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
-  
-  // ファイルサイズチェック
-  if (file.size > MAX_FILE_SIZE) {
-    return { valid: false, error: `ファイルサイズが大きすぎます。最大50MBまでです。(${file.name})` }
+// File validation
+const BYTES_PER_MB = 1024 * 1024
+
+type FileRule = {
+  maxSize: number
+  allowedMimePrefixes?: string[]
+  allowedMimeIncludes?: string[]
+  allowedExact?: string[]
+}
+
+const FILE_TYPE_RULES: Record<'images' | 'videos' | 'pdfs' | 'programs', FileRule> = {
+  images: {
+    maxSize: 50 * BYTES_PER_MB,
+    allowedMimePrefixes: ['image/'],
+  },
+  videos: {
+    maxSize: 50 * BYTES_PER_MB,
+    allowedMimePrefixes: ['video/'],
+  },
+  pdfs: {
+    maxSize: 50 * BYTES_PER_MB,
+    allowedMimeIncludes: ['pdf'],
+  },
+  programs: {
+    maxSize: 50 * BYTES_PER_MB,
+    allowedExact: [
+      'text/plain',
+      'text/x-nc',
+      'application/octet-stream',
+      'application/dxf',
+      'application/x-dxf',
+      'image/vnd.dxf',
+      'application/zip',
+      'application/x-zip-compressed',
+      'application/x-zip',
+      'application/x-compressed',
+      'multipart/x-zip',
+      'application/step',
+      'application/x-step',
+      'model/step',
+      'model/x-step',
+    ],
+  },
+}
+
+function isMimeAllowed(mimeType: string, rule: FileRule) {
+  if (!mimeType) {
+    return true
   }
-  
-  // ファイル名チェック（危険な拡張子の除外）
+
+  const normalized = mimeType.toLowerCase()
+
+  if (rule.allowedExact?.some((value) => normalized === value)) {
+    return true
+  }
+
+  if (rule.allowedMimePrefixes?.some((prefix) => normalized.startsWith(prefix))) {
+    return true
+  }
+
+  if (rule.allowedMimeIncludes?.some((fragment) => normalized.includes(fragment))) {
+    return true
+  }
+
+  return false
+}
+
+function validateFile(file: File): { valid: boolean; error?: string } {
   const dangerousExtensions = ['.exe', '.bat', '.cmd', '.com', '.scr', '.js', '.vbs', '.jar']
   const fileName = file.name.toLowerCase()
-  if (dangerousExtensions.some(ext => fileName.endsWith(ext))) {
-    return { valid: false, error: `実行可能ファイルはアップロードできません。(${file.name})` }
+
+  if (dangerousExtensions.some((ext) => fileName.endsWith(ext))) {
+    return { valid: false, error: `Executable files cannot be uploaded (${file.name})` }
   }
-  
-  // ファイルタイプ別の追加検証
+
   try {
     const fileType = determineFileTypeForBatch(file)
-    
-    switch (fileType) {
-      case 'images':
-        const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
-        if (!allowedImageTypes.includes(file.type)) {
-          return { valid: false, error: `サポートされていない画像形式です。(${file.name})` }
-        }
-        break
-        
-      case 'videos':
-        const allowedVideoTypes = ['video/mp4', 'video/webm', 'video/avi', 'video/mov']
-        if (!allowedVideoTypes.includes(file.type)) {
-          return { valid: false, error: `サポートされていない動画形式です。(${file.name})` }
-        }
-        break
-        
-      case 'pdfs':
-        if (!file.type.includes('pdf')) {
-          return { valid: false, error: `PDFファイルではありません。(${file.name})` }
-        }
-        break
-        
-      case 'programs':
-        // プログラムファイルは拡張子で判定済み
-        break
+    const rule = FILE_TYPE_RULES[fileType]
+    const mimeType = file.type || ''
+
+    if (file.size > rule.maxSize) {
+      const maxMb = Math.floor(rule.maxSize / BYTES_PER_MB)
+      return { valid: false, error: `File is too large. Maximum ${maxMb}MB (${file.name})` }
+    }
+
+    if (!isMimeAllowed(mimeType, rule)) {
+      const displayMime = mimeType || 'unknown'
+      return { valid: false, error: `Unexpected MIME type (${file.name}: ${displayMime})` }
     }
   } catch (error) {
-    return { valid: false, error: error instanceof Error ? error.message : 'ファイルタイプの判定に失敗しました' }
+    return { valid: false, error: error instanceof Error ? error.message : 'Failed to validate file type' }
   }
-  
+
   return { valid: true }
 }
 
-// 複数ファイル検証
+// Multiple file validation
 function validateFiles(files: File[]): { valid: boolean; error?: string } {
-  const MAX_TOTAL_SIZE = 100 * 1024 * 1024 // 100MB
-  const MAX_FILE_COUNT = 20 // 画像・動画と違い、図面やプログラムは多い可能性があるため増やす
-  
-  // ファイル数チェック
+  const MAX_TOTAL_SIZE = 100 * BYTES_PER_MB // 100MB
+  const MAX_FILE_COUNT = 20
+
   if (files.length > MAX_FILE_COUNT) {
-    return { valid: false, error: `ファイル数が上限を超えています。最大${MAX_FILE_COUNT}ファイルまでです。` }
+    return { valid: false, error: `Too many files. Up to ${MAX_FILE_COUNT} files are allowed.` }
   }
-  
-  // 総容量チェック
+
   const totalSize = files.reduce((sum, file) => sum + file.size, 0)
   if (totalSize > MAX_TOTAL_SIZE) {
-    return { valid: false, error: `総ファイルサイズが大きすぎます。最大100MBまでです。` }
+    return { valid: false, error: 'Total upload size must be 100MB or less.' }
   }
-  
-  // 個別ファイル検証
+
   for (const file of files) {
     const validation = validateFile(file)
     if (!validation.valid) {
       return validation
     }
   }
-  
+
   return { valid: true }
 }
 
-// ファイル名生成（ファイルタイプ別）
 function generateFileName(file: File, fileType: string): string {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
   
