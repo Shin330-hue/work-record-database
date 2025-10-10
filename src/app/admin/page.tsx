@@ -1,4 +1,4 @@
-// src/app/admin/page.tsx - 管理画面トップページ
+﻿// src/app/admin/page.tsx - 管理画面トップページ
 
 'use client'
 
@@ -106,32 +106,6 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* データ管理 */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center">【データ管理】</h2>
-              <div className="space-y-4 flex flex-col items-center">
-                <a 
-                  href="/admin/companies"
-                  className="custom-rect-button emerald"
-                >
-                  <span>会社・製品管理</span>
-                </a>
-                <a 
-                  href="/admin/contributions"
-                  className="custom-rect-button purple"
-                >
-                  <span>追記管理</span>
-                </a>
-                <a 
-                  href="/admin/tools/validate"
-                  className="custom-rect-button gray"
-                >
-                  <span>データ整合性チェック</span>
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* 最新追記 */}
@@ -211,3 +185,6 @@ export default function AdminDashboard() {
     </div>
   )
 }
+
+
+
