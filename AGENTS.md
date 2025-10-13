@@ -1,49 +1,51 @@
-﻿# AGENTS.md - Work Record Database Project
+﻿# AGENTS.md - ワークレコードデータベースプロジェクト
 
-## Session Kickoff Checklist
-- Working directory: C:\work\projects\work-record-database
-- Confirm git status: git status -sb
-- Re-read key docs: doc/プロジェクト概要仕様書_v2.0.md, doc/API仕様書.md, doc/UI改善ガイドライン.md, doc/development-notes.md
-- Check doc/doc_for_claude/ for the latest handover notes and temporary decisions
+## セッション開始チェックリスト
+- 作業ディレクトリ: C:\work\projects\work-record-database
+- git のステータス確認: git status -sb
+- 重要ドキュメントの再読: doc/プロジェクト概要仕様書_v2.0.md, doc/API仕様書.md, doc/UI改善ガイドライン.md, doc/development-notes.md
+- doc/doc_for_claude/ 内の最新の引き継ぎメモと一時的な判断を確認
 
-## Working Agreements
-- Follow existing TypeScript / Next.js typing and lint rules
-- Prefer project APIs (e.g. /api/files) for file access
-- Match current UI conventions (Tailwind + custom classes) with shop-floor users in mind
-- Log meaningful messages; Japanese copy is welcome when user-facing
+## 作業合意事項
+- 既存の TypeScript / Next.js の型定義と lint 規約に従う
+- ファイルアクセスはプロジェクト提供の API（例: /api/files）を優先する
+- 現行 UI の慣例（Tailwind + カスタムクラス）を工場現場のユーザーを意識して踏襲する
+- ログには意味のあるメッセージを残す。ユーザー向けメッセージは日本語歓迎
+- Git 操作はユーザーが主体で進め、必要なコマンド確認はその都度エージェントがサポートする
 
-## Security & Data Handling
-- Respect admin feature flags such as ADMIN_ENABLED
-- Accept only whitelisted upload types (PDF / images / videos / NC programs)
-- Reuse sanitizer utilities for user input and file names
-- Keep both NAS and local path layouts in mind when dealing with file I/O
+## セキュリティとデータ取扱い
+- ADMIN_ENABLED などの管理者向け機能フラグを遵守する
+- 許可されたアップロード形式（PDF / 画像 / 動画 / NC プログラム）のみ受け入れる
+- ユーザー入力やファイル名のサニタイザユーティリティを再利用する
+- ファイル入出力では NAS とローカルのパス構成を両方考慮する
 
-## Typical Workflow
-1. Capture the task scope; add context to doc/doc_for_claude/ if needed
-2. Ensure the repo is clean (git status) before editing
-3. After changes, run pnpm run lint and any targeted tests
-4. Record decisions/findings in a memo or formal doc
-5. Review git diff before committing or handing off
+## 典型的なワークフロー
+1. タスク範囲を把握し、必要なら doc/doc_for_claude/ に背景を追加する
+2. 編集前にリポジトリがクリーンか確認する（git status）
+3. 変更後は pnpm run lint と対象テストを実行する
+4. 決定事項や調査結果をメモまたは正式ドキュメントに記録する
+5. コミットまたは引き継ぎ前に git diff を確認する
 
-## Key Resources
-- src/app/page.tsx – Main landing (company selection & search)
-- src/app/admin/ – Admin UI and back-office APIs
-- src/lib/dataLoader.ts – Data loading helpers and shared types
-- src/lib/drawingRegistrationTransaction.ts – Drawing registration flow
-- doc/ – Authoritative specs and ops guides
+## 主要リソース
+- src/app/page.tsx - メインランディング（企業選択と検索）
+- src/app/admin/ - 管理 UI とバックオフィス API
+- src/lib/dataLoader.ts - データ読み込みヘルパーと共有型
+- src/lib/drawingRegistrationTransaction.ts - 図面登録フロー
+- doc/ - 公式仕様と運用ガイド
 
-## Notes & Documentation
-- Temporary notes live in doc/doc_for_claude/ (ignored by Git)
-- Promote long-term knowledge to doc/
-- Save text files in UTF-8 to avoid mojibake
+## メモとドキュメント管理
+- 一時的なメモは doc/doc_for_claude/（Git 無視対象）に保存する
+- 長期的な知識は doc/ へ昇格させる
+- テキストファイルは UTF-8 で保存し文字化けを防ぐ
+- 進捗や決定事項は `doc/development-notes.md` に追記して共有する
 
-## Caution Points
-- Preserve transaction integrity, validation logic, and existing tests
-- Use powershell.exe -NoLogo -Command when invoking shell commands via Codex CLI
-- Check the approval policy before attempting network or privileged operations
+## 注意点
+- トランザクション整合性、バリデーションロジック、既存テストを保持する
+- Codex CLI からコマンド実行時は powershell.exe -NoLogo -Command を使用する
+- ネットワークや権限が必要な操作の前に承認ポリシーを確認する
 
-## Done Checklist
-- [ ] Code and docs updated to satisfy the task
-- [ ] No unintended changes in git diff
-- [ ] Required lint/test commands executed
-- [ ] Notes/specs updated with outcomes
+## 完了チェックリスト
+- [ ] タスクを満たすコードとドキュメントを更新した
+- [ ] 意図しない変更が git diff に含まれていない
+- [ ] 必要な lint / テストコマンドを実行した
+- [ ] 結果をメモや仕様に記録した
