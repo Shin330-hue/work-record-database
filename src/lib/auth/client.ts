@@ -71,18 +71,38 @@ export function clearAuthInfo(): void {
 // 認証ヘッダーを生成する共通関数
 export function getAuthHeaders(): HeadersInit {
   const authInfo = getAuthInfo()
-  return {
-    'Authorization': `Bearer ${authInfo?.password || ''}`,
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${authInfo?.password || ''}`,
     'Content-Type': 'application/json'
   }
+
+  if (authInfo?.id) {
+    headers['X-Admin-User-Id'] = encodeURIComponent(authInfo.id)
+  }
+
+  if (authInfo?.name) {
+    headers['X-Admin-User-Name'] = encodeURIComponent(authInfo.name)
+  }
+
+  return headers
 }
 
 // FormData用の認証ヘッダー（Content-Typeなし）
 export function getAuthHeadersForFormData(): HeadersInit {
   const authInfo = getAuthInfo()
-  return {
-    'Authorization': `Bearer ${authInfo?.password || ''}`
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${authInfo?.password || ''}`
   }
+
+  if (authInfo?.id) {
+    headers['X-Admin-User-Id'] = encodeURIComponent(authInfo.id)
+  }
+
+  if (authInfo?.name) {
+    headers['X-Admin-User-Name'] = encodeURIComponent(authInfo.name)
+  }
+
+  return headers
 }
 
 // 認証状態のチェック

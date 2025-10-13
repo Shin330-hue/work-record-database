@@ -3,6 +3,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { getAuthHeaders } from '@/lib/auth/client'
 import { loadAllContributions } from '@/lib/dataLoader'
 import { ContributionData } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
@@ -74,9 +75,7 @@ export default function ContributionsManagementPage() {
     try {
       const response = await fetch(`/api/admin/contributions/${targetContribution.drawingNumber}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           action: 'updateStatus',
           contributionId: targetContribution.contribution.id,
@@ -119,9 +118,7 @@ export default function ContributionsManagementPage() {
     try {
       const response = await fetch(`/api/admin/contributions/${targetContribution.drawingNumber}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           action: 'delete',
           contributionId: targetContribution.contribution.id

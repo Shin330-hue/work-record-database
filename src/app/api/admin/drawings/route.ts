@@ -8,6 +8,7 @@ import {
 import { 
   processDrawingsWithTransaction 
 } from '@/lib/drawingRegistrationTransaction'
+import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
 
 
 // 入力データバリデーション
@@ -152,6 +153,25 @@ export async function POST(request: NextRequest) {
     }
     
     // 成功した図番のPDF/プログラムファイル処理（オプショナル）
+    const actor = extractAuditActorFromHeaders(request.headers)
+
+    const auditPromises = transactionResult.processed.map(processedData =>
+      logAuditEvent({
+        action: 'drawing.create',
+        target: processedData.drawingNumber,
+        actor,
+        metadata: {
+          title: processedData.title,
+          companyId: processedData.companyId,
+          companyName: processedData.companyName,
+          productId: processedData.productId,
+          productName: processedData.productName,
+          source: 'admin/drawings/new'
+        }
+      })
+    )
+    await Promise.all(auditPromises)
+
     const processResults: Array<{
       drawingNumber: string
       success: boolean

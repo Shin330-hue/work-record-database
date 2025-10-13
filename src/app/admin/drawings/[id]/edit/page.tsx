@@ -5,6 +5,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import { getAuthHeaders, getAuthHeadersForFormData } from '@/lib/auth/client'
 import { loadWorkInstruction, loadSearchIndex, loadCompanies, loadContributions, WorkStep, NearMissItem, CuttingConditions } from '@/lib/dataLoader'
 import { ContributionFile } from '@/types/contribution'
 import { ImageLightbox } from '@/components/ImageLightbox'
@@ -391,9 +392,7 @@ export default function DrawingEdit() {
 
       const response = await fetch(`/api/admin/drawings/${drawingNumber}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(updateData),
       })
 
@@ -412,9 +411,7 @@ export default function DrawingEdit() {
             try {
               const deleteResponse = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
                 method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                   fileName: file.fileName,
                   stepNumber: file.stepNumber,
@@ -454,6 +451,7 @@ export default function DrawingEdit() {
             try {
               const uploadResponse = await fetch(`/api/admin/drawings/${drawingNumber}/files`, {
                 method: 'POST',
+                headers: getAuthHeadersForFormData(),
                 body: formDataUpload
               })
               
@@ -1012,6 +1010,7 @@ export default function DrawingEdit() {
 
       const response = await fetch(`/api/admin/drawings/${drawingNumber}/files/batch`, {
         method: 'POST',
+        headers: getAuthHeadersForFormData(),
         body: formDataUpload
       })
 
@@ -1115,9 +1114,7 @@ export default function DrawingEdit() {
     try {
       const response = await fetch(`/api/admin/contributions/${drawingNumber}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           action: 'updateStatus',
           contributionId: targetContribution.id,
