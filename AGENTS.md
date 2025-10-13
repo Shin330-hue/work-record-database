@@ -3,8 +3,8 @@
 ## Session Kickoff Checklist
 - Working directory: C:\work\projects\work-record-database
 - Confirm git status: git status -sb
-- Re-read key docs: doc/プロジェクト概要仕様書_v2.0.md (project overview), doc/API仕様書.md
-- Check doc/doc_for_claude/ for the latest handover notes
+- Re-read key docs: doc/プロジェクト概要仕様書_v2.0.md, doc/API仕様書.md, doc/UI改善ガイドライン.md, doc/development-notes.md
+- Check doc/doc_for_claude/ for the latest handover notes and temporary decisions
 
 ## Working Agreements
 - Follow existing TypeScript / Next.js typing and lint rules
@@ -21,8 +21,7 @@
 ## Typical Workflow
 1. Capture the task scope; add context to doc/doc_for_claude/ if needed
 2. Ensure the repo is clean (git status) before editing
-3. After changes, run 
-pm run lint and any targeted tests
+3. After changes, run pnpm run lint and any targeted tests
 4. Record decisions/findings in a memo or formal doc
 5. Review git diff before committing or handing off
 
@@ -35,7 +34,7 @@ pm run lint and any targeted tests
 
 ## Notes & Documentation
 - Temporary notes live in doc/doc_for_claude/ (ignored by Git)
-- Long-term knowledge should be promoted to doc/
+- Promote long-term knowledge to doc/
 - Save text files in UTF-8 to avoid mojibake
 
 ## Caution Points

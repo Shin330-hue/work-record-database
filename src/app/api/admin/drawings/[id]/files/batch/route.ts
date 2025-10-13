@@ -8,6 +8,7 @@ import {
   getDataPath, 
   determineFileType 
 } from '@/lib/admin/utils'
+import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
 
 
 // ファイルタイプ判定（共通ユーティリティのラッパー）
@@ -260,6 +261,7 @@ export async function POST(
 ) {
   try {
     const { id: drawingNumber } = await context.params
+    const actor = extractAuditActorFromHeaders(request.headers)
     
     if (!drawingNumber) {
       return NextResponse.json(
@@ -384,6 +386,25 @@ export async function POST(
     // レスポンス
     const success = results.uploaded.length > 0
     const statusCode = success ? 200 : 400
+
+    await logAuditEvent({
+      action: 'drawing.files.upload',
+      target: `${drawingNumber}:step-${stepNumber}`,
+      actor,
+      metadata: {
+        drawingNumber,
+        stepNumber,
+        success,
+        summary: {
+          total: files.length,
+          uploaded: results.uploaded.length,
+          failed: results.errors.length,
+        },
+        uploadedFiles: results.uploaded,
+        failedFiles: results.errors,
+        source: 'admin/drawings/files/batch',
+      },
+    })
 
     return NextResponse.json({
       success,

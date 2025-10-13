@@ -5,6 +5,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import { getDataPath } from '@/lib/admin/utils'
 import { getStepFolderName } from '@/lib/machineTypeUtils'
+import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
 
 
 // ファイルアップロード
@@ -14,6 +15,7 @@ export async function POST(
 ) {
   try {
     const { id: drawingNumber } = await params
+    const actor = extractAuditActorFromHeaders(request.headers)
     
     if (!drawingNumber) {
       return NextResponse.json(
@@ -80,6 +82,22 @@ export async function POST(
     // instruction.json更新
     await updateInstructionFile(drawingNumber, stepNumber, fileType, fileName)
 
+    await logAuditEvent({
+      action: 'drawing.files.upload',
+      target: `${drawingNumber}:${fileName}`,
+      actor,
+      metadata: {
+        drawingNumber,
+        stepNumber,
+        fileType,
+        fileName,
+        originalFileName: file.name,
+        fileSize: file.size,
+        machineType,
+        source: 'admin/drawings/files',
+      },
+    })
+
     return NextResponse.json({
       success: true,
       fileName,
@@ -105,6 +123,7 @@ export async function DELETE(
 ) {
   try {
     const { id: drawingNumber } = await params
+    const actor = extractAuditActorFromHeaders(request.headers)
     const { fileName, stepNumber, fileType, machineType } = await request.json()
 
     console.log('削除リクエスト:', { drawingNumber, fileName, stepNumber, fileType })
@@ -150,6 +169,20 @@ export async function DELETE(
 
     // instruction.json更新
     await removeFromInstructionFile(drawingNumber, stepNumber, fileType, fileName)
+
+    await logAuditEvent({
+      action: 'drawing.files.delete',
+      target: `${drawingNumber}:${fileName}`,
+      actor,
+      metadata: {
+        drawingNumber,
+        stepNumber,
+        fileType,
+        fileName,
+        machineType,
+        source: 'admin/drawings/files',
+      },
+    })
 
     return NextResponse.json({
       success: true,

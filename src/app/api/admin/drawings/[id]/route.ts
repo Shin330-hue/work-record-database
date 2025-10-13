@@ -5,6 +5,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import { NearMissItem, WorkStep } from '@/lib/dataLoader'
 import { getDataPath } from '@/lib/admin/utils'
+import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
 
 // 図番編集用の型定義
 interface UpdateDrawingData {
@@ -46,6 +47,12 @@ interface UpdateDrawingData {
   }>
 }
 
+interface AuditFieldChange {
+  field: string
+  before: unknown
+  after: unknown
+}
+
 
 // 図番データ更新
 export async function PUT(
@@ -54,6 +61,8 @@ export async function PUT(
 ) {
   try {
     const { id: drawingNumber } = await params
+
+    const actor = extractAuditActorFromHeaders(request.headers)
     
     if (!drawingNumber) {
       return NextResponse.json(
@@ -112,6 +121,25 @@ export async function PUT(
       await transaction.updateSearchIndex(drawingNumber, updateData)
       await transaction.commit()
 
+      const changeLog = transaction.getChangeLog()
+
+      await logAuditEvent({
+        action: 'drawing.update',
+        target: drawingNumber,
+        actor,
+        metadata: {
+          title: updateData.title,
+          difficulty: updateData.difficulty,
+          companyId: updateData.company?.id,
+          companyName: updateData.company?.name,
+          productId: updateData.product?.id,
+          productName: updateData.product?.name,
+          changedFields: changeLog.map(change => change.field),
+          changes: changeLog,
+          source: 'admin/drawings/update'
+        }
+      })
+
       return NextResponse.json({
         success: true,
         message: '図番情報が正常に更新されました',
@@ -138,9 +166,63 @@ export async function PUT(
 class UpdateTransaction {
   private dataPath: string
   private backupFiles: Map<string, string> = new Map()
+  private changeLog: AuditFieldChange[] = []
 
   constructor(dataPath: string) {
     this.dataPath = dataPath
+  }
+
+  getChangeLog(): AuditFieldChange[] {
+    return this.changeLog
+  }
+
+  private recordChange(field: string, before: unknown, after: unknown) {
+    if (this.areValuesEqual(before, after)) {
+      return
+    }
+
+    this.changeLog.push({
+      field,
+      before: this.cloneValue(before),
+      after: this.cloneValue(after),
+    })
+  }
+
+  private areValuesEqual(a: unknown, b: unknown): boolean {
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) {
+        return false
+      }
+      return a.every((value, index) => this.areValuesEqual(value, b[index]))
+    }
+
+    if (a instanceof Date && b instanceof Date) {
+      return a.getTime() === b.getTime()
+    }
+
+    if (typeof a === 'object' && typeof b === 'object' && a !== null && b !== null) {
+      try {
+        return JSON.stringify(a) === JSON.stringify(b)
+      } catch {
+        return false
+      }
+    }
+
+    return a === b
+  }
+
+  private cloneValue(value: unknown): unknown {
+    if (Array.isArray(value)) {
+      return value.map(item => this.cloneValue(item))
+    }
+    if (value && typeof value === 'object') {
+      try {
+        return JSON.parse(JSON.stringify(value))
+      } catch {
+        return value
+      }
+    }
+    return value
   }
 
   // instruction.json 更新
@@ -159,25 +241,72 @@ class UpdateTransaction {
     // BOM除去してJSONパース
     const cleanData = originalData.replace(/^\uFEFF/, '') // BOM除去
     const instruction = JSON.parse(cleanData)
-    
+    const previousMetadata = instruction.metadata ?? {}
+    const previousOverview = instruction.overview ?? {}
+
+    const previousTitle = typeof previousMetadata.title === 'string' ? previousMetadata.title : ''
+    const previousDifficulty = typeof previousMetadata.difficulty === 'string' ? previousMetadata.difficulty : ''
+    const previousEstimatedTime = typeof previousMetadata.estimatedTime === 'string' ? previousMetadata.estimatedTime : ''
+    const previousMachineType = Array.isArray(previousMetadata.machineType)
+      ? [...previousMetadata.machineType]
+      : typeof previousMetadata.machineType === 'string'
+        ? previousMetadata.machineType.split(',').map((m: string) => m.trim()).filter(Boolean)
+        : []
+    const previousToolsRequired = Array.isArray(previousMetadata.toolsRequired)
+      ? [...previousMetadata.toolsRequired]
+      : typeof previousMetadata.toolsRequired === 'string'
+        ? previousMetadata.toolsRequired.split(',').map((t: string) => t.trim()).filter(Boolean)
+        : []
+
+    const previousWarnings = Array.isArray(previousOverview.warnings)
+      ? [...previousOverview.warnings]
+      : []
+    const previousPreparationTime = typeof previousOverview.preparationTime === 'string'
+      ? previousOverview.preparationTime
+      : ''
+    const previousProcessingTime = typeof previousOverview.processingTime === 'string'
+      ? previousOverview.processingTime
+      : ''
+    const previousDescription = typeof previousOverview.description === 'string'
+      ? previousOverview.description
+      : ''
+
+    const nextEstimatedTime = `${updateData.estimatedTime}分`
+    const nextMachineType = updateData.machineType.split(',').map(m => m.trim()).filter(m => m)
+    const nextToolsRequired = updateData.toolsRequired.split(',').map(t => t.trim()).filter(t => t)
+    const nextWarnings = updateData.overview.warnings ?? []
+    const nextPreparationTime = `${updateData.overview.preparationTime}分`
+    const nextProcessingTime = `${updateData.overview.processingTime}分`
+    const nextDescription = updateData.description ? updateData.description : previousDescription
+
+    this.recordChange('metadata.title', previousTitle, updateData.title)
+    this.recordChange('metadata.difficulty', previousDifficulty, updateData.difficulty)
+    this.recordChange('metadata.estimatedTime', previousEstimatedTime, nextEstimatedTime)
+    this.recordChange('metadata.machineType', previousMachineType, nextMachineType)
+    this.recordChange('metadata.toolsRequired', previousToolsRequired, nextToolsRequired)
+    this.recordChange('overview.description', previousDescription, nextDescription)
+    this.recordChange('overview.warnings', previousWarnings, nextWarnings)
+    this.recordChange('overview.preparationTime', previousPreparationTime, nextPreparationTime)
+    this.recordChange('overview.processingTime', previousProcessingTime, nextProcessingTime)
+
     // メタデータ更新
     instruction.metadata = {
       ...instruction.metadata,
       title: updateData.title,
       difficulty: updateData.difficulty,
-      estimatedTime: `${updateData.estimatedTime}分`,
-      machineType: updateData.machineType.split(',').map(m => m.trim()).filter(m => m),
-      toolsRequired: updateData.toolsRequired.split(',').map(t => t.trim()).filter(t => t),
+      estimatedTime: nextEstimatedTime,
+      machineType: nextMachineType,
+      toolsRequired: nextToolsRequired,
       updatedDate: new Date().toISOString().split('T')[0]
     }
 
     // 概要更新
     instruction.overview = {
       ...instruction.overview,
-      description: updateData.description || instruction.overview.description,
-      warnings: updateData.overview.warnings,
-      preparationTime: `${updateData.overview.preparationTime}分`,
-      processingTime: `${updateData.overview.processingTime}分`
+      description: nextDescription,
+      warnings: nextWarnings,
+      preparationTime: nextPreparationTime,
+      processingTime: nextProcessingTime
     }
 
     // 作業ステップ更新
@@ -221,13 +350,24 @@ class UpdateTransaction {
     )
 
     if (drawingIndex >= 0) {
+      const previousEntry = searchIndex.drawings[drawingIndex]
+      const nextEstimatedTime = `${updateData.estimatedTime}分`
+      const nextMachineType = updateData.machineType
+      const nextKeywords = updateData.keywords.split(',').map(k => k.trim()).filter(k => k)
+
+      this.recordChange('searchIndex.title', previousEntry.title, updateData.title)
+      this.recordChange('searchIndex.difficulty', previousEntry.difficulty, updateData.difficulty)
+      this.recordChange('searchIndex.estimatedTime', previousEntry.estimatedTime, nextEstimatedTime)
+      this.recordChange('searchIndex.machineType', previousEntry.machineType, nextMachineType)
+      this.recordChange('searchIndex.keywords', Array.isArray(previousEntry.keywords) ? [...previousEntry.keywords] : [], nextKeywords)
+
       searchIndex.drawings[drawingIndex] = {
         ...searchIndex.drawings[drawingIndex],
         title: updateData.title,
         difficulty: updateData.difficulty,
-        estimatedTime: `${updateData.estimatedTime}分`,
-        machineType: updateData.machineType,
-        keywords: updateData.keywords.split(',').map(k => k.trim()).filter(k => k)
+        estimatedTime: nextEstimatedTime,
+        machineType: nextMachineType,
+        keywords: nextKeywords
       }
 
       // メタデータ更新
@@ -255,6 +395,7 @@ class UpdateTransaction {
         await fs.writeFile(filePath, originalData)
       }
       this.backupFiles.clear()
+      this.changeLog = []
     } catch (error) {
       console.error('ロールバックエラー:', error)
       throw new Error('データの復元に失敗しました')

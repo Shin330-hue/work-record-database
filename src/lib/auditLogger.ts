@@ -16,7 +16,7 @@ export interface AuditEvent {
 
 const DEFAULT_AUDIT_DIR = path.join(process.cwd(), 'public', 'data', 'audit')
 
-function resolveAuditDir(): string {
+export function getAuditLogDir(): string {
   return process.env.AUDIT_LOG_DIR && process.env.AUDIT_LOG_DIR.trim().length > 0
     ? process.env.AUDIT_LOG_DIR
     : DEFAULT_AUDIT_DIR
@@ -38,7 +38,7 @@ export async function logAuditEvent(event: Omit<AuditEvent, 'timestamp'> & { tim
     return
   }
 
-  const auditDir = resolveAuditDir()
+  const auditDir = getAuditLogDir()
   const filePath = buildAuditFilePath(auditDir)
 
   const entry: AuditEvent = {
