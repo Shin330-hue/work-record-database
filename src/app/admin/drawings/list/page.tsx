@@ -4,7 +4,11 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { loadSearchIndex, loadContributions } from '@/lib/dataLoader'
+import {
+  loadSearchIndex,
+  loadContributions,
+  loadWorkInstruction,
+} from '@/lib/dataLoader'
 import { FormInput } from '@/components/admin/forms/FormInput'
 import { FormButton } from '@/components/admin/forms/FormButton'
 import { FormSelect } from '@/components/admin/forms/FormSelect'
@@ -16,9 +20,7 @@ interface DrawingWithContributions {
   companyName: string
   productName: string
   category: string
-  difficulty: string
-  estimatedTime: string
-  machineType: string
+  createdAt?: string
   contributionsCount: number
   latestContributionDate?: string
   mergedContributionsCount: number
@@ -42,20 +44,29 @@ export default function DrawingsList() {
       try {
         setLoading(true)
         const searchIndex = await loadSearchIndex()
-        setAllDrawings(searchIndex.drawings.map(drawing => ({
-          drawingNumber: drawing.drawingNumber,
-          title: drawing.title,
-          companyName: drawing.companyName,
-          productName: drawing.productName,
-          category: drawing.category,
-          difficulty: drawing.difficulty,
-          estimatedTime: drawing.estimatedTime,
-          machineType: drawing.machineType,
-          contributionsCount: 0,
-          latestContributionDate: undefined,
-          mergedContributionsCount: 0,
-          pendingContributionsCount: 0
-        })))
+        const hasCreatedAt = searchIndex.drawings.some(d => d.createdAt)
+        const sortedDrawings = hasCreatedAt
+          ? [...searchIndex.drawings].sort((a, b) => {
+              const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0
+              const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0
+              return bDate - aDate
+            })
+          : [...searchIndex.drawings].reverse()
+
+        setAllDrawings(
+          sortedDrawings.map(drawing => ({
+            drawingNumber: drawing.drawingNumber,
+            title: drawing.title,
+            companyName: drawing.companyName,
+            productName: drawing.productName,
+            category: drawing.category,
+            createdAt: drawing.createdAt,
+            contributionsCount: 0,
+            latestContributionDate: undefined,
+            mergedContributionsCount: 0,
+            pendingContributionsCount: 0,
+          })),
+        )
       } catch (error) {
         console.error('基本データ読み込みエラー:', error)
       } finally {
@@ -100,25 +111,40 @@ export default function DrawingsList() {
           let latestContributionDate: string | undefined
           let mergedCount = 0
           let pendingCount = 0
+          let createdAt = drawing.createdAt
 
           try {
             const contributionData = await loadContributions(drawing.drawingNumber)
             contributionsCount = contributionData.contributions.length
-            
-            if (contributionData.contributions.length > 0) {
-              const sortedContributions = contributionData.contributions
+
+            const activeContributions = contributionData.contributions.filter(
+              contribution => contribution.status === 'active',
+            )
+
+            if (activeContributions.length > 0) {
+              const sortedContributions = activeContributions
                 .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
               
               latestContributionDate = sortedContributions[0].timestamp
-              pendingCount = contributionData.contributions.length
+              pendingCount = activeContributions.length
               mergedCount = 0
             }
           } catch (error) {
             console.warn(`追記データ取得エラー (${drawing.drawingNumber}):`, error)
           }
 
+          if (!createdAt) {
+            try {
+              const instruction = await loadWorkInstruction(drawing.drawingNumber)
+              createdAt = instruction?.metadata?.createdDate ?? createdAt
+            } catch (error) {
+              console.warn(`作業手順メタデータ取得エラー (${drawing.drawingNumber}):`, error)
+            }
+          }
+
           return {
             ...drawing,
+            createdAt,
             contributionsCount,
             latestContributionDate,
             mergedContributionsCount: mergedCount,
@@ -127,7 +153,25 @@ export default function DrawingsList() {
         })
       )
 
-      setFilteredDrawings(drawingsWithContributions)
+      const hasCreatedAtKey = drawingsWithContributions.some(d => d.createdAt)
+
+      const sortedResults = hasCreatedAtKey
+        ? [...drawingsWithContributions].sort((a, b) => {
+            const aCreated = a.createdAt ? new Date(a.createdAt).getTime() : undefined
+            const bCreated = b.createdAt ? new Date(b.createdAt).getTime() : undefined
+
+            const aDate = aCreated ?? 0
+            const bDate = bCreated ?? 0
+
+            if (aDate === bDate) {
+              return b.drawingNumber.localeCompare(a.drawingNumber)
+            }
+
+            return bDate - aDate
+          })
+        : drawingsWithContributions
+
+      setFilteredDrawings(sortedResults)
       setHasSearched(true)
       setCurrentPage(1)
     } catch (error) {
@@ -206,16 +250,7 @@ export default function DrawingsList() {
                   会社・製品
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
-                  難易度
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
-                  時間
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
-                  機械種別
-                </th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider border-r border-white">
-                  追記情報
+                  追記状況
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
                   操作
@@ -239,23 +274,6 @@ export default function DrawingsList() {
                     </div>
                     <div className="text-sm text-gray-500">
                       {drawing.category} - {drawing.productName}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap border-r border-white">
-                    <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-lg ${
-                      drawing.difficulty === '初級' ? 'bg-green-100 text-green-800' :
-                      drawing.difficulty === '中級' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {drawing.difficulty}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-r border-white">
-                    {drawing.estimatedTime}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-r border-white">
-                    <div className="max-w-32 truncate" title={drawing.machineType}>
-                      {drawing.machineType.split(',').map(type => type.trim()).join(', ')}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap border-r border-white">

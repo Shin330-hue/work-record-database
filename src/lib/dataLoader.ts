@@ -139,6 +139,7 @@ export interface DrawingSearchItem {
   difficulty: string
   estimatedTime: string
   machineType: string
+  createdAt?: string
 }
 
 // 作業手順メタデータ
