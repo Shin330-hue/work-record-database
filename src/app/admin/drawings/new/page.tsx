@@ -3,7 +3,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
 import { getAuthHeadersForFormData } from '@/lib/auth/client'
@@ -173,7 +172,6 @@ function CompanySelector({
 
 // メインコンポーネント
 export default function NewDrawingPage() {
-  const router = useRouter()
   const [companies, setCompanies] = useState<Company[]>([])
   const [drawings, setDrawings] = useState<DrawingFormData[]>([
     {
@@ -202,18 +200,6 @@ export default function NewDrawingPage() {
   }, [])
 
   // 図番を追加
-  const addDrawing = () => {
-    setDrawings([...drawings, {
-      drawingNumber: '',
-      title: '',
-      company: { type: 'existing', name: '' },
-      product: { type: 'existing', name: '', category: '' },
-      machineType: 'マシニング',
-      pdfFiles: [],
-      programFiles: []
-    }])
-  }
-
   // 図番を削除
   const removeDrawing = (index: number) => {
     if (drawings.length > 1) {

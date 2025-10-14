@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { getAuthHeaders, getAuthHeadersForFormData } from '@/lib/auth/client'
@@ -112,25 +112,20 @@ export default function DrawingEdit() {
   //   return machine === 'machining' ? (formData?.workSteps?.length || 0) : 0
   // }
 
-  const getContributionCount = (): number => {
-    if (!contributions?.contributions) return 0
-    return contributions.contributions.filter(c => c.status === 'active').length
-  }
-
   // タブ定義
   const tabs: { id: TabType; label: string; icon: string }[] = [
     { id: 'basic', label: '基本情報', icon: '📋' },
     { id: 'quality', label: 'ヒヤリハット', icon: '⚠️' },
-    { id: 'machining', label: `マシニング・追記【${getContributionCount()}件】`, icon: '🔧' },
-    { id: 'turning', label: `ターニング・追記【${getContributionCount()}件】`, icon: '🔧' },
-    { id: 'yokonaka', label: `横中・追記【${getContributionCount()}件】`, icon: '🔧' },
-    { id: 'radial', label: `ラジアル・追記【${getContributionCount()}件】`, icon: '🔧' },
-    { id: 'other', label: `その他・追記【${getContributionCount()}件】`, icon: '🔧' },
+    { id: 'machining', label: 'マシニング', icon: '🔧' },
+    { id: 'turning', label: 'ターニング', icon: '🔧' },
+    { id: 'yokonaka', label: '横中', icon: '🔧' },
+    { id: 'radial', label: 'ラジアル', icon: '🔧' },
+    { id: 'other', label: 'その他', icon: '🔧' },
     { id: 'related', label: '関連情報', icon: '🔗' }
   ]
 
   // データ読み込み関数を外部に定義
-  const loadEditData = async () => {
+  const loadEditData = useCallback(async () => {
     try {
       if (!drawingNumber) {
         setError('図番が指定されていません')
@@ -248,12 +243,12 @@ export default function DrawingEdit() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [drawingNumber])
 
   // 初回読み込み用のuseEffect
   useEffect(() => {
     loadEditData()
-  }, [drawingNumber])
+  }, [loadEditData])
 
   // formDataが設定されたらファイル一覧を取得
   useEffect(() => {

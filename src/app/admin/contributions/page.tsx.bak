@@ -1,8 +1,8 @@
-﻿// src/app/admin/contributions/page.tsx - 追記管理ページ
+// src/app/admin/contributions/page.tsx - 追記管理ページ
 
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { getAuthHeaders } from '@/lib/auth/client'
 import { loadAllContributions } from '@/lib/dataLoader'
 import { ContributionData } from '@/types/contribution'
@@ -27,27 +27,23 @@ export default function ContributionsManagementPage() {
   const [currentImages, setCurrentImages] = useState<string[]>([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-const loadData = useCallback(async () => {
-  try {
-    // 全追記情報を読み込み（limit=1000で実質全件取得）
-    const allContributions = await loadAllContributions(1000)
-    setContributions(allContributions)
-  } catch (error) {
-    console.error('データ読み込みエラー:', error)
-  } finally {
-    setLoading(false)
+  const loadData = async () => {
+    try {
+      // 全追記情報を読み込み（limit=1000で実質全件取得）
+      const allContributions = await loadAllContributions(1000)
+      setContributions(allContributions)
+    } catch (error) {
+      console.error('データ読み込みエラー:', error)
+    } finally {
+      setLoading(false)
+    }
   }
-}, [])
 
-useEffect(() => {
-  loadData()
-}, [loadData])
+  const filterContributions = () => {
+    let filtered = [...contributions]
 
-const filterContributions = useCallback(() => {
-  let filtered = [...contributions]
-
-  // ステータスフィルタ
-  if (statusFilter !== 'all') {
+    // ステータスフィルタ
+    if (statusFilter !== 'all') {
       filtered = filtered.filter(item => item.contribution.status === statusFilter)
     }
 
@@ -62,12 +58,8 @@ const filterContributions = useCallback(() => {
       )
     }
 
-  setFilteredContributions(filtered)
-}, [contributions, statusFilter, searchQuery])
-
-useEffect(() => {
-  filterContributions()
-}, [filterContributions])
+    setFilteredContributions(filtered)
+  }
 
   const handleStatusChange = async (index: number, newStatus: 'active' | 'merged') => {
     const targetContribution = filteredContributions[index]
