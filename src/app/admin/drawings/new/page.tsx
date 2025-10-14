@@ -393,7 +393,7 @@ export default function NewDrawingPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
                 {/* 5. 図面PDF（複数対応） */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
+                <div className="space-y-2 pb-6 border-b border-gray-200">
                   <label className="custom-form-label">
                     図面PDF（複数可）
                   </label>
@@ -412,7 +412,7 @@ export default function NewDrawingPage() {
                 </div>
 
                 {/* 6. プログラムファイル */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
+                <div className="space-y-2 pb-6 border-b border-gray-200">
                   <label className="custom-form-label">
                     プログラムファイル（複数可）
                   </label>
@@ -433,7 +433,7 @@ export default function NewDrawingPage() {
                   </p>
                 </div>
                 {/* 1. 会社名 */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
+                <div className="space-y-2 pb-6 border-b border-gray-200">
                   <CompanySelector
                     companies={companies}
                     value={drawing.company}
@@ -442,7 +442,7 @@ export default function NewDrawingPage() {
                 </div>
 
                 {/* 2. 図番 */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
+                <div className="space-y-2 pb-6 border-b border-gray-200">
                   <label className="custom-form-label">
                     図番 <span className="text-red-500">*</span>
                   </label>
@@ -457,7 +457,7 @@ export default function NewDrawingPage() {
 
 
                 {/* 3. 製品カテゴリ */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
+                <div className="space-y-2 pb-6 border-b border-gray-200">
                   <label className="custom-form-label">
                     製品カテゴリ <span className="text-red-500">*</span>
                   </label>
@@ -483,7 +483,7 @@ export default function NewDrawingPage() {
                 </div>
 
                 {/* 4. 製品名（名称やあだ名） */}
-                <div className="space-y-2 pb-6 border-b border-gray-600">
+                <div className="space-y-2 pb-6 border-b border-gray-200">
                   <label className="custom-form-label">
                     製品名 <span className="text-red-500">*</span>
                     <span className="text-sm text-gray-500">（名称やあだ名）</span>
@@ -499,7 +499,7 @@ export default function NewDrawingPage() {
 
 
                 {/* 7. 作業手順タイトル */}
-                <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-600">
+                <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-200">
                   <label className="custom-form-label">
                     作業手順タイトル <span className="text-red-500">*</span>
                   </label>
@@ -530,7 +530,7 @@ export default function NewDrawingPage() {
                 </div>
 
                 {/* 8. 機械種別 */}
-                <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-600">
+                <div className="md:col-span-2 space-y-2 pb-6 border-b border-gray-200">
                   <label className="custom-form-label">
                     機械種別 <span className="text-red-500">*</span>
                   </label>
@@ -558,7 +558,7 @@ export default function NewDrawingPage() {
                             }}
                             className="custom-checkbox mr-3"
                           />
-                          <span style={{ fontSize: '1.25rem' }} className="font-medium text-white">{machine}</span>
+                          <span style={{ fontSize: '1.25rem' }} className="font-medium text-gray-900">{machine}</span>
                         </label>
                       )
                     })}
@@ -571,17 +571,6 @@ export default function NewDrawingPage() {
 
             </div>
           ))}
-
-          {/* 図番追加ボタン */}
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={addDrawing}
-              className="custom-rect-button emerald"
-            >
-              <span>+ 図番を追加</span>
-            </button>
-          </div>
 
           {/* エラー表示 */}
           {error && (
@@ -604,7 +593,7 @@ export default function NewDrawingPage() {
               loading={loading}
               variant="blue"
             >
-              {loading ? '登録中...' : `${drawings.length}件の図番を登録`}
+              {loading ? '登録中...' : '登録'}
             </FormButton>
           </div>
         </form>

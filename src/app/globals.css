@@ -1721,7 +1721,7 @@ a[href$=".pdf"]:visited {
   display: block;
   font-size: 1.1rem;
   font-weight: 600;
-  color: white;
+  color: #1f2937;
   margin-bottom: 8px;
 }
 
@@ -1732,10 +1732,10 @@ a[href$=".pdf"]:visited {
   width: 100%;
   max-width: 640px;
   margin-top: 4px;
-  background-color: #1f2937;
-  border: 2px solid #374151;
+  background-color: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.4);
   border-radius: 12px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.5);
   max-height: 240px;
   overflow-y: auto;
 }
@@ -1744,29 +1744,27 @@ a[href$=".pdf"]:visited {
   width: 100%;
   text-align: left;
   padding: 12px 20px;
-  color: white;
-  font-size: 1.1rem;
+  color: #1f2937;
+  font-size: 1.05rem;
   border: none;
   background: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.custom-dropdown-item:hover {
-  background-color: #374151;
-}
-
+.custom-dropdown-item:hover,
 .custom-dropdown-item:focus {
-  background-color: #374151;
+  background-color: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
   outline: none;
 }
 
 .custom-dropdown-divider {
-  border-top: 1px solid #4b5563;
+  border-top: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 .custom-dropdown-item.highlight {
-  color: #60a5fa;
+  color: #2563eb;
 }
 
 /* ライトボックス用のカスタムスタイル */
@@ -1871,7 +1869,7 @@ a[href$=".pdf"]:visited {
 .custom-form-label {
   font-size: 1.1rem;
   font-weight: 600;
-  color: white;
+  color: #1f2937;
   margin-bottom: 0.5rem;
   display: block;
 }
