@@ -349,7 +349,6 @@ export default function NewDrawingPage() {
       
       if (result.success) {
         alert(`${result.summary.successful}件の図番が正常に登録されました`)
-        router.push('/admin/drawings/list')
       } else {
         // API からの詳細エラーメッセージを優先的に表示
         if (result.details && Array.isArray(result.details)) {

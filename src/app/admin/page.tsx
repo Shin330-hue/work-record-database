@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import {
   loadSearchIndex,
   loadCompanies,
-  loadRecentContributions,
+  loadAllContributions,
 } from '@/lib/dataLoader'
 import type { ContributionData } from '@/types/contribution'
 import { LoadingSpinner } from '@/components/admin/feedback'
@@ -56,8 +56,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     totalDrawings: 0,
     totalCompanies: 0,
-    totalProducts: 0,
-    totalContributions: 0,
+    activeContributions: 0,
   })
   const [recentContributions, setRecentContributions] = useState<
     ContributionWithDrawing[]
@@ -70,20 +69,20 @@ export default function AdminDashboard() {
         const [searchIndex, companies, contributions] = await Promise.all([
           loadSearchIndex(),
           loadCompanies(),
-          loadRecentContributions(5),
+          loadAllContributions(Number.MAX_SAFE_INTEGER),
         ])
+
+        const activeContributions = contributions.filter(
+          item => item.contribution.status === 'active',
+        )
 
         setStats({
           totalDrawings: searchIndex.drawings.length,
           totalCompanies: companies.length,
-          totalProducts: companies.reduce(
-            (sum, company) => sum + company.products.length,
-            0,
-          ),
-          totalContributions: contributions.length,
+          activeContributions: activeContributions.length,
         })
 
-        setRecentContributions(contributions)
+        setRecentContributions(contributions.slice(0, 5))
       } catch (error) {
         console.error('ダッシュボードデータの取得に失敗しました:', error)
       } finally {
@@ -98,11 +97,10 @@ export default function AdminDashboard() {
     () => [
       { label: '登録図番', value: stats.totalDrawings, icon: '📘', theme: 'blue' },
       { label: '登録企業', value: stats.totalCompanies, icon: '🏭', theme: 'emerald' },
-      { label: '登録製品', value: stats.totalProducts, icon: '🧩', theme: 'amber' },
       {
-        label: '最新の追記',
-        value: stats.totalContributions,
-        icon: '✨',
+        label: '未処理追記',
+        value: stats.activeContributions,
+        icon: '🕒',
         theme: 'purple',
       },
     ],
@@ -226,7 +224,7 @@ export default function AdminDashboard() {
                   key={item.contribution.id}
                   type="button"
                   className="dashboard-recent-card"
-                  onClick={() => router.push(`/instruction/${item.drawingNumber}`)}
+                  onClick={() => router.push(`/admin/drawings/${item.drawingNumber}/edit`)}
                 >
                   <div className="dashboard-recent-header">
                     <div className="flex items-start gap-3">
