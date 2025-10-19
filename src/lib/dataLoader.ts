@@ -1,3 +1,4 @@
+﻿import { MachineTypeKey, normalizeMachineTypeInput } from './machineTypeUtils'
 // src/lib/dataLoader.ts - 案件記録データベース用に完全書き換え
 
 // ファイルパスサニタイゼーション関数
@@ -138,7 +139,7 @@ export interface DrawingSearchItem {
   stepCount: number
   difficulty: string
   estimatedTime: string
-  machineType: string
+  machineType: MachineTypeKey[]
   createdAt?: string
 }
 
@@ -154,7 +155,7 @@ export interface InstructionMetadata {
   updatedDate: string
   author: string
   estimatedTime: string
-  machineType: string
+  machineType: MachineTypeKey[]
   difficulty: string
   toolsRequired: string[]
 }
@@ -318,7 +319,15 @@ export const loadSearchIndex = async (): Promise<SearchIndex> => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return await response.json();
+    const result: SearchIndex = await response.json();
+    const normalizedDrawings = result.drawings.map(drawing => ({
+      ...drawing,
+      machineType: normalizeMachineTypeInput(drawing.machineType)
+    }));
+    return {
+      ...result,
+      drawings: normalizedDrawings
+    };
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('検索インデックスの読み込みに失敗:', error);
@@ -551,3 +560,9 @@ export const loadAllContributions = async (limit: number = 1000): Promise<{ draw
     return []
   }
 }
+
+
+
+
+
+

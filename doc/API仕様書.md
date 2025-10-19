@@ -1,4 +1,4 @@
-# Work Record Database API仕様書
+﻿# Work Record Database API仕様書
 
 ## 概要
 本ドキュメントは、作業記録データベースシステムのAPIエンドポイント一覧と詳細仕様を記載しています。
@@ -27,7 +27,7 @@
 | `drawingNumber` | string | 条件付き | 図番（作業手順用） |
 | `folderType` | string | ○ | フォルダタイプ: 'images', 'videos', 'pdfs', 'programs' |
 | `subFolder` | string | - | サブフォルダ |
-| `machineType` | string | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
+| `machineType` | string[] | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
 | `ideaCategory` | string | 条件付き | 加工アイデアカテゴリ |
 | `ideaId` | string | 条件付き | 加工アイデアID |
 | `contributionFile` | string | - | 追加投稿ファイル名（単一ファイル配信用） |
@@ -142,7 +142,7 @@
   },
   "difficulty": "初級",
   "estimatedTime": "30",
-  "machineType": "CNC旋盤",
+  "machineType": ["turning"],
   "description": "説明文",
   "warnings": ["注意事項1", "注意事項2"]
 }
@@ -234,7 +234,7 @@
   },
   "difficulty": "中級",
   "estimatedTime": "45",
-  "machineType": "CNC旋盤,マシニングセンタ",
+  "machineType": ["turning", "machining"],
   "description": "詳細説明",
   "keywords": "キーワード1,キーワード2",
   "toolsRequired": "工具1,工具2",
@@ -288,7 +288,7 @@
 | `file` | File | ○ | アップロードファイル |
 | `stepNumber` | string | ○ | ステップ番号（0=概要） |
 | `fileType` | string | ○ | ファイルタイプ: 'images', 'videos' |
-| `machineType` | string | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
+| `machineType` | string[] | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
 
 **制限事項**
 - 最大ファイルサイズ: 50MB
@@ -319,7 +319,7 @@
   "fileName": "2025-07-20T10-00-00-000Z-image.jpg",
   "stepNumber": "1",
   "fileType": "images",
-  "machineType": "machining"
+  "machineType": ["machining"]
 }
 ```
 
@@ -345,7 +345,7 @@
 |---|---|---|---|
 | `files` | File[] | ○ | アップロードファイル（複数可） |
 | `stepNumber` | string | ○ | ステップ番号（0=概要、1以上=各ステップ） |
-| `machineType` | string | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
+| `machineType` | string[] | - | 機械種別: 'machining', 'turning', 'yokonaka', 'radial', 'other' |
 
 **対応ファイル形式**
 - **画像**: jpg, jpeg, png, gif, webp

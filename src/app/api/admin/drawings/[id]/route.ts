@@ -1,4 +1,4 @@
-// src/app/api/admin/drawings/[id]/route.ts - 図番更新API
+﻿// src/app/api/admin/drawings/[id]/route.ts - 図番更新API
 
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
@@ -6,6 +6,7 @@ import path from 'path'
 import { NearMissItem, WorkStep } from '@/lib/dataLoader'
 import { getDataPath } from '@/lib/admin/utils'
 import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
+import { MachineTypeKey, normalizeMachineTypeInput, getMachineTypeJapanese } from '@/lib/machineTypeUtils'
 
 // 図番編集用の型定義
 interface UpdateDrawingData {
@@ -22,7 +23,7 @@ interface UpdateDrawingData {
   }
   difficulty: '初級' | '中級' | '上級'
   estimatedTime: string
-  machineType: string
+  machineType: MachineTypeKey[] | string | string[]
   description: string
   keywords: string
   toolsRequired: string
@@ -247,11 +248,7 @@ class UpdateTransaction {
     const previousTitle = typeof previousMetadata.title === 'string' ? previousMetadata.title : ''
     const previousDifficulty = typeof previousMetadata.difficulty === 'string' ? previousMetadata.difficulty : ''
     const previousEstimatedTime = typeof previousMetadata.estimatedTime === 'string' ? previousMetadata.estimatedTime : ''
-    const previousMachineType = Array.isArray(previousMetadata.machineType)
-      ? [...previousMetadata.machineType]
-      : typeof previousMetadata.machineType === 'string'
-        ? previousMetadata.machineType.split(',').map((m: string) => m.trim()).filter(Boolean)
-        : []
+    const previousMachineType = normalizeMachineTypeInput(previousMetadata.machineType as string | string[] | MachineTypeKey[])
     const previousToolsRequired = Array.isArray(previousMetadata.toolsRequired)
       ? [...previousMetadata.toolsRequired]
       : typeof previousMetadata.toolsRequired === 'string'
@@ -272,7 +269,7 @@ class UpdateTransaction {
       : ''
 
     const nextEstimatedTime = `${updateData.estimatedTime}分`
-    const nextMachineType = updateData.machineType.split(',').map(m => m.trim()).filter(m => m)
+    const nextMachineType = [...(updateData.machineType as MachineTypeKey[])]
     const nextToolsRequired = updateData.toolsRequired.split(',').map(t => t.trim()).filter(t => t)
     const nextWarnings = updateData.overview.warnings ?? []
     const nextPreparationTime = `${updateData.overview.preparationTime}分`
@@ -352,14 +349,25 @@ class UpdateTransaction {
     if (drawingIndex >= 0) {
       const previousEntry = searchIndex.drawings[drawingIndex]
       const nextEstimatedTime = `${updateData.estimatedTime}分`
-      const nextMachineType = updateData.machineType
-      const nextKeywords = updateData.keywords.split(',').map(k => k.trim()).filter(k => k)
+      const nextMachineType = [...(updateData.machineType as MachineTypeKey[])]
+      const machineTypeLabels = nextMachineType.map(getMachineTypeJapanese)
+      const keywordSeeds = updateData.keywords.split(',').map(k => k.trim()).filter(k => k)
+      const previousMachineType = Array.isArray(previousEntry.machineType)
+        ? [...previousEntry.machineType]
+        : normalizeMachineTypeInput(previousEntry.machineType as string | string[])
+      const keywordSet = new Set<string>(keywordSeeds)
+      machineTypeLabels.forEach(label => keywordSet.add(label))
+      const nextKeywords = Array.from(keywordSet)
 
       this.recordChange('searchIndex.title', previousEntry.title, updateData.title)
       this.recordChange('searchIndex.difficulty', previousEntry.difficulty, updateData.difficulty)
       this.recordChange('searchIndex.estimatedTime', previousEntry.estimatedTime, nextEstimatedTime)
-      this.recordChange('searchIndex.machineType', previousEntry.machineType, nextMachineType)
-      this.recordChange('searchIndex.keywords', Array.isArray(previousEntry.keywords) ? [...previousEntry.keywords] : [], nextKeywords)
+      this.recordChange('searchIndex.machineType', previousMachineType, nextMachineType)
+      this.recordChange(
+        'searchIndex.keywords',
+        Array.isArray(previousEntry.keywords) ? [...previousEntry.keywords] : [],
+        nextKeywords
+      )
 
       searchIndex.drawings[drawingIndex] = {
         ...searchIndex.drawings[drawingIndex],
@@ -402,3 +410,8 @@ class UpdateTransaction {
     }
   }
 }
+
+
+
+
+

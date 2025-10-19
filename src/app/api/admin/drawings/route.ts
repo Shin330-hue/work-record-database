@@ -9,10 +9,11 @@ import {
   processDrawingsWithTransaction 
 } from '@/lib/drawingRegistrationTransaction'
 import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
+import { normalizeMachineTypeInput, MachineTypeKey } from '@/lib/machineTypeUtils'
 
 
 // 入力データバリデーション
-function validateDrawingData(data: NewDrawingData): { valid: boolean; errors: string[] } {
+function validateDrawingData(data: NewDrawingData): { valid: boolean; errors: string[]; machineType: MachineTypeKey[] } {
   const errors: string[] = []
   
   // 必須フィールドチェック
@@ -36,8 +37,8 @@ function validateDrawingData(data: NewDrawingData): { valid: boolean; errors: st
     errors.push('製品カテゴリは必須です')
   }
   
-  
-  if (!data.machineType?.trim()) {
+  const machineType = normalizeMachineTypeInput(data.machineType as string | string[] | MachineTypeKey[])
+  if (machineType.length === 0) {
     errors.push('機械種別は必須です')
   }
   
@@ -58,7 +59,8 @@ function validateDrawingData(data: NewDrawingData): { valid: boolean; errors: st
   
   return {
     valid: errors.length === 0,
-    errors
+    errors,
+    machineType
   }
 }
 
@@ -72,6 +74,8 @@ function validateMultipleDrawingInputs(drawings: NewDrawingData[]): { valid: boo
     if (!validation.valid) {
       errors.push(`図番 ${index + 1}: ${validation.errors.join(', ')}`)
     }
+    
+    drawing.machineType = validation.machineType
     
     // 図番重複チェック（同一リクエスト内）
     if (drawing.drawingNumber) {

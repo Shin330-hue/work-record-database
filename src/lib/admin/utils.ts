@@ -1,5 +1,7 @@
 // src/lib/admin/utils.ts - 管理画面共通ユーティリティ
 
+import path from 'path'
+
 /**
  * 環境に応じたデータパスを取得
  * @returns データルートパス
@@ -31,14 +33,53 @@ export const sanitizeDrawingNumber = (drawingNumber: string): string => {
  * @returns サニタイズされたファイル名
  */
 export const sanitizeFileName = (fileName: string): string => {
+  if (!fileName) return 'unnamed'
+
   // パスセパレータを除去
-  fileName = fileName.replace(/[\/\\]/g, '_')
+  let sanitized = fileName.replace(/[\/\\]/g, '_')
+
+  // 全角スペースを含む空白を半角スペースに統一し、連続スペースを単一アンダースコアへ
+  sanitized = sanitized.replace(/[\s\u3000]+/g, ' ')
+  sanitized = sanitized.replace(/\s+/g, '_')
+
   // 特殊文字を除去（日本語は保持）
-  fileName = fileName.replace(/[<>:"|?*]/g, '')
-  // 先頭・末尾の空白とドットを除去
-  fileName = fileName.trim().replace(/^\.+|\.+$/g, '')
-  
-  return fileName || 'unnamed'
+  sanitized = sanitized.replace(/[<>:"|?*\x00-\x1F]/g, '')
+
+  // 先頭・末尾の空白（アンダースコア含む）とドットを除去
+  sanitized = sanitized.trim().replace(/^\.+|\.+$/g, '')
+
+  if (!sanitized) {
+    sanitized = 'unnamed'
+  }
+
+  // ファイル名長を制限（拡張子込みで255未満に収めるため）
+  const MAX_LENGTH = 120
+  if (sanitized.length > MAX_LENGTH) {
+    sanitized = sanitized.slice(0, MAX_LENGTH)
+  }
+
+  return sanitized
+}
+
+
+export const createSafeFileName = (
+  originalName: string,
+  options?: { addTimestamp?: boolean }
+): string => {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+  const ext = path.extname(originalName)
+  const base = path.basename(originalName, ext)
+
+  const sanitizedBase = sanitizeFileName(base)
+  const sanitizedExt = ext ? sanitizeFileName(ext.replace(/^\./, '')) : ''
+  const safeExt = sanitizedExt ? `.${sanitizedExt}` : ext
+
+  const baseLengthLimit = 200 - (safeExt?.length || 0)
+  const finalBase = sanitizedBase.slice(0, Math.max(1, baseLengthLimit))
+
+  return options?.addTimestamp
+    ? `${timestamp}-${finalBase}${safeExt || ''}`
+    : `${finalBase}${safeExt || ''}`
 }
 
 /**

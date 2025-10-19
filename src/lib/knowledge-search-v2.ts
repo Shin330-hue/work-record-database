@@ -1,3 +1,4 @@
+﻿import { normalizeMachineTypeInput, getMachineTypeJapanese } from './machineTypeUtils'
 /**
  * 社内データ検索・RAG機能モジュール V2
  * 検索精度向上版 - メタデータを最大限活用
@@ -280,10 +281,13 @@ function calculateRelevanceScore(
   }
   
   // 機械種別マッチング
-  const machineTypes = Array.isArray(metadata.machineType) ? metadata.machineType : []
-  const machineMatch = keywords.machines.filter(m =>
-    machineTypes.some((mt: string) => mt.toLowerCase().includes(m.toLowerCase()))
-  ).length
+  const machineTypeKeys = normalizeMachineTypeInput(metadata.machineType as string | string[] | undefined)
+  const machineTypeLabels = machineTypeKeys.map(getMachineTypeJapanese)
+  const machineTypePool = [...machineTypeKeys, ...machineTypeLabels].map(mt => mt.toLowerCase())
+  const machineMatch = keywords.machines.filter(m => {
+    const lowerM = m.toLowerCase()
+    return machineTypePool.some(mt => mt.includes(lowerM))
+  }).length
   if (machineMatch > 0) {
     score += weights.machineType * machineMatch
     matchedFields.push('機械種別')
@@ -779,3 +783,4 @@ export function formatSearchResults(results: SearchResult): string {
   
   return context
 }
+

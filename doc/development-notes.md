@@ -45,3 +45,10 @@
 - ステップ追加・削除・並び替え時に actualFiles.stepsByMachine / pendingUploads も同じ順序に追従させる方針。
 - 閲覧ページ (WorkInstructionResults) やファイルAPIの後方互換処理も統一し、機械種別ごとの構造へ寄せる。
 - 並び替え後のステップ番号送信仕様とファイルアップロード/削除 API の対応状況を再確認し、必要なら更新する。
+
+## 2025-10-14 (機械種別データ統一計画)
+- instruction.json の `machineType` が配列とカンマ区切り文字列で混在し、編集フォーム初期表示でチェックが外れる不具合を確認。
+- 管理画面フォーム・API・`dataTransaction` を英語キー配列（`['machining', ...]`）前提に揃え、送受信の型を `string[]` に変更する。
+- 既存読み込み経路（`dataLoader` や検索ユーティリティ）に正規化ヘルパーを用意し、文字列/配列の両方を安全に配列へ変換する。
+- `public/data/work-instructions/**/instruction.json` を走査し、`machineType` を英語キー配列へ書き換える移行スクリプトを用意（バックアップ＆dry-run対応）。
+- コード適用後に移行スクリプトを実行し、管理画面での新規登録→編集→閲覧の流れと `pnpm run lint` での検証を行う。

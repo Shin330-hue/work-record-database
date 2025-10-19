@@ -6,7 +6,8 @@ import path from 'path'
 import { existsSync } from 'fs'
 import { 
   getDataPath, 
-  determineFileType 
+  determineFileType,
+  createSafeFileName
 } from '@/lib/admin/utils'
 import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
 
@@ -142,21 +143,19 @@ function validateFiles(files: File[]): { valid: boolean; error?: string } {
 }
 
 function generateFileName(file: File, fileType: string): string {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-  
   switch (fileType) {
     case 'images':
     case 'videos':
       // 画像・動画：タイムスタンプ付加（重複回避）
-      return `${timestamp}-${file.name}`
-      
+      return createSafeFileName(file.name, { addTimestamp: true })
+
     case 'pdfs':
     case 'programs':
-      // PDF・プログラム：オリジナルファイル名を保持
-      return file.name
-      
+      // PDF・プログラム：オリジナルの意図を保ちつつサニタイズ
+      return createSafeFileName(file.name)
+
     default:
-      return `${timestamp}-${file.name}`
+      return createSafeFileName(file.name, { addTimestamp: true })
   }
 }
 

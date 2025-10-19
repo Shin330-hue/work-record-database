@@ -1,3 +1,4 @@
+﻿import { normalizeMachineTypeInput } from '@/lib/machineTypeUtils'
 // src/app/api/search-index/route.ts - 検索インデックスAPI
 
 import { NextResponse } from 'next/server'
@@ -15,9 +16,16 @@ export async function GET() {
     try {
       const fileContent = await fs.readFile(filePath, 'utf-8')
       const searchIndex = JSON.parse(fileContent)
+      const normalizedIndex = {
+        ...searchIndex,
+        drawings: (searchIndex.drawings || []).map((drawing) => ({
+          ...drawing,
+          machineType: normalizeMachineTypeInput(drawing.machineType)
+        }))
+      }
       
       // キャッシュ制御ヘッダーを設定（キャッシュを無効化）
-      return NextResponse.json(searchIndex, {
+      return NextResponse.json(normalizedIndex, {
         headers: {
           'Cache-Control': 'no-store, no-cache, must-revalidate',
           'Pragma': 'no-cache',
@@ -53,3 +61,4 @@ export async function GET() {
     )
   }
 }
+

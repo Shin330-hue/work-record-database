@@ -1,4 +1,4 @@
-// src/lib/__tests__/drawingRegistrationTransaction.test.ts
+﻿// src/lib/__tests__/drawingRegistrationTransaction.test.ts
 // DrawingRegistrationTransactionクラスのテスト
 
 import { promises as fs } from 'fs'
@@ -75,7 +75,7 @@ describe('DrawingRegistrationTransaction', () => {
     },
     difficulty: '中級',
     estimatedTime: '60',
-    machineType: 'CNC旋盤',
+    machineType: ['turning'],
     description: 'テスト説明',
     warnings: ['テスト警告1', 'テスト警告2']
   }

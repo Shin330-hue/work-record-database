@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
-import { getDataPath } from '@/lib/admin/utils'
+import { getDataPath, createSafeFileName } from '@/lib/admin/utils'
 import { getStepFolderName } from '@/lib/machineTypeUtils'
 import { logAuditEvent, extractAuditActorFromHeaders } from '@/lib/auditLogger'
 
@@ -47,8 +47,7 @@ export async function POST(
     }
 
     // ファイル名生成
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-    const fileName = `${timestamp}-${file.name}`
+    const fileName = createSafeFileName(file.name, { addTimestamp: true })
     
     // 保存先パス
     const dataPath = getDataPath()

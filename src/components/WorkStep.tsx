@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { WorkInstruction, WorkStep as WorkStepType } from '@/lib/dataLoader'
 import { ImageLightbox } from './ImageLightbox'
-import { getStepFolderName } from '@/lib/machineTypeUtils'
+import { getStepFolderName, getMachineTypeJapanese, MachineTypeKey } from '@/lib/machineTypeUtils'
 
 interface WorkStepProps {
   step: WorkStepType
   instruction: WorkInstruction
   getStepFiles: (stepNumber: number) => Promise<{ images: string[], videos: string[], programs: string[] }>
-  machineType?: string  // 機械種別を追加
+  machineType?: MachineTypeKey  // 機械種別を追加
 }
 
 
@@ -26,6 +26,7 @@ const getPropertyText = (prop: string): string => {
 }
 
 export default function WorkStep({ step, instruction, getStepFiles, machineType }: WorkStepProps) {
+  const machineTypeLabel = machineType ? getMachineTypeJapanese(machineType) : ''
   const [stepFiles, setStepFiles] = useState<{ images: string[], videos: string[], programs: string[] }>({ images: [], videos: [], programs: [] })
   const [isLoading, setIsLoading] = useState(true)
   // ライトボックス用の状態
@@ -56,10 +57,11 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
   // ファイルダウンロード関数
   const downloadStepFile = (filename: string) => {
     const drawingNumber = instruction.metadata.drawingNumber
+    const subFolder = machineType ? getStepFolderName(step.stepNumber, machineType) : `step_${step.stepNumber.toString().padStart(2, '0')}`
     const params = new URLSearchParams({
       drawingNumber,
       folderType: 'programs',
-      subFolder: `step_0${step.stepNumber}`,
+      subFolder,
       fileName: filename
     })
     const filePath = `/api/files?${params}`
@@ -86,10 +88,13 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
             第{step.stepNumber}工程
           </div>
           <div className="mx-2" /> {/* スペーサー */}
-          <div className={`text-lg sm:text-xl font-bold truncate ${
+          <div className={`text-lg sm:text-xl font-bold truncate flex items-center gap-2 ${
             isExpanded ? 'text-purple-100' : 'text-white'
           }`}>
-            【{step.title}】
+            <span>【{step.title}】</span>
+            {machineTypeLabel && (
+              <span className="text-emerald-300 text-xs sm:text-sm font-semibold">[{machineTypeLabel}]</span>
+            )}
           </div>
         </div>
         
@@ -356,3 +361,9 @@ export default function WorkStep({ step, instruction, getStepFiles, machineType 
     </>
   )
 } 
+
+
+
+
+
+

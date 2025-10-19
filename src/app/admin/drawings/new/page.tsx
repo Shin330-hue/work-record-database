@@ -7,6 +7,7 @@ import { loadCompanies } from '@/lib/dataLoader'
 import { Company } from '@/lib/dataLoader'
 import { getAuthHeadersForFormData } from '@/lib/auth/client'
 import { FormButton } from '@/components/admin/forms'
+import { MACHINE_TYPE_OPTIONS, MachineTypeKey, getMachineTypeJapanese } from '@/lib/machineTypeUtils'
 
 // 図番データ型（シンプル化）
 interface DrawingFormData {
@@ -23,7 +24,7 @@ interface DrawingFormData {
     name: string
     category: string
   }
-  machineType: string
+  machineType: MachineTypeKey[]
   pdfFiles: File[]  // 複数ファイル対応に変更
   programFiles: File[]  // プログラムファイル追加
 }
@@ -179,7 +180,7 @@ export default function NewDrawingPage() {
       title: '',
       company: { type: 'existing', name: '' },
       product: { type: 'existing', name: '', category: '' },
-      machineType: 'マシニング',
+      machineType: ['machining'],
       pdfFiles: [],
       programFiles: []
     }
@@ -208,10 +209,16 @@ export default function NewDrawingPage() {
   }
 
   // 図番データを更新
-  const updateDrawing = (index: number, field: keyof DrawingFormData, value: string | string[]) => {
-    const newDrawings = [...drawings]
-    newDrawings[index] = { ...newDrawings[index], [field]: value }
-    setDrawings(newDrawings)
+  const updateDrawing = <K extends keyof DrawingFormData>(
+    index: number,
+    field: K,
+    value: DrawingFormData[K]
+  ) => {
+    setDrawings((prev) => {
+      const next = [...prev]
+      next[index] = { ...next[index], [field]: value }
+      return next
+    })
   }
 
   const updateDrawingCompany = (index: number, company: DrawingFormData['company']) => {
@@ -278,6 +285,10 @@ export default function NewDrawingPage() {
       }
       if (!drawing.product.category.trim()) {
         errors.push(`図番 ${index + 1}: カテゴリは必須です`)
+      }
+
+      if (!drawing.machineType || drawing.machineType.length === 0) {
+        errors.push(`図番 ${index + 1}: 機械種別は最低1つ選択してください`)
       }
     })
     
@@ -520,36 +531,29 @@ export default function NewDrawingPage() {
                     機械種別 <span className="text-red-500">*</span>
                   </label>
                   <div className="flex flex-wrap gap-4">
-                    {['マシニング', 'ターニング', '横中', 'ラジアル', 'フライス'].map((machine) => {
-                      const machineTypes = drawing.machineType.split(',').map(s => s.trim()).filter(s => s)
-                      const isChecked = machineTypes.includes(machine)
-                      
+                    {MACHINE_TYPE_OPTIONS.map(({ key, label }) => {
+                      const isChecked = drawing.machineType.includes(key)
                       return (
-                        <label key={machine} className="flex items-center cursor-pointer">
+                        <label key={key} className="flex items-center cursor-pointer">
                           <input
                             type="checkbox"
                             checked={isChecked}
                             onChange={(e) => {
-                              const currentTypes = drawing.machineType.split(',').map(s => s.trim()).filter(s => s)
-                              let newTypes
-                              
-                              if (e.target.checked) {
-                                newTypes = [...currentTypes, machine]
-                              } else {
-                                newTypes = currentTypes.filter(t => t !== machine)
-                              }
-                              
-                              updateDrawing(index, 'machineType', newTypes.join(','))
+                              const currentTypes = drawing.machineType
+                              const newTypes = e.target.checked
+                                ? (currentTypes.includes(key) ? currentTypes : [...currentTypes, key])
+                                : currentTypes.filter((t) => t !== key)
+                              updateDrawing(index, 'machineType', newTypes)
                             }}
                             className="custom-checkbox mr-3"
                           />
-                          <span style={{ fontSize: '1.25rem' }} className="font-medium text-gray-900">{machine}</span>
+                          <span style={{ fontSize: '1.25rem' }} className="font-medium text-gray-900">{label}</span>
                         </label>
                       )
                     })}
                   </div>
                   <p className="mt-1 text-sm text-gray-500">
-                    選択中: {drawing.machineType || 'なし'}
+                    選択中: {drawing.machineType.length ? drawing.machineType.map((key) => getMachineTypeJapanese(key)).join('、') : 'なし'}
                   </p>
                 </div>
               </div>

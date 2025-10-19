@@ -1,10 +1,11 @@
-// src/lib/dataTransaction.ts - データ更新トランザクション処理
+﻿// src/lib/dataTransaction.ts - データ更新トランザクション処理
 
 import { writeFile, readFile, copyFile } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { Company, SearchIndex, DrawingSearchItem } from './dataLoader'
 import { generateCompanyId, generateProductId } from './drawingUtils'
+import { MachineTypeKey, normalizeMachineTypeInput, getMachineTypeJapanese } from './machineTypeUtils'
 
 // 環境に応じたデータパス取得
 function getDataPath(): string {
@@ -36,7 +37,7 @@ export interface NewDrawingData {
   }
   difficulty: string
   estimatedTime: string
-  machineType: string
+  machineType: MachineTypeKey[] | string | string[]
   description?: string
   warnings?: string[]
   keywords?: string[]
@@ -53,7 +54,7 @@ export interface ProcessedDrawingData {
   category: string
   difficulty: string
   estimatedTime: string
-  machineType: string
+  machineType: MachineTypeKey[]
   description?: string
   warnings?: string[]
   keywords?: string[]
@@ -104,6 +105,11 @@ export class DataTransaction {
   async processDrawingData(inputData: NewDrawingData): Promise<ProcessedDrawingData> {
     const companyId = await this.resolveCompanyId(inputData.company)
     const productId = await this.resolveProductId(inputData.product)
+    const machineTypes = normalizeMachineTypeInput(inputData.machineType as string | string[] | MachineTypeKey[])
+
+    if (machineTypes.length === 0) {
+      throw new Error('機械種別が選択されていません')
+    }
     
     // keywordsを配列に変換（文字列の場合）
     let keywords: string[] = []
@@ -114,6 +120,12 @@ export class DataTransaction {
         keywords = (inputData.keywords as string).split(',').map(k => k.trim()).filter(k => k)
       }
     }
+
+    const keywordSet = new Set(keywords)
+    machineTypes
+      .map(getMachineTypeJapanese)
+      .filter(Boolean)
+      .forEach(label => keywordSet.add(label))
     
     return {
       drawingNumber: inputData.drawingNumber,
@@ -125,10 +137,10 @@ export class DataTransaction {
       category: inputData.product.category,
       difficulty: inputData.difficulty,
       estimatedTime: inputData.estimatedTime,
-      machineType: inputData.machineType,
+      machineType: machineTypes,
       description: inputData.description,
       warnings: inputData.warnings,
-      keywords
+      keywords: Array.from(keywordSet)
     }
   }
   
@@ -218,6 +230,17 @@ export class DataTransaction {
       }
     }
     
+    const machineTypeLabels = data.machineType.map(getMachineTypeJapanese)
+    const keywords = data.keywords && data.keywords.length > 0
+      ? Array.from(new Set([...data.keywords, ...machineTypeLabels]))
+      : [
+          data.category,
+          data.productName,
+          data.companyName,
+          ...machineTypeLabels,
+          data.difficulty
+        ]
+
     // 新しい検索エントリ作成
     const newEntry: DrawingSearchItem = {
       drawingNumber: data.drawingNumber,
@@ -227,13 +250,7 @@ export class DataTransaction {
       productId: data.productId,
       title: data.title,
       category: data.category,
-      keywords: data.keywords || [
-        data.category,
-        data.productName,
-        data.companyName,
-        data.machineType,
-        data.difficulty
-      ],
+      keywords,
       folderPath: `drawing-${data.drawingNumber}`,
       hasImages: false,
       hasVideos: false,

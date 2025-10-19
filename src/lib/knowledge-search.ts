@@ -1,3 +1,4 @@
+﻿import { normalizeMachineTypeInput, getMachineTypeJapanese } from './machineTypeUtils'
 /**
  * 社内データ検索・RAG機能モジュール
  * 既存システムから完全独立・読み取り専用
@@ -289,7 +290,9 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
         // メタデータから関連性チェック
         const metadata = instruction.metadata || {}
         const title = metadata.title || ''
-        const machineTypes = metadata.machineType || []
+        const machineTypeKeys = normalizeMachineTypeInput(metadata.machineType as string | string[] | undefined)
+        const machineTypeLabels = machineTypeKeys.map(getMachineTypeJapanese)
+        const machineTypePool = [...machineTypeKeys, ...machineTypeLabels].map(mt => mt.toLowerCase())
         
         // 全件表示モードの場合、すべてに基本スコアを付与
         if (keywords.showAll) {
@@ -304,9 +307,10 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
         }
         
         // 機械種別マッチ
-        if (keywords.machines.some(m => 
-          machineTypes.some((mt: string) => mt.includes(m))
-        )) {
+        if (keywords.machines.some(m => {
+          const lowerM = m.toLowerCase()
+          return machineTypePool.some(mt => mt.includes(lowerM))
+        })) {
           relevanceScore += 4
         }
         
@@ -338,7 +342,7 @@ async function searchDrawings(keywords: ExtractedKeywords): Promise<DrawingMatch
             drawingNumber: metadata.drawingNumber || dir.name,
             title: title,
             companyId: metadata.companyId || 'unknown',
-            machineTypes: machineTypes,
+            machineTypes: machineTypeLabels,
             materials: keywords.materials.filter(m => title.toLowerCase().includes(m.toLowerCase())),
             difficulty: metadata.difficulty || 'unknown',
             estimatedTime: metadata.estimatedTime || 'unknown',

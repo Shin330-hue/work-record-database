@@ -1,4 +1,4 @@
-// scripts/test-transaction.js - DrawingRegistrationTransactionの簡易テスト
+﻿// scripts/test-transaction.js - DrawingRegistrationTransactionの簡易テスト
 
 const { promises: fs } = require('fs')
 const path = require('path')
@@ -109,7 +109,7 @@ async function runTests() {
       },
       difficulty: '中級',
       estimatedTime: '60',
-      machineType: 'CNC旋盤',
+      machineType: ['turning'],
       description: 'テスト説明',
       warnings: ['テスト警告1', 'テスト警告2']
     }

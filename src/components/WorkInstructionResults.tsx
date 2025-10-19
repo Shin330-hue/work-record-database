@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+﻿import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { WorkInstruction, loadRelatedIdeas } from '@/lib/dataLoader'
 import { Idea } from '@/types/idea'
@@ -7,7 +7,7 @@ import WorkStep from './WorkStep'
 import ContributionForm from './ContributionForm'
 import ContributionDisplay from './ContributionDisplay'
 import { ImageLightbox } from './ImageLightbox'
-import { getStepFolderName, getMachineTypeJapanese } from '@/lib/machineTypeUtils'
+import { getStepFolderName, getMachineTypeJapanese, normalizeMachineTypeInput, MachineTypeKey } from '@/lib/machineTypeUtils'
 
 interface WorkInstructionResultsProps {
   instruction: WorkInstruction
@@ -17,10 +17,15 @@ interface WorkInstructionResultsProps {
 }
 
 
-type MachineType = 'machining' | 'turning' | 'yokonaka' | 'radial' | 'other'
+type MachineType = MachineTypeKey
 
 export default function WorkInstructionResults({ instruction, contributions, onBack, onRelatedDrawingClick }: WorkInstructionResultsProps) {
-  // 機械種別ごとの工程数を計算
+  const metadataMachineTypes: MachineType[] = Array.isArray(instruction.metadata.machineType)
+    ? (instruction.metadata.machineType as MachineType[])
+    : (normalizeMachineTypeInput(instruction.metadata.machineType as string | string[] | undefined) as MachineType[])
+  const machineTypeLabels = metadataMachineTypes.map(getMachineTypeJapanese)
+
+// 機械種別ごとの工程数を計算
   const getStepCountByMachine = (machine: MachineType): number => {
     if (instruction.workStepsByMachine && instruction.workStepsByMachine[machine]) {
       return instruction.workStepsByMachine[machine]!.length
@@ -29,24 +34,24 @@ export default function WorkInstructionResults({ instruction, contributions, onB
     return machine === 'machining' && instruction.workSteps ? instruction.workSteps.length : 0
   }
 
-  const [activeTab, setActiveTab] = useState<MachineType>('machining')
-  // overview用のファイル状態
-  const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[], programs: string[] }>({ pdfs: [], images: [], videos: [], programs: [] })
-  // 関連アイデアの状態
+  const initialActiveTab: MachineType = metadataMachineTypes[0] || 'machining'
+  const [activeTab, setActiveTab] = useState<MachineType>(initialActiveTab)
+  const [overviewFiles, setOverviewFiles] = useState<{ pdfs: string[], images: string[], videos: string[], programs: string[] }>({
+    pdfs: [],
+    images: [],
+    videos: [],
+    programs: []
+  })
   const [relatedIdeas, setRelatedIdeas] = useState<Idea[]>([])
-  // 追記フォームの状態
   const [showContributionForm, setShowContributionForm] = useState(false)
   const [contributionTarget, setContributionTarget] = useState<{
     section: 'overview' | 'step' | 'general'
     stepNumber?: number
   }>({ section: 'general' })
-  // ライトボックス用の状態
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  // 関連情報の表示状態
   const [showRelatedDrawings, setShowRelatedDrawings] = useState(false)
   const [showIdeas, setShowIdeas] = useState(false)
-
 
   // ファイルダウンロード関数
   const downloadFile = (filename: string, folderType: string, subFolder?: string) => {
@@ -121,7 +126,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
     
     // 機械種別付きのフォルダ名を生成
     const stepFolder = machineType 
-      ? getStepFolderName(stepNumber, getMachineTypeJapanese(machineType))
+      ? getStepFolderName(stepNumber, machineType)
       : `step_${stepNumber.toString().padStart(2, '0')}`
     
     const [stepImages, stepVideos, stepPrograms] = await Promise.all([
@@ -153,9 +158,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
             <div className="text-lg font-medium text-white mb-2">《製品》 {instruction.metadata.productName || '-'}</div>
             <div className="flex flex-col gap-2 text-emerald-200/70 text-sm mt-2">
               <span>《使用機械》 {
-                Array.isArray(instruction.metadata.machineType) 
-                  ? instruction.metadata.machineType.join(', ')
-                  : instruction.metadata.machineType?.split(',').map(type => type.trim()).join(', ') || ''
+                machineTypeLabels.length ? machineTypeLabels.join('、') : ''
               }</span>
               <span>《推奨工具》 {instruction.metadata.toolsRequired?.join(', ')}</span>
             </div>
@@ -537,7 +540,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   step={step}
                   instruction={instruction}
                   getStepFiles={(stepNum) => getStepFiles(stepNum, 'machining')}
-                  machineType="マシニング"
+                  machineType="machining"
                 />
               ))}
             </div>
@@ -560,7 +563,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   step={step}
                   instruction={instruction}
                   getStepFiles={(stepNum) => getStepFiles(stepNum, 'turning')}
-                  machineType="ターニング"
+                  machineType="turning"
                 />
               ))}
             </div>
@@ -583,7 +586,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   step={step}
                   instruction={instruction}
                   getStepFiles={(stepNum) => getStepFiles(stepNum, 'yokonaka')}
-                  machineType="横中"
+                  machineType="yokonaka"
                 />
               ))}
             </div>
@@ -606,7 +609,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   step={step}
                   instruction={instruction}
                   getStepFiles={(stepNum) => getStepFiles(stepNum, 'radial')}
-                  machineType="ラジアル"
+                  machineType="radial"
                 />
               ))}
             </div>
@@ -629,7 +632,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
                   step={step}
                   instruction={instruction}
                   getStepFiles={(stepNum) => getStepFiles(stepNum, 'other')}
-                  machineType="その他"
+                  machineType="other"
                 />
               ))}
             </div>
@@ -689,3 +692,14 @@ export default function WorkInstructionResults({ instruction, contributions, onB
     </div>
   )
 } 
+
+
+
+
+
+
+
+
+
+
+

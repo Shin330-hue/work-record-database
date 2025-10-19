@@ -1,3 +1,4 @@
+﻿import { normalizeMachineTypeInput } from '@/lib/machineTypeUtils'
 // src/app/api/work-instruction/[drawingNumber]/route.ts - 作業手順データAPI
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -36,7 +37,11 @@ export async function GET(
     try {
       const fileContent = await fs.readFile(filePath, 'utf-8')
       const workInstruction = JSON.parse(fileContent)
-      
+      workInstruction.metadata = {
+        ...workInstruction.metadata,
+        machineType: normalizeMachineTypeInput(workInstruction.metadata?.machineType)
+      }
+
       // キャッシュ制御ヘッダーを設定（キャッシュを無効化）
       return NextResponse.json(workInstruction, {
         headers: {
@@ -59,3 +64,6 @@ export async function GET(
     )
   }
 }
+
+
+

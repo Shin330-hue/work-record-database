@@ -1,10 +1,11 @@
-// src/lib/drawingUtils.ts - 図番管理ユーティリティ
+﻿// src/lib/drawingUtils.ts - 図番管理ユーティリティ
 
 import { mkdir, writeFile, readFile, access } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { sanitizeDrawingNumber } from './dataLoader'
 import { Company, Product, SearchIndex, WorkInstruction } from './dataLoader'
+import { MachineTypeKey } from './machineTypeUtils'
 
 // 環境に応じたデータパス取得
 function getDataPath(): string {
@@ -131,7 +132,7 @@ export function generateBasicInstruction(data: {
   productId: string
   difficulty: string
   estimatedTime: string
-  machineType: string
+  machineType: MachineTypeKey[]
   description?: string
   warnings?: string[]
 }): WorkInstruction {
@@ -149,7 +150,7 @@ export function generateBasicInstruction(data: {
       updatedDate: new Date().toISOString().split('T')[0],
       author: "管理画面",
       estimatedTime: `${data.estimatedTime}分`,
-      machineType: data.machineType,
+      machineType: [...data.machineType],
       difficulty: data.difficulty,
       toolsRequired: []
     },
@@ -282,3 +283,7 @@ export async function validateMultipleDrawings(drawingNumbers: string[]): Promis
     results
   }
 }
+
+
+
+
