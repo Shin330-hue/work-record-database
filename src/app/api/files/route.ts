@@ -24,6 +24,19 @@ const getDataRootPath = (): string => {
   return join(process.cwd(), 'public', 'data')
 }
 
+const encodeRFC5987ValueChars = (str: string): string => {
+  return encodeURIComponent(str)
+    .replace(/['()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`)
+    .replace(/%(7C|60|5E)/g, (match, hex) => `%${hex}`)
+}
+
+const buildContentDispositionHeader = (fileName: string): string => {
+  const normalizedName = fileName.replace(/[/\\]/g, '')
+  const asciiFallback = normalizedName.replace(/[^\x20-\x7E]/g, '_') || 'file'
+  const encoded = encodeRFC5987ValueChars(normalizedName)
+  return `inline; filename="${asciiFallback}"; filename*=UTF-8''${encoded}`
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const drawingNumber = searchParams.get('drawingNumber')
@@ -81,11 +94,13 @@ export async function GET(request: NextRequest) {
       else if (ext === '.wmv') mimeType = 'video/wmv'
       else if (ext === '.pdf') mimeType = 'application/pdf'
 
+      const downloadName = safePath.split(/[\\/]/).pop() || safePath
+
       return new NextResponse(fileBuffer, {
         headers: {
           'Content-Type': mimeType,
           'Cache-Control': 'public, max-age=3600',
-          'Content-Disposition': 'inline'
+          'Content-Disposition': buildContentDispositionHeader(downloadName)
         }
       })
     }
@@ -125,11 +140,13 @@ export async function GET(request: NextRequest) {
       else if (ext === '.mov') mimeType = 'video/mov'
       else if (ext === '.pdf') mimeType = 'application/pdf'
 
+      const downloadName = safePath.split(/[\\/]/).pop() || safePath
+
       return new NextResponse(fileBuffer, {
         headers: {
           'Content-Type': mimeType,
           'Cache-Control': 'public, max-age=3600',
-          'Content-Disposition': 'inline'
+          'Content-Disposition': buildContentDispositionHeader(downloadName)
         }
       })
     }
