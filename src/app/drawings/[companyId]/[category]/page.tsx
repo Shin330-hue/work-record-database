@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
-import { loadCompanies, Company } from '@/lib/dataLoader'
+import { loadCompanies, Company, loadSearchIndex } from '@/lib/dataLoader'
 
 interface DrawingsPageProps {
   params: Promise<{
@@ -14,14 +14,24 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
   const { companyId, category } = use(params)
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [displayDrawingMap, setDisplayDrawingMap] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    // 会社データを読み込み
-    loadCompanies()
-      .then((companiesData) => {
+    // 会社データと検索インデックスを並行読み込み
+    Promise.all([loadCompanies(), loadSearchIndex()])
+      .then(([companiesData, searchIndex]) => {
+        // displayDrawingNumber マッピングを作成
+        const drawingMap: Record<string, string> = {}
+        for (const drawing of searchIndex.drawings) {
+          if (drawing.displayDrawingNumber) {
+            drawingMap[drawing.drawingNumber] = drawing.displayDrawingNumber
+          }
+        }
+        setDisplayDrawingMap(drawingMap)
+
         // URLパラメータから会社とカテゴリを特定
         const company = companiesData.find(c => c.id === companyId)
         if (company) {
@@ -33,7 +43,7 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
             }
             return acc
           }, [] as string[])
-          
+
           const decodedCategory = decodeURIComponent(category)
           if (categories.includes(decodedCategory)) {
             setSelectedCategory(decodedCategory)
@@ -159,7 +169,7 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
 
           {/* 図番一覧 */}
           <div className="selection-grid w-full">
-            {categoryProducts.map((product) => 
+            {categoryProducts.map((product) =>
               product.drawings.map((drawingNumber) => (
                 <button
                   key={drawingNumber}
@@ -167,7 +177,7 @@ export default function DrawingsPage({ params }: DrawingsPageProps) {
                   onClick={() => handleDrawingSelect(drawingNumber)}
                 >
                   <div className="icon">📄</div>
-                  <div className="title">{drawingNumber}</div>
+                  <div className="title">{displayDrawingMap[drawingNumber] || drawingNumber}</div>
                   <div className="desc">{product.name}</div>
                 </button>
               ))

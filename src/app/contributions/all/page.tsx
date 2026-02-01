@@ -10,6 +10,7 @@ import Link from 'next/link'
 
 interface ContributionWithDrawing {
   drawingNumber: string
+  displayDrawingNumber?: string
   drawingTitle?: string
   contribution: ContributionData
 }
@@ -81,11 +82,11 @@ export default function AllContributionsPage() {
                 {/* ヘッダー部分 */}
                 <div className="flex flex-wrap items-center justify-between mb-4">
                   <div className="flex items-center space-x-4">
-                    <Link 
+                    <Link
                       href={`/instruction/${item.drawingNumber}`}
                       className="text-lg font-semibold text-blue-400 hover:text-blue-300"
                     >
-                      図番: {item.drawingNumber}
+                      図番: {item.displayDrawingNumber || item.drawingNumber}
                     </Link>
                     {item.drawingTitle && (
                       <span className="text-gray-400">- {item.drawingTitle}</span>

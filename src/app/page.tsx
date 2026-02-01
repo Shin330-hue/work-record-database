@@ -72,7 +72,7 @@ export default function Home() {
                     onClick={() => handleSearchDrawingSelect(result.drawingNumber)}
                   >
                     <div className="icon" style={{fontSize:'1.6rem',marginBottom:8}}>🔍</div>
-                    <div className="title" style={{fontSize:'1.1rem'}}>{result.drawingNumber}</div>
+                    <div className="title" style={{fontSize:'1.1rem'}}>{result.displayDrawingNumber || result.drawingNumber}</div>
                     <div className="desc" style={{marginBottom:4}}>{result.title}</div>
                     <div className="desc" style={{fontSize:'0.95rem',color:'#8ff'}}>{result.companyName} - {result.productName}</div>
                     <div className="desc" style={{fontSize:'0.92rem',color:'#bff'}}>{result.estimatedTime}</div>

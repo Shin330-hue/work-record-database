@@ -6,6 +6,7 @@ import { ContributionData } from '@/types/contribution'
 
 interface RecentContributionItem {
   drawingNumber: string
+  displayDrawingNumber?: string
   contribution: ContributionData
   drawingTitle?: string
 }
@@ -103,7 +104,7 @@ export default function RecentContributions({ onDrawingClick }: RecentContributi
                 <span className="text-lg">{getTypeIcon(item.contribution.type)}</span>
                 <div>
                   <div className="text-emerald-300 font-mono text-sm">
-                    {item.drawingNumber}
+                    {item.displayDrawingNumber || item.drawingNumber}
                   </div>
                   {item.drawingTitle && (
                     <div className="text-emerald-200/80 text-xs">

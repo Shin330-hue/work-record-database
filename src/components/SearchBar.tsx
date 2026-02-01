@@ -191,7 +191,7 @@ export default function SearchBar({ searchIndex, onSearch, onDrawingSelect, plac
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-mono text-emerald-300 text-lg group-hover:text-emerald-200 transition-colors">
-                    {suggestion.drawingNumber}
+                    {suggestion.displayDrawingNumber || suggestion.drawingNumber}
                   </div>
                   <div className="text-white text-sm font-medium">
                     {suggestion.title}
