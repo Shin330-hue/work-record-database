@@ -153,7 +153,7 @@ export default function WorkInstructionResults({ instruction, contributions, onB
         <h1 className="text-4xl font-bold text-white mb-6">【🙋ざっくり説明】</h1>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <div className="text-2xl font-bold text-emerald-300 mb-2">《図番》 {instruction.metadata.drawingNumber}</div>
+            <div className="text-2xl font-bold text-emerald-300 mb-2">《図番》 {instruction.metadata.displayDrawingNumber || instruction.metadata.drawingNumber}</div>
             <div className="text-lg font-medium text-white mb-1">《会社》 {instruction.metadata.companyName || '-'}</div>
             <div className="text-lg font-medium text-white mb-2">《製品》 {instruction.metadata.productName || '-'}</div>
             <div className="flex flex-col gap-2 text-emerald-200/70 text-sm mt-2">

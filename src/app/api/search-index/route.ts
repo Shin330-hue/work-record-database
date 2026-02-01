@@ -18,7 +18,7 @@ export async function GET() {
       const searchIndex = JSON.parse(fileContent)
       const normalizedIndex = {
         ...searchIndex,
-        drawings: (searchIndex.drawings || []).map((drawing) => ({
+        drawings: (searchIndex.drawings || []).map((drawing: { machineType?: string | string[]; [key: string]: unknown }) => ({
           ...drawing,
           machineType: normalizeMachineTypeInput(drawing.machineType)
         }))

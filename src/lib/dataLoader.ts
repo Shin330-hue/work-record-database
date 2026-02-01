@@ -125,6 +125,7 @@ export interface SearchMetadata {
 // 検索用図番アイテム
 export interface DrawingSearchItem {
   drawingNumber: string
+  displayDrawingNumber?: string  // 表示用図番（オプション）
   productName: string
   companyName: string
   companyId: string
@@ -146,6 +147,7 @@ export interface DrawingSearchItem {
 // 作業手順メタデータ
 export interface InstructionMetadata {
   drawingNumber: string
+  displayDrawingNumber?: string  // 表示用図番（オプション）
   title: string
   companyId: string
   productId: string
@@ -478,11 +480,11 @@ export const loadContributions = async (drawingNumber: string): Promise<Contribu
 }
 
 // 全図番の最新追記データを取得
-export const loadRecentContributions = async (limit: number = 10): Promise<{ drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[]> => {
+export const loadRecentContributions = async (limit: number = 10): Promise<{ drawingNumber: string, displayDrawingNumber?: string, contribution: ContributionData, drawingTitle?: string }[]> => {
   try {
     // 検索インデックスから全図番を取得
     const searchIndex = await loadSearchIndex()
-    const allContributions: { drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[] = []
+    const allContributions: { drawingNumber: string, displayDrawingNumber?: string, contribution: ContributionData, drawingTitle?: string }[] = []
 
     // 各図番の追記データを並列取得
     const contributionPromises = searchIndex.drawings.map(async (drawing) => {
@@ -492,6 +494,7 @@ export const loadRecentContributions = async (limit: number = 10): Promise<{ dra
         return contributionFile.contributions
           .map(contribution => ({
             drawingNumber: drawing.drawingNumber,
+            displayDrawingNumber: drawing.displayDrawingNumber,
             contribution,
             drawingTitle: drawing.title
           }))
@@ -520,11 +523,11 @@ export const loadRecentContributions = async (limit: number = 10): Promise<{ dra
 }
 
 // 全図番の全追記データを取得（管理画面用：全ステータス）
-export const loadAllContributions = async (limit: number = 1000): Promise<{ drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[]> => {
+export const loadAllContributions = async (limit: number = 1000): Promise<{ drawingNumber: string, displayDrawingNumber?: string, contribution: ContributionData, drawingTitle?: string }[]> => {
   try {
     // 検索インデックスから全図番を取得
     const searchIndex = await loadSearchIndex()
-    const allContributions: { drawingNumber: string, contribution: ContributionData, drawingTitle?: string }[] = []
+    const allContributions: { drawingNumber: string, displayDrawingNumber?: string, contribution: ContributionData, drawingTitle?: string }[] = []
 
     // 各図番の追記データを並列取得
     const contributionPromises = searchIndex.drawings.map(async (drawing) => {
@@ -534,6 +537,7 @@ export const loadAllContributions = async (limit: number = 1000): Promise<{ draw
         return contributionFile.contributions
           .map(contribution => ({
             drawingNumber: drawing.drawingNumber,
+            displayDrawingNumber: drawing.displayDrawingNumber,
             contribution,
             drawingTitle: drawing.title
           }))
