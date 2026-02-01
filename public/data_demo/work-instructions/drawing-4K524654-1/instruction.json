@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "drawingNumber": "4K524654-1",
+    "title": "ギヤセット（HUB）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-HUB-1754285056596-8qu7",
+    "createdDate": "2025-08-04",
+    "updatedDate": "2025-09-05",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-031"
+  },
+  "overview": {
+    "description": "ギヤセット（HUB）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-04",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "1工程",
+        "description": "正直の高さ50ミリ、セリの高さ55ミリ。",
+        "detailedInstructions": [
+          "段取",
+          "外側荒引",
+          "内側荒引",
+          "内側仕上げ",
+          "外側仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "荒引": {
+            "tool": "住友　CNMM120408N-MP",
+            "spindleSpeed": "S500～1200",
+            "feedRate": "F0.3～0.4",
+            "depthOfCut": "1.5ミリ",
+            "stepOver": ""
+          },
+          "仕上げ": {
+            "tool": "タンガロイ　DNMG150404-TM",
+            "spindleSpeed": "S500～1200",
+            "feedRate": "F0.15～0.2",
+            "depthOfCut": "X0.25　Z0.1",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "2工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転面取り"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

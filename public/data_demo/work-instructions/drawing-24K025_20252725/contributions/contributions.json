@@ -1,0 +1,134 @@
+{
+  "drawingNumber": "24K025_20252725",
+  "contributions": [
+    {
+      "id": "1753423163224_zabpn3ul6",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-07-25T05:59:24.506Z",
+      "type": "comment",
+      "targetSection": "overview",
+      "content": {
+        "text": "機械　東芝TUE-20\r\n内径からせる。(外径からせるには2058までが限界)\r\n",
+        "imagePath": "files/images/_____1753423163224_zabpn3ul6_0.jpg",
+        "originalFileName": "1000024808.jpg",
+        "fileSize": 5981762,
+        "files": [
+          {
+            "fileName": "_____1753423163224_zabpn3ul6_0.jpg",
+            "originalFileName": "1000024808.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5981762,
+            "filePath": "files/images/_____1753423163224_zabpn3ul6_0.jpg"
+          },
+          {
+            "fileName": "_____1753423163224_zabpn3ul6_1.jpg",
+            "originalFileName": "1000024806.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2734180,
+            "filePath": "files/images/_____1753423163224_zabpn3ul6_1.jpg"
+          },
+          {
+            "fileName": "_____1753423163224_zabpn3ul6_2.jpg",
+            "originalFileName": "1000024807.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3107221,
+            "filePath": "files/images/_____1753423163224_zabpn3ul6_2.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753423264696_x5apgc4a0",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-07-25T06:01:05.640Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "仕上げ段取り",
+        "imagePath": "files/images/_____1753423264696_x5apgc4a0_0.jpg",
+        "originalFileName": "1000024809.jpg",
+        "fileSize": 2770008,
+        "files": [
+          {
+            "fileName": "_____1753423264696_x5apgc4a0_0.jpg",
+            "originalFileName": "1000024809.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2770008,
+            "filePath": "files/images/_____1753423264696_x5apgc4a0_0.jpg"
+          },
+          {
+            "fileName": "_____1753423264696_x5apgc4a0_1.jpg",
+            "originalFileName": "1000024811.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2618448,
+            "filePath": "files/images/_____1753423264696_x5apgc4a0_1.jpg"
+          },
+          {
+            "fileName": "_____1753423264696_x5apgc4a0_2.jpg",
+            "originalFileName": "1000024813.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3012631,
+            "filePath": "files/images/_____1753423264696_x5apgc4a0_2.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753423837027_iswfrfcd0",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-07-25T06:10:38.317Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "製品完成\r\n端面仕上がり92ミリ　粗さ▽▽に対して\r\n取代が少なく歪が大きい為、幅は90.8ミリ片側のみ粗さ▽▽反対側黒皮残りで仕上げてあります。",
+        "imagePath": "files/images/_____1753423837027_iswfrfcd0_0.jpg",
+        "originalFileName": "1000024817.jpg",
+        "fileSize": 4359132,
+        "files": [
+          {
+            "fileName": "_____1753423837027_iswfrfcd0_0.jpg",
+            "originalFileName": "1000024817.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4359132,
+            "filePath": "files/images/_____1753423837027_iswfrfcd0_0.jpg"
+          },
+          {
+            "fileName": "_____1753423837027_iswfrfcd0_1.jpg",
+            "originalFileName": "1000024815.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5363484,
+            "filePath": "files/images/_____1753423837027_iswfrfcd0_1.jpg"
+          },
+          {
+            "fileName": "_____1753423837027_iswfrfcd0_2.jpg",
+            "originalFileName": "1000024814.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4176216,
+            "filePath": "files/images/_____1753423837027_iswfrfcd0_2.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 3,
+    "lastUpdated": "2025-08-01T05:54:04.148Z",
+    "version": "1.0",
+    "mergedCount": 3
+  }
+}

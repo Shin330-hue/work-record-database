@@ -1,0 +1,60 @@
+{
+  "metadata": {
+    "drawingNumber": "25047-00-002",
+    "title": "フレーム（スライドフレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-スライドフレーム-1756095253255-f4xh",
+    "createdDate": "2025-08-25",
+    "updatedDate": "2025-08-29",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "マシニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-25T07:19:22.578Z",
+    "displayDrawingNumber": "DRW-058"
+  },
+  "overview": {
+    "description": "フレーム（スライドフレーム）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "25047-00-002.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-25",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "段取",
+        "description": "タッカー吊り上げ\n真ん中にも押え(ドリミールで加工のため)\n※裏面も加工",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

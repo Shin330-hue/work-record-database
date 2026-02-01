@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "drawingNumber": "05389730954",
+    "title": "ボデー（ガイドJ）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-ガイドJ-1753680913343-40tx",
+    "createdDate": "2025-07-28",
+    "updatedDate": "2025-08-19",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-19T00:11:36.289Z",
+    "displayDrawingNumber": "DRW-013"
+  },
+  "overview": {
+    "description": "ボデー（ガイドJ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "05389730954.PDF"
+    ]
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-28",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正、yokonakaプロパティを正しく追加"
+    }
+  ],
+  "nearMiss": []
+}

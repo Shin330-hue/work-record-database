@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "2-773-1919A-001",
+    "title": "固定振止ベース（固定振止ベース φ50-350  H-395）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-固定振止ベース503-1759190050078-tzis",
+    "createdDate": "2025-09-29",
+    "updatedDate": "2025-09-30",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-30T00:02:44.550Z",
+    "displayDrawingNumber": "DRW-079"
+  },
+  "overview": {
+    "description": "固定振止ベース（固定振止ベース φ50-350  H-395）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "2-773-1919A-001.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-29",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

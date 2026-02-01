@@ -1,0 +1,191 @@
+{
+  "drawingNumber": "2-240-1593C",
+  "contributions": [
+    {
+      "id": "1760674669920_v7s1m86p8",
+      "userId": "作業者C",
+      "userName": "作業者B",
+      "timestamp": "2025-10-17T04:17:51.762Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "画像",
+        "imagePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_0.jpg",
+        "originalFileName": "1000005597.jpg",
+        "fileSize": 5872676,
+        "files": [
+          {
+            "fileName": "tanaka_t_1760674669920_v7s1m86p8_0.jpg",
+            "originalFileName": "1000005597.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5872676,
+            "filePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_0.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674669920_v7s1m86p8_1.jpg",
+            "originalFileName": "1000005600.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5030630,
+            "filePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_1.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674669920_v7s1m86p8_2.jpg",
+            "originalFileName": "1000005601.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4751818,
+            "filePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_2.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674669920_v7s1m86p8_3.jpg",
+            "originalFileName": "1000005602.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5139010,
+            "filePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_3.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674669920_v7s1m86p8_4.jpg",
+            "originalFileName": "1000005603.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5194360,
+            "filePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_4.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674669920_v7s1m86p8_5.jpg",
+            "originalFileName": "1000005604.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4710359,
+            "filePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_5.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674669920_v7s1m86p8_6.jpg",
+            "originalFileName": "1000005605.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5918920,
+            "filePath": "files/images/tanaka_t_1760674669920_v7s1m86p8_6.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1760674696934_9rulc8be3",
+      "userId": "作業者C",
+      "userName": "作業者B",
+      "timestamp": "2025-10-17T04:18:17.926Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "画像",
+        "imagePath": "files/images/tanaka_t_1760674696934_9rulc8be3_0.jpg",
+        "originalFileName": "1000005606.jpg",
+        "fileSize": 5437360,
+        "files": [
+          {
+            "fileName": "tanaka_t_1760674696934_9rulc8be3_0.jpg",
+            "originalFileName": "1000005606.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5437360,
+            "filePath": "files/images/tanaka_t_1760674696934_9rulc8be3_0.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674696934_9rulc8be3_1.jpg",
+            "originalFileName": "1000005607.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5269107,
+            "filePath": "files/images/tanaka_t_1760674696934_9rulc8be3_1.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674696934_9rulc8be3_2.jpg",
+            "originalFileName": "1000005611.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3690484,
+            "filePath": "files/images/tanaka_t_1760674696934_9rulc8be3_2.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760674696934_9rulc8be3_3.jpg",
+            "originalFileName": "1000005610.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5196938,
+            "filePath": "files/images/tanaka_t_1760674696934_9rulc8be3_3.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1760674722815_s5nmcp1jo",
+      "userId": "作業者C",
+      "userName": "作業者B",
+      "timestamp": "2025-10-17T04:18:44.560Z",
+      "type": "video",
+      "targetSection": "overview",
+      "content": {
+        "text": "画像",
+        "videoPath": "files/videos/tanaka_t_1760674722815_s5nmcp1jo_0.mp4",
+        "originalFileName": "1000005613.mp4",
+        "fileSize": 38157520,
+        "files": [
+          {
+            "fileName": "tanaka_t_1760674722815_s5nmcp1jo_0.mp4",
+            "originalFileName": "1000005613.mp4",
+            "fileType": "video",
+            "mimeType": "video/mp4",
+            "fileSize": 38157520,
+            "filePath": "files/videos/tanaka_t_1760674722815_s5nmcp1jo_0.mp4"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1760675522477_glnclh6rg",
+      "userId": "作業者C",
+      "userName": "作業者B",
+      "timestamp": "2025-10-17T04:32:02.949Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "画像",
+        "imagePath": "files/images/tanaka_t_1760675522477_glnclh6rg_0.jpg",
+        "originalFileName": "1000005617.jpg",
+        "fileSize": 3250612,
+        "files": [
+          {
+            "fileName": "tanaka_t_1760675522477_glnclh6rg_0.jpg",
+            "originalFileName": "1000005617.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3250612,
+            "filePath": "files/images/tanaka_t_1760675522477_glnclh6rg_0.jpg"
+          },
+          {
+            "fileName": "tanaka_t_1760675522477_glnclh6rg_1.jpg",
+            "originalFileName": "1000005618.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5932886,
+            "filePath": "files/images/tanaka_t_1760675522477_glnclh6rg_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 4,
+    "lastUpdated": "2025-10-17T05:12:41.987Z",
+    "version": "1.0",
+    "mergedCount": 4
+  }
+}

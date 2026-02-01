@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "drawingNumber": "TM2502639-RS20X",
+    "title": "フレーム（フレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-フレーム-1757027756328-hcfy",
+    "createdDate": "2025-09-04",
+    "updatedDate": "2025-09-04",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-04T23:16:55.203Z",
+    "displayDrawingNumber": "DRW-060"
+  },
+  "overview": {
+    "description": "フレーム（フレーム）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "TM2502639-RS201.pdf",
+      "TM2502639-RS202.pdf"
+    ],
+    "programs": [
+      "TM2502639-RS201.dxf",
+      "TM2502639-RS202.dxf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-04",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

@@ -1,0 +1,203 @@
+{
+  "metadata": {
+    "drawingNumber": "2-240-1593C",
+    "title": "横送り台（横送り台）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-横送り台-1760674323782-o6fh",
+    "createdDate": "2025-10-17",
+    "updatedDate": "2025-10-17",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "横中",
+      "ラジアル"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-17T05:07:55.693Z",
+    "displayDrawingNumber": "DRW-080"
+  },
+  "overview": {
+    "description": "横送り台（横送り台）加工手順の加工を行います\n全体の取り代は7mm～多いところで12mm\n※上下面の加工は顧客先で済んでおり、横の加工のみ。",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "2-240-1593C ML 横送り台　横MC加工指示.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-17",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [
+      {
+        "stepNumber": 1,
+        "title": "芯出し",
+        "description": "縦マシで基準が引いてあるのでそこで平行出し",
+        "detailedInstructions": [
+          "150のブロック。フッ素樹脂塗布の面でうける",
+          "平行を出した後、上面の平面度を確認（フッ素樹脂の影響でずれてないか）",
+          "縦マシの加工面の取り代を念のため確認"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "側面加工➀",
+        "description": "穴加工が無い面を荒引きと仕上げ。W軸は300伸ばす。",
+        "detailedInstructions": [
+          "下面に押さえ用の耳が４カ所ある。ドリミールで手作業で削り取る",
+          "荒引から仕上げに移るとき、クランプを緩めて歪チェックしておく",
+          "歪んでなければそのまま仕上げ",
+          "ついでに平行もずれてないか見ておく"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": [
+            {
+              "checkPoint": "面粗度",
+              "tolerance": "なし",
+              "surfaceRoughness": "スジが入っていないか",
+              "inspectionTool": "手と目視"
+            }
+          ]
+        },
+        "cuttingConditions": {
+          "荒引き": {
+            "tool": "Φ100フェイスミル",
+            "spindleSpeed": "600",
+            "feedRate": "600",
+            "depthOfCut": "1mm（W軸を300伸ばしているため弱気）",
+            "stepOver": "85%"
+          },
+          "仕上げ": {
+            "tool": "Φ100フェイスミル",
+            "spindleSpeed": "540（仕上げの90%）",
+            "feedRate": "540（仕上げの90%）",
+            "depthOfCut": "0.2mm",
+            "stepOver": "85%"
+          }
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "側面加工②",
+        "description": "長手方向の面削",
+        "detailedInstructions": [
+          "クランプ箇所を変更",
+          "荒引き仕上"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "荒引き（仕上は90%）": {
+            "tool": "Φ100フェイスミル",
+            "spindleSpeed": "600",
+            "feedRate": "600",
+            "depthOfCut": "1.5mm",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 4,
+        "title": "座ぐり",
+        "description": "Φ17.5ドリルとドリミール",
+        "detailedInstructions": [
+          "Φ17.5で32mm入れる",
+          "Φ16ドリミールで30まで手で突っ込む",
+          "ドリミールで円弧"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "座ぐり": {
+            "tool": "Φ16ドリミール",
+            "spindleSpeed": "1600",
+            "feedRate": "240",
+            "depthOfCut": "30mm",
+            "stepOver": "2mm"
+          },
+          "下穴": {
+            "tool": "Φ17.5",
+            "spindleSpeed": "420",
+            "feedRate": "60",
+            "depthOfCut": "32mm",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 5,
+        "title": "タップ",
+        "description": "M6タップと座ぐりM12",
+        "detailedInstructions": [
+          "タップはタッピングアーム使用"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "M6": {
+            "tool": "Φ5.1sgessドリル",
+            "spindleSpeed": "1300",
+            "feedRate": "60（2mmステップ）",
+            "depthOfCut": "21mm",
+            "stepOver": ""
+          },
+          "M12": {
+            "tool": "Φ10.3黒ドリル",
+            "spindleSpeed": "600",
+            "feedRate": "60",
+            "depthOfCut": "30+53=83（座ぐり30ネジ有効40）",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": [
+    {
+      "title": "下面にフッ素樹脂加工",
+      "description": "下面のフッ素樹脂加工がしてあるため、正にする場所を気を付ける",
+      "cause": "顧客先でそのように加工するため",
+      "prevention": "とはいえフッ素樹脂加工面を正にする。芯出しの際に平面度を確認する。",
+      "severity": "critical"
+    }
+  ]
+}

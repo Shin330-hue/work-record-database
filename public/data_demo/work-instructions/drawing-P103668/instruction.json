@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "drawingNumber": "P103668",
+    "title": "インペラ（ステンインペラ）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-ステンインペラ-1754290476213-57om",
+    "createdDate": "2025-08-04",
+    "updatedDate": "2025-08-09",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-035"
+  },
+  "overview": {
+    "description": "インペラ（ステンインペラ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-04",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

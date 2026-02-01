@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "drawingNumber": "91260506-2",
+    "title": "リング（リング）加工手順",
+    "companyId": "tvtokyo",
+    "productId": "product-レール-1754024245635-1hu6",
+    "createdDate": "2025-08-01",
+    "updatedDate": "2025-08-07",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "ターニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "TV-001"
+  },
+  "overview": {
+    "description": "リング（リング）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-01",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "段取",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "荒加工": {
+            "tool": "京セラ　TNMG160408R-ST",
+            "spindleSpeed": "S250",
+            "feedRate": "F0.25~0.30",
+            "depthOfCut": "2~1.5ミリ",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "仕上げ",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "仕上げ": {
+            "tool": "タンガロイ　DNMG150408SS",
+            "spindleSpeed": "S200~250",
+            "feedRate": "F0.20~0.25",
+            "depthOfCut": "0.25ミリ",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

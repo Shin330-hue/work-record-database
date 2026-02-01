@@ -1,0 +1,104 @@
+{
+  "metadata": {
+    "drawingNumber": "0A149002911",
+    "title": "ブラケット（レールユニットB）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-1752650458065-5fr89o",
+    "createdDate": "2025-07-16",
+    "updatedDate": "2025-08-25",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "マシニング"
+    ],
+    "toolsRequired": [],
+    "difficulty": "中級",
+    "displayDrawingNumber": "DRW-002"
+  },
+  "overview": {
+    "description": "ブラケット（レールユニットB）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "images": []
+  },
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "段取り・押さえ",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "condition_1": {
+            "tool": "Φ40ドリミール",
+            "spindleSpeed": "S1050",
+            "feedRate": "F320",
+            "depthOfCut": "1ｍｍ",
+            "stepOver": ""
+          },
+          "condition_2": {
+            "tool": "Φ50ドリミール",
+            "spindleSpeed": "S1000",
+            "feedRate": "F320",
+            "depthOfCut": "1ｍｍ",
+            "stepOver": ""
+          },
+          "condition_3": {
+            "tool": "Φ49．7仕上カッター",
+            "spindleSpeed": "S2200",
+            "feedRate": "F1700",
+            "depthOfCut": "0.2㎜",
+            "stepOver": ""
+          },
+          "condition_4": {
+            "tool": "",
+            "spindleSpeed": "",
+            "feedRate": "",
+            "depthOfCut": "",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "nearMiss": [
+    {
+      "title": "平面度",
+      "description": "平面度0.05が出ない。0.15くらい。反転して測定すると0.05に収まる",
+      "cause": "",
+      "prevention": "",
+      "severity": "high"
+    }
+  ],
+  "revisionHistory": [
+    {
+      "date": "2025-07-16",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正、yokonakaプロパティを正しく追加"
+    }
+  ]
+}

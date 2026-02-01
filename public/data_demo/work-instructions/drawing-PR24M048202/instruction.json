@@ -1,0 +1,141 @@
+{
+  "metadata": {
+    "drawingNumber": "PR24M048202",
+    "title": "インペラ（ステンインペラ）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-ステンインペラ-1754293816687-tsod",
+    "createdDate": "2025-08-04",
+    "updatedDate": "2025-09-05",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-04T07:50:18.250Z",
+    "displayDrawingNumber": "DRW-036"
+  },
+  "overview": {
+    "description": "インペラ（ステンインペラ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "PR24M048202.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-04",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "1工程",
+        "description": "全体的に取付2～3ミリ。\n治具にて段取",
+        "detailedInstructions": [
+          "端面仕上げ（断続加工）",
+          "端面仕上げ（最上部）"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "端面仕上げ": {
+            "tool": "サンドビック　SNMM120412-MR　2035",
+            "spindleSpeed": "S200～300",
+            "feedRate": "F0.15～0.2",
+            "depthOfCut": "0.25～0.5",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "2工程",
+        "description": "",
+        "detailedInstructions": [
+          "内径荒引",
+          "内径溝入れ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "内径荒引": {
+            "tool": "京セラ　CNMG120408MU　CA6515",
+            "spindleSpeed": "S200～300",
+            "feedRate": "F0.15～0.2",
+            "depthOfCut": "0.5",
+            "stepOver": ""
+          },
+          "内径溝入れ": {
+            "tool": "自作工具　幅4.08ミリ",
+            "spindleSpeed": "S200～300",
+            "feedRate": "F0.05～0.1",
+            "depthOfCut": "1.0ミリ",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "3工程",
+        "description": "押さえ金を外す。",
+        "detailedInstructions": [
+          "外径仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "外径仕上げ": {
+            "tool": "京セラ　CNMG120408MU　CA6515",
+            "spindleSpeed": "S200～300",
+            "feedRate": "F0.15～0.25",
+            "depthOfCut": "0.25",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 4,
+        "title": "4工程",
+        "description": "治具を外し、新しく正直を置く。",
+        "detailedInstructions": [
+          "反転端面、外径仕上げる"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

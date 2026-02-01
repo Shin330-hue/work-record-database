@@ -1,0 +1,75 @@
+{
+  "drawingNumber": "TM256039-2-1401",
+  "contributions": [
+    {
+      "id": "1755829096241_5s06lswwn",
+      "userId": "作業者M",
+      "userName": "作業者M",
+      "timestamp": "2025-08-22T02:18:16.850Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/__1755829096241_5s06lswwn_0.jpg",
+        "originalFileName": "1000000083.jpg",
+        "fileSize": 5586566,
+        "files": [
+          {
+            "fileName": "__1755829096241_5s06lswwn_0.jpg",
+            "originalFileName": "1000000083.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5586566,
+            "filePath": "files/images/__1755829096241_5s06lswwn_0.jpg"
+          },
+          {
+            "fileName": "__1755829096241_5s06lswwn_1.jpg",
+            "originalFileName": "1000000082.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5120490,
+            "filePath": "files/images/__1755829096241_5s06lswwn_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1755829124082_8cg0yjocd",
+      "userId": "作業者L",
+      "userName": "作業者L",
+      "timestamp": "2025-08-22T02:18:44.647Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1755829124082_8cg0yjocd_0.jpg",
+        "originalFileName": "1000000081.jpg",
+        "fileSize": 4497416,
+        "files": [
+          {
+            "fileName": "___1755829124082_8cg0yjocd_0.jpg",
+            "originalFileName": "1000000081.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4497416,
+            "filePath": "files/images/___1755829124082_8cg0yjocd_0.jpg"
+          },
+          {
+            "fileName": "___1755829124082_8cg0yjocd_1.jpg",
+            "originalFileName": "1000000080.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 7005854,
+            "filePath": "files/images/___1755829124082_8cg0yjocd_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 2,
+    "lastUpdated": "2025-08-22T02:33:27.106Z",
+    "version": "1.0",
+    "mergedCount": 2
+  }
+}

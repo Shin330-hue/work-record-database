@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "0A149000443",
+    "title": "ベース（ベース）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-ベース-1761024363755-bgb1",
+    "createdDate": "2025-10-21",
+    "updatedDate": "2025-10-31",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-31T01:26:44.241Z",
+    "displayDrawingNumber": "DRW-020"
+  },
+  "overview": {
+    "description": "ベース（ベース）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "0A149000443.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-21",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

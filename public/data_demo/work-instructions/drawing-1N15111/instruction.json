@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "drawingNumber": "1N15111",
+    "title": "カバー（吸込カバー）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-吸込カバー-1754977384812-g116",
+    "createdDate": "2025-08-12",
+    "updatedDate": "2025-08-12",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": "マシニング,フライス",
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-037"
+  },
+  "overview": {
+    "description": "カバー（吸込カバー）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-12",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ]
+}

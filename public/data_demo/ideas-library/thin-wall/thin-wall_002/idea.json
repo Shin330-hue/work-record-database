@@ -1,0 +1,18 @@
+{
+  "id": "thin-wall_002",
+  "title": "薄物加工での振動対策",
+  "category": "thin-wall",
+  "tags": ["振動対策", "工具選定", "切削条件", "段取り"],
+  "description": "薄物加工時の振動を最小限に抑える方法",
+  "content": "薄物加工では振動が品質に大きく影響します。工具選定と切削条件の最適化が重要です。振動が発生すると表面粗さの悪化や工具の早期摩耗の原因となります。",
+  "keyPoints": [
+    "主軸回転数を10-20%増減させて共振を避ける",
+    "工具の剛性を重視した選定を行う",
+    "段階的な切削で振動を抑制",
+    "支持点を増やして剛性を向上"
+  ],
+  "images": ["vibration-control.jpg"],
+  "videos": ["vibration-reduction.mp4"],
+  "difficulty": "advanced",
+  "applicableMaterials": ["アルミ", "鋼材", "チタン"]
+} 

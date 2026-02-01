@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "drawingNumber": "TM256039-2-1401",
+    "title": "フレーム（フレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-フレーム-1754701388484-n7mq",
+    "createdDate": "2025-08-09",
+    "updatedDate": "2025-08-26",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "横中",
+      "マシニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [
+      "4.2ド，M5タップ，10.3ド，19.6ド，20リ―マ，"
+    ],
+    "lastUpdated": "2025-08-22T06:41:25.986Z",
+    "displayDrawingNumber": "DRW-057"
+  },
+  "overview": {
+    "description": "フレーム（フレーム）加工手順の加工を行います\n※プログラムファイル.NCは横中用",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "TM256039-2-1401.pdf"
+    ],
+    "programs": [
+      "TM2500639-2-1401.dxf",
+      "K-TM2500.NC"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-09",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "ステップ 1",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "turning": [],
+    "yokonaka": [
+      {
+        "stepNumber": 1,
+        "title": "段取り・押さえ",
+        "description": "タッカーにて吊り上げ\n下側に板あるので避けながらショウジキset",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {}
+      },
+      {
+        "stepNumber": 2,
+        "title": "面削",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "condition_1": {
+            "tool": "Φ125facemil",
+            "spindleSpeed": "S430",
+            "feedRate": "F520",
+            "depthOfCut": "",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "穴あけ",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "condition_1": {
+            "tool": "Φ4.2ドリル",
+            "spindleSpeed": "S1300",
+            "feedRate": "F143",
+            "depthOfCut": "Q2",
+            "stepOver": ""
+          },
+          "condition_2": {
+            "tool": "M5タップ",
+            "spindleSpeed": "S260",
+            "feedRate": "F20",
+            "depthOfCut": "",
+            "stepOver": ""
+          },
+          "condition_3": {
+            "tool": "Φ10.3ドリル",
+            "spindleSpeed": "S650",
+            "feedRate": "F71",
+            "depthOfCut": "Q3",
+            "stepOver": ""
+          },
+          "condition_4": {
+            "tool": "Φ19.6",
+            "spindleSpeed": "S300",
+            "feedRate": "F30",
+            "depthOfCut": "Q3",
+            "stepOver": ""
+          },
+          "condition_5": {
+            "tool": "20リーマ",
+            "spindleSpeed": "S230",
+            "feedRate": "F30",
+            "depthOfCut": "",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "02760810650",
+    "title": "リテーナー加工手順",
+    "companyId": "demo-precision-b",
+    "productId": "02760810650",
+    "version": "1.0",
+    "createdDate": "2024-12-30",
+    "updatedDate": "2025-07-31",
+    "author": "作業者AI",
+    "difficulty": "中級",
+    "estimatedTime": "500分",
+    "machineType": "ターニング",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-024"
+  },
+  "overview": {
+    "description": "DRW-024　リテーナーの加工",
+    "warnings": [],
+    "preparationTime": "-",
+    "processingTime": "-"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "mediaFolders": {
+    "images": "images",
+    "videos": "videos",
+    "pdfs": "pdfs"
+  },
+  "revisionHistory": [
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、空のデフォルト作業ステップを削除"
+    }
+  ]
+}

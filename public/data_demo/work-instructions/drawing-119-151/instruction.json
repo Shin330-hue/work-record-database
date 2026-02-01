@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "drawingNumber": "119-151",
+    "title": "ブラケット加工手順",
+    "companyId": "wbs",
+    "productId": "product-フレーム-1765151605609-ocep",
+    "createdDate": "2025-12-07",
+    "updatedDate": "2025-12-07",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "マシニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-12-07T23:55:55.569Z",
+    "displayDrawingNumber": "WBS-003"
+  },
+  "overview": {
+    "description": "ブラケット加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "J-1.pdf",
+      "J-4.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-12-07",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "drawingNumber": "12750800122",
+    "title": "リテーナ加工手順",
+    "companyId": "demo-precision-b",
+    "productId": "12750800122",
+    "version": "1.0",
+    "createdDate": "2025-07-16",
+    "updatedDate": "2026-01-13",
+    "author": "作業者AN",
+    "difficulty": "中級",
+    "estimatedTime": "500分",
+    "machineType": [
+      "横中",
+      "ターニング",
+      "マシニング"
+    ],
+    "toolsRequired": [],
+    "lastUpdated": "2026-01-13T05:43:53.133Z",
+    "displayDrawingNumber": "DRW-025"
+  },
+  "overview": {
+    "description": "DRW-025　リテーナの加工",
+    "warnings": [],
+    "preparationTime": "-分",
+    "processingTime": "-分",
+    "images": [
+      "2025-08-01T06-36-59-182Z-files.jpg"
+    ],
+    "programs": [
+      "YM00122.txt",
+      "YM00122.NC"
+    ]
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "段取り",
+        "description": "内寸910 外寸980 幅30正直",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "第一工程",
+        "description": "",
+        "detailedInstructions": [
+          "セリ74㎜"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "第二工程",
+        "description": "",
+        "detailedInstructions": [
+          "外、内径2㎜ 幅1㎜　つけ粗びき",
+          "16㎜段差",
+          "段差11㎜　セリ91㎜"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 4,
+        "title": "第三工程",
+        "description": "",
+        "detailedInstructions": [
+          "幅46.5㎜　反転",
+          "46㎜仕上げ　16㎜段差",
+          "Φ900仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 5,
+        "title": "第四工程",
+        "description": "",
+        "detailedInstructions": [
+          "Φ993仕上げ　Φ942.1",
+          "6㎜ステッキ　TIP3 Z−18.8 粗びき",
+          "Φ942 Φ975 Z−19 45°　仕上げ",
+          "Φ942 Φ975 Z−19 45°　仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 6,
+        "title": "第五工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転11mm",
+          "内径C1",
+          "Φ933.9 Z−11 30°",
+          "4.225㎜　溝　TIP3"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 7,
+        "title": "第六工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転　正直　内寸899セット",
+          "Φ910 Φ930 15㎜溝",
+          "抑え直し　C1",
+          "完成"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [
+      {
+        "stepNumber": 1,
+        "title": "加工",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "condition_1": {
+            "tool": "Φ8.2",
+            "spindleSpeed": "S700",
+            "feedRate": "F60",
+            "depthOfCut": "-40mm",
+            "stepOver": ""
+          },
+          "condition_2": {
+            "tool": "Φ11エンドミル",
+            "spindleSpeed": "S720",
+            "feedRate": "F18",
+            "depthOfCut": "-2.5mm",
+            "stepOver": ""
+          },
+          "condition_3": {
+            "tool": "Rc1/8タップ",
+            "spindleSpeed": "S140",
+            "feedRate": "F12",
+            "depthOfCut": "-16mm",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "mediaFolders": {
+    "images": "images",
+    "videos": "videos",
+    "pdfs": "pdfs",
+    "programs": "programs"
+  },
+  "revisionHistory": [
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、空のデフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ],
+  "nearMiss": []
+}

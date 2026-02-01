@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "drawingNumber": "1193762506",
+    "title": "テーブル（テーブル1250）加工手順",
+    "companyId": "demo-precision-b",
+    "productId": "product-テーブル1250-1759792702646-ttdi",
+    "createdDate": "2025-10-06",
+    "updatedDate": "2025-10-07",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-06T23:19:23.198Z",
+    "displayDrawingNumber": "DRW-028"
+  },
+  "overview": {
+    "description": "テーブル（テーブル1250）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "20251007081511106.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-06",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "1工程",
+        "description": "",
+        "detailedInstructions": [
+          "正直外寸1230にて設置",
+          "芯だしは黒皮が残るところで確認",
+          "工具T707で端面・内径荒引",
+          "工具T808で端面・外径荒引",
+          "Φ720・Φ905仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "2工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転し端面・外径荒引",
+          "内径荒引・Φ150仕上げ",
+          "P45で９か所溝入れ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

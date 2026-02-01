@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "drawingNumber": "TM2502639-HA201-0",
+    "title": "フレーム（フレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-フレーム-1760053907827-upeb",
+    "createdDate": "2025-10-09",
+    "updatedDate": "2025-10-09",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": "マシニング,ラジアル",
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-09T23:51:49.549Z",
+    "displayDrawingNumber": "DRW-065"
+  },
+  "overview": {
+    "description": "フレーム（フレーム）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "20251006100907057.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-09",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ]
+}

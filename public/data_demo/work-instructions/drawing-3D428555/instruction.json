@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "drawingNumber": "3D428555",
+    "title": "プレート（オプションプレート）加工手順",
+    "companyId": "demo-metal-h",
+    "productId": "product-オプションプレート-1756271001497-9x6x",
+    "createdDate": "2025-08-27",
+    "updatedDate": "2025-09-02",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "マシニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-27T05:09:11.551Z",
+    "displayDrawingNumber": "DRW-071"
+  },
+  "overview": {
+    "description": "プレート（オプションプレート）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "20250827140943597.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-27",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "吊り上げ",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "裏面押さえ",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

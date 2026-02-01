@@ -1,0 +1,958 @@
+{
+  "companies": [
+    {
+      "id": "demo-manufacturing-a",
+      "name": "株式会社デモ製作所A",
+      "shortName": "デモ製作所A",
+      "description": "株式会社デモ製作所A",
+      "priority": 1,
+      "products": [
+        {
+          "id": "precision-parts",
+          "name": "部品ユニットA",
+          "category": "シャフト部品",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "0D127100014"
+          ]
+        },
+        {
+          "id": "product-1752650458065-5fr89o",
+          "name": "部品ユニットB",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "0A149002911"
+          ]
+        },
+        {
+          "id": "product-1752651493882-6rbf9v",
+          "name": "部品ユニットC",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "0A224000531"
+          ]
+        },
+        {
+          "id": "product-シーサーR-1752801408600-t28j",
+          "name": "部品ユニットD",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "25417362721"
+          ]
+        },
+        {
+          "id": "product-シーサーL-1752801917176-z8sc",
+          "name": "パーツセットE",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "25417362731"
+          ]
+        },
+        {
+          "id": "product-メインフレーム-1753083422822-aogz",
+          "name": "パーツセットF",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "A3159-500-00-A1"
+          ]
+        },
+        {
+          "id": "product-フレーム-1753142694854-oeol",
+          "name": "パーツセットG",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "0974122270"
+          ]
+        },
+        {
+          "id": "product-ガイドJ-1753147511117-x0iu",
+          "name": "パーツセットH",
+          "category": "ハウジング",
+          "description": "ボデー",
+          "drawingCount": 1,
+          "drawings": [
+            "04297711725"
+          ]
+        },
+        {
+          "id": "product-ステージ5-1753320732861-10p1",
+          "name": "コンポーネントI",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "0A229001290"
+          ]
+        },
+        {
+          "id": "product-ブラケット-1753404206325-yqam",
+          "name": "コンポーネントJ",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "5427365400"
+          ]
+        },
+        {
+          "id": "product-レーザーテーブル48-1753676432471-d4ps",
+          "name": "コンポーネントK",
+          "category": "ベアリング部品",
+          "description": "レーザーテーブル",
+          "drawingCount": 1,
+          "drawings": [
+            "06190300668"
+          ]
+        },
+        {
+          "id": "product-レーザーテーブル51-1753677007893-f7yw",
+          "name": "コンポーネントL",
+          "category": "ベアリング部品",
+          "description": "レーザーテーブル",
+          "drawingCount": 1,
+          "drawings": [
+            "06200301496"
+          ]
+        },
+        {
+          "id": "product-ガイドJ-1753680913343-40tx",
+          "name": "パーツセットH",
+          "category": "ハウジング",
+          "description": "ボデー",
+          "drawingCount": 1,
+          "drawings": [
+            "05389730954"
+          ]
+        },
+        {
+          "id": "product-門-1755675398922-ftc6",
+          "name": "アッセンブリM",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "6848300490"
+          ]
+        },
+        {
+          "id": "product-プレートK-1755675448470-jvxg",
+          "name": "アッセンブリN",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "4277790003"
+          ]
+        },
+        {
+          "id": "product-架台ユニットF-1756429636611-mk0h",
+          "name": "アッセンブリO",
+          "category": "プレート部品",
+          "description": "架台",
+          "drawingCount": 1,
+          "drawings": [
+            "536-79-25010"
+          ]
+        },
+        {
+          "id": "product-ブラケットH-1756854585237-z1wl",
+          "name": "アッセンブリP",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "0F127300570"
+          ]
+        },
+        {
+          "id": "product-ハウジングC-1757996672151-ihoe",
+          "name": "機構部品Q",
+          "category": "ハウジング",
+          "description": "ボデー",
+          "drawingCount": 1,
+          "drawings": [
+            "6850300924"
+          ]
+        },
+        {
+          "id": "product-フレームユニットG-1759217605290-rscj",
+          "name": "機構部品R",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "05644400083"
+          ]
+        },
+        {
+          "id": "product-ベース-1761024363755-bgb1",
+          "name": "機構部品S",
+          "category": "ブロック",
+          "description": "機構部品S",
+          "drawingCount": 1,
+          "drawings": [
+            "0A149000443"
+          ]
+        },
+        {
+          "id": "product-クランク-1762315847853-iqaw",
+          "name": "機構部品T",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "0A219403330"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-precision-b",
+      "name": "株式会社デモ精密B",
+      "shortName": "デモ精密B",
+      "description": "株式会社デモ精密B",
+      "priority": 2,
+      "products": [
+        {
+          "id": "0E260800172",
+          "name": "加工品U",
+          "category": "スリーブ",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "0E260800172"
+          ]
+        },
+        {
+          "id": "0E260800190",
+          "name": "加工品V",
+          "category": "カラー部品",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "0E260800190"
+          ]
+        },
+        {
+          "id": "02760810650",
+          "name": "加工品W",
+          "category": "フランジ部品",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "02760810650"
+          ]
+        },
+        {
+          "id": "12750800122",
+          "name": "加工品X",
+          "category": "カバー部品",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "12750800122"
+          ]
+        },
+        {
+          "id": "0F030800622",
+          "name": "構成部品Y",
+          "category": "ケース",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "0F030800622"
+          ]
+        },
+        {
+          "id": "16800301576",
+          "name": "加工品U",
+          "category": "スリーブ",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "16800301576"
+          ]
+        },
+        {
+          "id": "product-テーブル1250-1759792702646-ttdi",
+          "name": "構成部品Z",
+          "category": "ボディ部品",
+          "description": "テーブル",
+          "drawingCount": 1,
+          "drawings": [
+            "1193762506"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-works-c",
+      "name": "株式会社デモ工業C",
+      "shortName": "デモ工業C",
+      "description": "株式会社デモ工業C",
+      "priority": 3,
+      "products": [
+        {
+          "id": "82096-2-R04",
+          "name": "構成部品AA",
+          "category": "スリーブ",
+          "description": "工作機械部品",
+          "drawingCount": 1,
+          "drawings": [
+            "82096-2-R04"
+          ]
+        },
+        {
+          "id": "product-コネクティングブッシ-1753141605396-ywva",
+          "name": "構成部品AB",
+          "category": "サポート",
+          "description": "構成部品AB",
+          "drawingCount": 1,
+          "drawings": [
+            "A1-46717-E"
+          ]
+        },
+        {
+          "id": "product-HUB-1754285056596-8qu7",
+          "name": "モジュールAC",
+          "category": "ホルダー",
+          "description": "ギヤセット",
+          "drawingCount": 1,
+          "drawings": [
+            "4K524654-1"
+          ]
+        },
+        {
+          "id": "product-GEAR-1754285224295-g9ol",
+          "name": "モジュールAD",
+          "category": "ホルダー",
+          "description": "ギヤセット",
+          "drawingCount": 1,
+          "drawings": [
+            "4K524654-2"
+          ]
+        },
+        {
+          "id": "product-PLATE-1754285282851-8icg",
+          "name": "モジュールAE",
+          "category": "アダプター",
+          "description": "プレート",
+          "drawingCount": 1,
+          "drawings": [
+            "4K470955"
+          ]
+        },
+        {
+          "id": "product-GEAR-1754285338637-cb7s",
+          "name": "モジュールAD",
+          "category": "ジョイント",
+          "description": "歯切り治具",
+          "drawingCount": 1,
+          "drawings": [
+            "4K300346"
+          ]
+        },
+        {
+          "id": "product-ステンインペラ-1754290476213-57om",
+          "name": "モジュールAF",
+          "category": "コネクタ",
+          "description": "インペラ",
+          "drawingCount": 1,
+          "drawings": [
+            "P103668"
+          ]
+        },
+        {
+          "id": "product-ステンインペラ-1754293816687-tsod",
+          "name": "モジュールAF",
+          "category": "コネクタ",
+          "description": "インペラ",
+          "drawingCount": 1,
+          "drawings": [
+            "PR24M048202"
+          ]
+        },
+        {
+          "id": "product-吸込カバー-1754977384812-g116",
+          "name": "エレメントAG",
+          "category": "スリーブ",
+          "description": "加工品U",
+          "drawingCount": 1,
+          "drawings": [
+            "1N15111"
+          ]
+        },
+        {
+          "id": "product-ケーシング-1756095784152-a74t",
+          "name": "エレメントAH",
+          "category": "マウント",
+          "description": "エレメントAH",
+          "drawingCount": 1,
+          "drawings": [
+            "2A00259DN-R01"
+          ]
+        },
+        {
+          "id": "product-ケーシング-1756186735063-lqjx",
+          "name": "エレメントAH",
+          "category": "マウント",
+          "description": "エレメントAH",
+          "drawingCount": 1,
+          "drawings": [
+            "2A00218DN-R02"
+          ]
+        },
+        {
+          "id": "product-ケーシング-1757641639624-rpqi",
+          "name": "エレメントAH",
+          "category": "マウント",
+          "description": "エレメントAH",
+          "drawingCount": 1,
+          "drawings": [
+            "2A00511-R16"
+          ]
+        },
+        {
+          "id": "product-ケーシング-1757892125126-0j0s",
+          "name": "エレメントAH",
+          "category": "マウント",
+          "description": "エレメントAH",
+          "drawingCount": 1,
+          "drawings": [
+            "2A00279-4DN-R02"
+          ]
+        },
+        {
+          "id": "product-蓋-1759724011115-qq98",
+          "name": "エレメントAI",
+          "category": "ブラケット部品",
+          "description": "グローブボックス",
+          "drawingCount": 1,
+          "drawings": [
+            "TG-11923"
+          ]
+        },
+        {
+          "id": "product-胴体-1759724090583-f4o9",
+          "name": "エレメントAJ",
+          "category": "ブラケット部品",
+          "description": "グローブボックス",
+          "drawingCount": 1,
+          "drawings": [
+            "TG-11924-5"
+          ]
+        },
+        {
+          "id": "product-フランジ-1761783293999-cvkf",
+          "name": "ユニットAK",
+          "category": "フレーム部品",
+          "description": "ユニットAK",
+          "drawingCount": 1,
+          "drawings": [
+            "5Z228005A"
+          ]
+        },
+        {
+          "id": "product-ケーシング-1762388003336-7zvk",
+          "name": "エレメントAH",
+          "category": "マウント",
+          "description": "エレメントAH",
+          "drawingCount": 1,
+          "drawings": [
+            "NP102796-2"
+          ]
+        },
+        {
+          "id": "product-砲金インペラ-1768865759601-332c",
+          "name": "ユニットAL",
+          "category": "コネクタ",
+          "description": "インペラ",
+          "drawingCount": 1,
+          "drawings": [
+            "PR-4451"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-engineering-d",
+      "name": "有限会社デモエンジニアリングD",
+      "shortName": "有限会社デモエンジニアリングD",
+      "description": "有限会社デモエンジニアリングD",
+      "priority": 4,
+      "products": [
+        {
+          "id": "product-フレーム-1752728753984-9ljr",
+          "name": "パーツセットG",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "GSETJIG-3101"
+          ]
+        },
+        {
+          "id": "product-ブラケット-1752728896002-bup8",
+          "name": "コンポーネントJ",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "TMT1750-P0003"
+          ]
+        },
+        {
+          "id": "product-アルミフレーム-1753171089847-cx6b",
+          "name": "ユニットAM",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "INNSJ-XXXX"
+          ]
+        },
+        {
+          "id": "product-ブラケット-1753663629308-eq1q",
+          "name": "コンポーネントJ",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "M-2009211-060"
+          ]
+        },
+        {
+          "id": "product-ブラケット-1753663671504-7cx9",
+          "name": "コンポーネントJ",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "M-5329619-160"
+          ]
+        },
+        {
+          "id": "product-サイドフレーム-1753853688010-ozcz",
+          "name": "ユニットAN",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2404599-1604-0"
+          ]
+        },
+        {
+          "id": "product-サイドフレーム-1753853724272-temu",
+          "name": "ユニットAN",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2404599-1603-0"
+          ]
+        },
+        {
+          "id": "product-フレーム-1753853837926-6z7f",
+          "name": "パーツセットG",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2404599-1601-0"
+          ]
+        },
+        {
+          "id": "product-昇降フレーム-1753853837926-vurh",
+          "name": "パートAO",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2404599-1651-0"
+          ]
+        },
+        {
+          "id": "product-ベース-1754700782583-m5gn",
+          "name": "機構部品S",
+          "category": "ブロック",
+          "description": "機構部品S",
+          "drawingCount": 1,
+          "drawings": [
+            "TM26003-RS10x"
+          ]
+        },
+        {
+          "id": "product-フレーム-1754701388484-n7mq",
+          "name": "パーツセットG",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "TM256039-2-1401"
+          ]
+        },
+        {
+          "id": "product-スライドフレーム-1756095253255-f4xh",
+          "name": "パートAP",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "25047-00-002"
+          ]
+        },
+        {
+          "id": "product-ベースフレーム-1756358158897-uasf",
+          "name": "パートAQ",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "M-6617288-010"
+          ]
+        },
+        {
+          "id": "product-フレーム-1757027756328-hcfy",
+          "name": "パーツセットG",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2502639-RS20X"
+          ]
+        },
+        {
+          "id": "product-ブラケット-1758256805340-1lah",
+          "name": "コンポーネントJ",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2302799-101"
+          ]
+        },
+        {
+          "id": "product-ブラケット-1758600727371-ts0h",
+          "name": "コンポーネントJ",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2302799-107"
+          ]
+        },
+        {
+          "id": "product-ブラケット-1758600759531-81uy",
+          "name": "コンポーネントJ",
+          "category": "シャフト部品",
+          "description": "コンポーネントJ",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2302799-108"
+          ]
+        },
+        {
+          "id": "product-フレーム-1759964968656-ijr9",
+          "name": "パーツセットG",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "M-2009839-120"
+          ]
+        },
+        {
+          "id": "product-フレーム-1760053907827-upeb",
+          "name": "パーツセットG",
+          "category": "ギア部品",
+          "description": "パーツセットG",
+          "drawingCount": 1,
+          "drawings": [
+            "TM2502639-HA201-0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-industrial-e",
+      "name": "デモインダストリーE",
+      "shortName": "デモインダストリーE",
+      "description": "デモインダストリーE",
+      "priority": 5,
+      "products": [
+        {
+          "id": "product-ステンレスアリ溝フラ-1753161544745-0cph",
+          "name": "パートAR",
+          "category": "フレーム部品",
+          "description": "ユニットAK",
+          "drawingCount": 1,
+          "drawings": [
+            "flange_sus_sanei_20250722"
+          ]
+        },
+        {
+          "id": "product-アリ溝SS400リン-1753170068727-8rbz",
+          "name": "部材AS",
+          "category": "フレーム部品",
+          "description": "ユニットAK",
+          "drawingCount": 1,
+          "drawings": [
+            "sanei_24K022"
+          ]
+        },
+        {
+          "id": "product-扉金物-1753420163031-0fay",
+          "name": "部材AT",
+          "category": "ベース部品",
+          "description": "部材AT",
+          "drawingCount": 1,
+          "drawings": [
+            "24K025_20252725"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-factory-f",
+      "name": "デモファクトリーF",
+      "shortName": "デモファクトリーF",
+      "description": "デモファクトリーF",
+      "priority": 6,
+      "products": [
+        {
+          "id": "product-リングI-1753681070605-ugtn",
+          "name": "部材AU",
+          "category": "カラー部品",
+          "description": "加工品V",
+          "drawingCount": 1,
+          "drawings": [
+            "1G-162-TL-05"
+          ]
+        },
+        {
+          "id": "product-回転機構D-1753420217649-3bsc",
+          "name": "部材AV",
+          "category": "プーリー",
+          "description": "部材AV",
+          "drawingCount": 1,
+          "drawings": [
+            "DM-05"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tvtokyo",
+      "name": "テレ東(株)",
+      "shortName": "テレ東(株)",
+      "description": "テレ東(株)",
+      "priority": 7,
+      "products": [
+        {
+          "id": "product-レール-1754024245635-1hu6",
+          "name": "リング",
+          "category": "リング",
+          "description": "リング",
+          "drawingCount": 1,
+          "drawings": [
+            "91260506-2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-metal-h",
+      "name": "株式会社デモメタルH",
+      "shortName": "株式会社デモメタルH",
+      "description": "株式会社デモメタルH",
+      "priority": 8,
+      "products": [
+        {
+          "id": "product-オプションプレート-1756271001497-9x6x",
+          "name": "製作品AW",
+          "category": "アダプター",
+          "description": "プレート",
+          "drawingCount": 1,
+          "drawings": [
+            "3D428555"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "demo-steel-i",
+      "name": "株式会社デモスチールI",
+      "shortName": "株式会社デモスチールI",
+      "description": "株式会社デモスチールI",
+      "priority": 9,
+      "products": [
+        {
+          "id": "product-150マル-1758238655318-7edi",
+          "name": "製作品AX",
+          "category": "スプロケット",
+          "description": "加工部品BB",
+          "drawingCount": 1,
+          "drawings": [
+            "1-773-1441A"
+          ]
+        },
+        {
+          "id": "product-200マル-1758238707704-4a47",
+          "name": "製作品AY",
+          "category": "スプロケット",
+          "description": "加工部品BB",
+          "drawingCount": 1,
+          "drawings": [
+            "1-773-1446A"
+          ]
+        },
+        {
+          "id": "product-振止共用ベース-1759189818032-eo3a",
+          "name": "製作品AZ",
+          "category": "カップリング",
+          "description": "製作品AZ",
+          "drawingCount": 1,
+          "drawings": [
+            "2-773-2173A"
+          ]
+        },
+        {
+          "id": "product-移動振止ベース-1759189864293-ez6s",
+          "name": "加工部品BA",
+          "category": "リテーナ部品",
+          "description": "加工部品BA",
+          "drawingCount": 1,
+          "drawings": [
+            "2-773-1954A"
+          ]
+        },
+        {
+          "id": "product-移動振止本体-1759189898884-vg3w",
+          "name": "加工部品BB",
+          "category": "スプロケット",
+          "description": "加工部品BB",
+          "drawingCount": 1,
+          "drawings": [
+            "2-773-1955A"
+          ]
+        },
+        {
+          "id": "product-固定振止本体5035-1759189959636-f3p2",
+          "name": "加工部品BC",
+          "category": "スペーサー",
+          "description": "固定振止本体",
+          "drawingCount": 1,
+          "drawings": [
+            "P-620-449"
+          ]
+        },
+        {
+          "id": "product-固定振止上体5035-1759189993823-qaic",
+          "name": "加工部品BD",
+          "category": "ワッシャー",
+          "description": "固定振止上体",
+          "drawingCount": 1,
+          "drawings": [
+            "P-620-450"
+          ]
+        },
+        {
+          "id": "product-固定振止ベース503-1759190050078-tzis",
+          "name": "機械部品BE",
+          "category": "ブッシュ",
+          "description": "固定振止ベース",
+          "drawingCount": 1,
+          "drawings": [
+            "2-773-1919A-001"
+          ]
+        },
+        {
+          "id": "product-横送り台-1760674323782-o6fh",
+          "name": "機械部品BF",
+          "category": "ピン部品",
+          "description": "機械部品BF",
+          "drawingCount": 1,
+          "drawings": [
+            "2-240-1593C"
+          ]
+        },
+        {
+          "id": "product-横送り台-1760674367010-qzrx",
+          "name": "機械部品BF",
+          "category": "ピン部品",
+          "description": "機械部品BF",
+          "drawingCount": 1,
+          "drawings": [
+            "2-240-1580A"
+          ]
+        },
+        {
+          "id": "product-上下側面加工-1761200786926-naqz",
+          "name": "機械部品BG",
+          "category": "ローラー",
+          "description": "芯押台",
+          "drawingCount": 1,
+          "drawings": [
+            "1-250-1166C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wbs",
+      "name": "ワールドビジネスサテライト(株)",
+      "shortName": "ワールドビジネスサテライト(株)",
+      "description": "ワールドビジネスサテライト(株)",
+      "priority": 10,
+      "products": [
+        {
+          "id": "product-フレーム-1760061792141-156t",
+          "name": "ブラケット",
+          "category": "ブラケット",
+          "description": "ブラケット",
+          "drawingCount": 1,
+          "drawings": [
+            "SW-25P5-040"
+          ]
+        },
+        {
+          "id": "product-フレーム-1760068929139-tyj5",
+          "name": "ブラケット",
+          "category": "ブラケット",
+          "description": "ブラケット",
+          "drawingCount": 1,
+          "drawings": [
+            "SW-25P5-050"
+          ]
+        },
+        {
+          "id": "product-フレーム-1765151605609-ocep",
+          "name": "ブラケット",
+          "category": "ブラケット",
+          "description": "ブラケット",
+          "drawingCount": 1,
+          "drawings": [
+            "119-151"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2026-01-19T23:36:00.251Z",
+    "version": "1.0.0"
+  }
+}

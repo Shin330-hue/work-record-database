@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "6848300490",
+    "title": "ブラケット（門）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-門-1755675398922-ftc6",
+    "createdDate": "2025-08-20",
+    "updatedDate": "2025-08-21",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-21T02:19:33.495Z",
+    "displayDrawingNumber": "DRW-014"
+  },
+  "overview": {
+    "description": "ブラケット（門）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "6848300490.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-20",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "drawingNumber": "16800301576",
+    "title": "カバー加工手順",
+    "companyId": "demo-precision-b",
+    "productId": "16800301576",
+    "version": "1.0",
+    "createdDate": "2025-07-10",
+    "updatedDate": "2025-08-01",
+    "author": "作業者AI",
+    "difficulty": "中級",
+    "estimatedTime": "500分",
+    "machineType": [],
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-027"
+  },
+  "overview": {
+    "description": "DRW-027　カバーの加工",
+    "warnings": [],
+    "preparationTime": "-分",
+    "processingTime": "-分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "第一工程",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "第二工程",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "第三工程",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "mediaFolders": {
+    "images": "images",
+    "videos": "videos",
+    "pdfs": "pdfs",
+    "programs": "programs"
+  },
+  "revisionHistory": [
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、空のデフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ],
+  "nearMiss": []
+}

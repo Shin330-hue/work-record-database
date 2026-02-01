@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "drawingNumber": "DM-05",
+    "title": "回転機構D（回転機構D）加工手順",
+    "companyId": "demo-factory-f",
+    "productId": "product-回転機構D-1753420217649-3bsc",
+    "createdDate": "2025-07-25",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "マシニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-070"
+  },
+  "overview": {
+    "description": "回転機構D（回転機構D）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "段取りと加工",
+        "description": "内側から4カ所せって4カ所押さえて加工\n仕上がりは幅68〜70ミリ",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-25",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ],
+  "nearMiss": []
+}

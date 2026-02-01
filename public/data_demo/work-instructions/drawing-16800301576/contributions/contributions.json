@@ -1,0 +1,118 @@
+{
+  "drawingNumber": "16800301576",
+  "contributions": [
+    {
+      "id": "1752624187734_6zolyqt94",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-16T00:03:08.563Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "第一工程",
+        "imagePath": "files/images/___1752624187734_6zolyqt94_0.jpg",
+        "originalFileName": "80.jpg",
+        "fileSize": 1700845,
+        "files": [
+          {
+            "fileName": "___1752624187734_6zolyqt94_0.jpg",
+            "originalFileName": "80.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1700845,
+            "filePath": "files/images/___1752624187734_6zolyqt94_0.jpg"
+          },
+          {
+            "fileName": "___1752624187734_6zolyqt94_1.jpg",
+            "originalFileName": "81.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1291119,
+            "filePath": "files/images/___1752624187734_6zolyqt94_1.jpg"
+          },
+          {
+            "fileName": "___1752624187734_6zolyqt94_2.jpg",
+            "originalFileName": "82.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1236610,
+            "filePath": "files/images/___1752624187734_6zolyqt94_2.jpg"
+          },
+          {
+            "fileName": "___1752624187734_6zolyqt94_3.jpg",
+            "originalFileName": "83.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1226476,
+            "filePath": "files/images/___1752624187734_6zolyqt94_3.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752624232552_jbp9lwl5s",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-16T00:03:52.986Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "第二工程",
+        "imagePath": "files/images/___1752624232552_jbp9lwl5s_0.jpg",
+        "originalFileName": "84.jpg",
+        "fileSize": 1418109,
+        "files": [
+          {
+            "fileName": "___1752624232552_jbp9lwl5s_0.jpg",
+            "originalFileName": "84.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1418109,
+            "filePath": "files/images/___1752624232552_jbp9lwl5s_0.jpg"
+          },
+          {
+            "fileName": "___1752624232552_jbp9lwl5s_1.jpg",
+            "originalFileName": "85.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1341584,
+            "filePath": "files/images/___1752624232552_jbp9lwl5s_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752624259082_2bnl0galf",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-16T00:04:19.276Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "第三工程",
+        "imagePath": "files/images/___1752624259082_2bnl0galf_0.jpg",
+        "originalFileName": "86.jpg",
+        "fileSize": 1229462,
+        "files": [
+          {
+            "fileName": "___1752624259082_2bnl0galf_0.jpg",
+            "originalFileName": "86.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1229462,
+            "filePath": "files/images/___1752624259082_2bnl0galf_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 3,
+    "lastUpdated": "2025-08-01T07:06:55.242Z",
+    "version": "1.0",
+    "mergedCount": 3
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "metadata": {
+    "drawingNumber": "TM26003-RS10x",
+    "title": "ベース（ベース）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-ベース-1754700782583-m5gn",
+    "createdDate": "2025-08-09",
+    "updatedDate": "2025-08-09",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": "マシニング,ラジアル",
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-09T00:53:04.995Z",
+    "displayDrawingNumber": "DRW-056"
+  },
+  "overview": {
+    "description": "ベース（ベース）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "TM26003-RS102.pdf",
+      "TM26003-RS103.pdf",
+      "TM26003-RS104.pdf"
+    ],
+    "programs": [
+      "TM26003-RS102.dxf",
+      "TM26003-RS103.dxf",
+      "TM26003-RS104.dxf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-09",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ]
+}

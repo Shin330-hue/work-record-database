@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "drawingNumber": "2-773-2173A",
+    "title": "振止共用ベース（振止共用ベース）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-振止共用ベース-1759189818032-eo3a",
+    "createdDate": "2025-09-29",
+    "updatedDate": "2025-10-30",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "横中",
+      "マシニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-29T23:54:47.683Z",
+    "displayDrawingNumber": "DRW-074"
+  },
+  "overview": {
+    "description": "振止共用ベース（振止共用ベース）加工手順の加工を行います",
+    "warnings": [
+      "▽▽▽部分はフェイスミル仕上でOK"
+    ],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "2-773-2173A.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-29",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [
+      {
+        "stepNumber": 1,
+        "title": "荒引(側面片側)",
+        "description": "5mm程削る部分有。内側寸法確認し切削",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "凹凸部側切削(荒引)",
+        "description": "凹凸部荒引\n固定時治具締め直し",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

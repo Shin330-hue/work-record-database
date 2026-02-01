@@ -1,0 +1,75 @@
+{
+  "drawingNumber": "2A00218DN-R02",
+  "contributions": [
+    {
+      "id": "1756792311474_jtr9iw898",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-09-02T05:51:51.822Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/_____1756792311474_jtr9iw898_0.jpg",
+        "originalFileName": "1000024922.jpg",
+        "fileSize": 3221600,
+        "files": [
+          {
+            "fileName": "_____1756792311474_jtr9iw898_0.jpg",
+            "originalFileName": "1000024922.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3221600,
+            "filePath": "files/images/_____1756792311474_jtr9iw898_0.jpg"
+          },
+          {
+            "fileName": "_____1756792311474_jtr9iw898_1.jpg",
+            "originalFileName": "1000024920.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2950031,
+            "filePath": "files/images/_____1756792311474_jtr9iw898_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1757052452560_5yy6gu51g",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-09-05T06:07:32.850Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/_____1757052452560_5yy6gu51g_0.jpg",
+        "originalFileName": "1000024934.jpg",
+        "fileSize": 2417016,
+        "files": [
+          {
+            "fileName": "_____1757052452560_5yy6gu51g_0.jpg",
+            "originalFileName": "1000024934.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2417016,
+            "filePath": "files/images/_____1757052452560_5yy6gu51g_0.jpg"
+          },
+          {
+            "fileName": "_____1757052452560_5yy6gu51g_1.jpg",
+            "originalFileName": "1000024935.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2490844,
+            "filePath": "files/images/_____1757052452560_5yy6gu51g_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 2,
+    "lastUpdated": "2025-09-05T06:23:46.914Z",
+    "version": "1.0",
+    "mergedCount": 2
+  }
+}

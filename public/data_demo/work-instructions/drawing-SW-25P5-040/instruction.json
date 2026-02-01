@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "drawingNumber": "SW-25P5-040",
+    "title": "ブラケット（ブラケット）加工手順",
+    "companyId": "wbs",
+    "productId": "product-フレーム-1760061792141-156t",
+    "createdDate": "2025-10-10",
+    "updatedDate": "2025-10-10",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-10T02:42:37.170Z",
+    "displayDrawingNumber": "WBS-001"
+  },
+  "overview": {
+    "description": "ブラケット（ブラケット）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "SW-25P5-040.pdf"
+    ],
+    "programs": [
+      "CAD.zip"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-10",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

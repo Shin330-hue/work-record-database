@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "drawingNumber": "82096-2-R04",
+    "title": "サクションカバー加工手順",
+    "companyId": "demo-works-c",
+    "productId": "82096-2-R04",
+    "version": "1.0",
+    "createdDate": "2025-07-11",
+    "updatedDate": "2025-08-09",
+    "author": "作業者AI",
+    "difficulty": "中級",
+    "estimatedTime": "500分",
+    "machineType": [
+      "ターニング"
+    ],
+    "toolsRequired": [
+      "工具1"
+    ],
+    "displayDrawingNumber": "DRW-029"
+  },
+  "overview": {
+    "description": "サクションカバーの加工手順概要です",
+    "warnings": [
+      "安全に注意"
+    ],
+    "preparationTime": "30分",
+    "processingTime": "470分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [
+    {
+      "problem": "加工精度が出ない",
+      "cause": "材料の固定不良",
+      "solution": "再度材料を正しく固定する"
+    }
+  ],
+  "nearMiss": [
+    {
+      "title": "薄い材料のクランプ時の注意",
+      "description": "薄い材料をクランプしたりセットする際は曲がりやすい",
+      "cause": "材料が薄いため、クランプ力による変形やひずみが発生しやすい",
+      "prevention": "岡田さんより：薄いものでクランプしたりせったりするときは曲がりやすいに気を付けてください",
+      "severity": "high"
+    }
+  ],
+  "mediaFolders": {
+    "images": "images",
+    "videos": "videos",
+    "pdfs": "pdfs"
+  },
+  "revisionHistory": [
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、ターニングタブに作業データを配置"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けを修正"
+    }
+  ]
+}

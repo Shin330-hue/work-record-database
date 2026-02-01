@@ -66,10 +66,12 @@ function validateFiles(files: File[]): { valid: boolean; error?: string } {
 function getContributionPath(drawingNumber: string): string {
   const safeDrawingNumber = sanitizeDrawingNumber(drawingNumber)
   if (process.env.NODE_ENV === 'production') {
-    return path.join(process.env.DATA_ROOT_PATH || '/mnt/nas/project-data', 
+    return path.join(process.env.DATA_ROOT_PATH || '/mnt/nas/project-data',
                     'work-instructions', `drawing-${safeDrawingNumber}`, 'contributions')
   }
-  return path.join(process.cwd(), 'public', 'data', 'work-instructions', 
+  // 開発環境では環境変数を優先
+  const devDataPath = process.env.DEV_DATA_ROOT_PATH || process.env.DATA_ROOT_PATH || './public/data'
+  return path.join(process.cwd(), devDataPath.replace(/^\.\//, ''), 'work-instructions',
                   `drawing-${safeDrawingNumber}`, 'contributions')
 }
 

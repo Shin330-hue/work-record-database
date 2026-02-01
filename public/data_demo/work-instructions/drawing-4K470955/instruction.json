@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "drawingNumber": "4K470955",
+    "title": "プレート（PLATE）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-PLATE-1754285282851-8icg",
+    "createdDate": "2025-08-04",
+    "updatedDate": "2025-09-05",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-033"
+  },
+  "overview": {
+    "description": "プレート（PLATE）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-04",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "1工程",
+        "description": "",
+        "detailedInstructions": [
+          "端面、内径荒引"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "2工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転端面、外径荒引",
+          "端面、内径仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "3工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転端面、外径仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

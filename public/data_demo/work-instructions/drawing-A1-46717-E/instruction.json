@@ -1,0 +1,116 @@
+{
+  "metadata": {
+    "drawingNumber": "A1-46717-E",
+    "title": "コネクティングブッシュ（コネクティングブッシュ）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-コネクティングブッシ-1753141605396-ywva",
+    "createdDate": "2025-07-21",
+    "updatedDate": "2026-01-09",
+    "author": "管理画面",
+    "estimatedTime": "500分",
+    "machineType": [
+      "マシニング",
+      "横中"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-030"
+  },
+  "overview": {
+    "description": "コネクティングブッシュ（コネクティングブッシュ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "470分"
+  },
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "段取り",
+        "description": "内側から押さえる",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "吊り方",
+        "description": "専用ハッカーでテープ巻いて吊り上げ",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "turning": [],
+    "yokonaka": [
+      {
+        "stepNumber": 1,
+        "title": "段取り",
+        "description": "４点押さえ\n紙ひいて押さえる",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "工具",
+        "description": "φ20ドリミール\nφ20エンドミル\nφ20ドリル\nφ20.2ボーリング\nφ9ドリル\nφ9ラフィング",
+        "detailedInstructions": [
+          "φ20ドリミール・エンドミルは110mm以上だす"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "nearMiss": [
+    {
+      "title": "追加工注意",
+      "description": "図面が２枚あるので気を付けてください",
+      "cause": "",
+      "prevention": "",
+      "severity": "high"
+    }
+  ],
+  "revisionHistory": [
+    {
+      "date": "2025-07-21",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、マシニングタブに作業データを配置"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "作業手順をマシニングから横中タブへ移動"
+    }
+  ]
+}

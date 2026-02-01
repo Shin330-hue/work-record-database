@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "drawingNumber": "TM2302799-101",
+    "title": "ブラケット（ブラケット）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-ブラケット-1758256805340-1lah",
+    "createdDate": "2025-09-19",
+    "updatedDate": "2025-09-19",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-19T04:45:14.156Z",
+    "displayDrawingNumber": "DRW-061"
+  },
+  "overview": {
+    "description": "ブラケット（ブラケット）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "TM2302799-101.pdf"
+    ],
+    "programs": [
+      "TM2302799-101.dxf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-19",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

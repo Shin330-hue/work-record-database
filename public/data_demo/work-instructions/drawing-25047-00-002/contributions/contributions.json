@@ -1,0 +1,67 @@
+{
+  "drawingNumber": "25047-00-002",
+  "contributions": [
+    {
+      "id": "1756361312639_9odk4rne4",
+      "userId": "作業者M",
+      "userName": "作業者M",
+      "timestamp": "2025-08-28T06:08:33.379Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/__1756361312639_9odk4rne4_0.jpg",
+        "originalFileName": "20250828_100311.jpg",
+        "fileSize": 5608769,
+        "files": [
+          {
+            "fileName": "__1756361312639_9odk4rne4_0.jpg",
+            "originalFileName": "20250828_100311.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5608769,
+            "filePath": "files/images/__1756361312639_9odk4rne4_0.jpg"
+          },
+          {
+            "fileName": "__1756361312639_9odk4rne4_1.jpg",
+            "originalFileName": "20250828_100303.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2316759,
+            "filePath": "files/images/__1756361312639_9odk4rne4_1.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1756366254040_jqw15hs6l",
+      "userId": "作業者M",
+      "userName": "作業者M",
+      "timestamp": "2025-08-28T07:30:54.449Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/__1756366254040_jqw15hs6l_0.jpg",
+        "originalFileName": "20250828_163014.jpg",
+        "fileSize": 4199679,
+        "files": [
+          {
+            "fileName": "__1756366254040_jqw15hs6l_0.jpg",
+            "originalFileName": "20250828_163014.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4199679,
+            "filePath": "files/images/__1756366254040_jqw15hs6l_0.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 2,
+    "lastUpdated": "2025-08-28T07:30:54.449Z",
+    "version": "1.0",
+    "mergedCount": 0
+  }
+}

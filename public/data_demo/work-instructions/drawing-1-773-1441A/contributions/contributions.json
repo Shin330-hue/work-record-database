@@ -1,0 +1,107 @@
+{
+  "drawingNumber": "1-773-1441A",
+  "contributions": [
+    {
+      "id": "1758670552142_1msaqpvs7",
+      "userId": "作業者G",
+      "userName": "作業者G",
+      "timestamp": "2025-09-23T23:35:53.325Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1758670552142_1msaqpvs7_0.jpg",
+        "originalFileName": "1000000167.jpg",
+        "fileSize": 4751460,
+        "files": [
+          {
+            "fileName": "___1758670552142_1msaqpvs7_0.jpg",
+            "originalFileName": "1000000167.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4751460,
+            "filePath": "files/images/___1758670552142_1msaqpvs7_0.jpg"
+          },
+          {
+            "fileName": "___1758670552142_1msaqpvs7_1.jpg",
+            "originalFileName": "1000000168.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5568889,
+            "filePath": "files/images/___1758670552142_1msaqpvs7_1.jpg"
+          },
+          {
+            "fileName": "___1758670552142_1msaqpvs7_2.jpg",
+            "originalFileName": "1000000178.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4464697,
+            "filePath": "files/images/___1758670552142_1msaqpvs7_2.jpg"
+          },
+          {
+            "fileName": "___1758670552142_1msaqpvs7_3.jpg",
+            "originalFileName": "1000000179.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5146017,
+            "filePath": "files/images/___1758670552142_1msaqpvs7_3.jpg"
+          },
+          {
+            "fileName": "___1758670552142_1msaqpvs7_4.jpg",
+            "originalFileName": "1000000180.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4667928,
+            "filePath": "files/images/___1758670552142_1msaqpvs7_4.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1759196124809_xyhxwub5b",
+      "userId": "作業者H",
+      "userName": "作業者H",
+      "timestamp": "2025-09-30T01:35:26.024Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1759196124809_xyhxwub5b_0.jpg",
+        "originalFileName": "1000005528.jpg",
+        "fileSize": 5336718,
+        "files": [
+          {
+            "fileName": "___1759196124809_xyhxwub5b_0.jpg",
+            "originalFileName": "1000005528.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5336718,
+            "filePath": "files/images/___1759196124809_xyhxwub5b_0.jpg"
+          },
+          {
+            "fileName": "___1759196124809_xyhxwub5b_1.jpg",
+            "originalFileName": "1000005531.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5941522,
+            "filePath": "files/images/___1759196124809_xyhxwub5b_1.jpg"
+          },
+          {
+            "fileName": "___1759196124809_xyhxwub5b_2.jpg",
+            "originalFileName": "1000005534.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3690641,
+            "filePath": "files/images/___1759196124809_xyhxwub5b_2.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 2,
+    "lastUpdated": "2025-09-30T01:35:26.024Z",
+    "version": "1.0",
+    "mergedCount": 0
+  }
+}

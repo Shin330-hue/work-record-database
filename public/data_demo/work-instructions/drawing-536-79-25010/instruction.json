@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "drawingNumber": "536-79-25010",
+    "title": "架台（架台ユニットF）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-架台ユニットF-1756429636611-mk0h",
+    "createdDate": "2025-08-29",
+    "updatedDate": "2025-09-08",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-08T05:49:12.462Z",
+    "displayDrawingNumber": "DRW-016"
+  },
+  "overview": {
+    "description": "架台（架台ユニットF）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "536-79-25010△02架台ユニットF.pdf"
+    ],
+    "programs": [
+      "536-79-25010△02_NA.DXF"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-29",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "裏面荒引",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "荒引": {
+            "tool": "Φ100ウェーブミル",
+            "spindleSpeed": "S600",
+            "feedRate": "F600",
+            "depthOfCut": "1mm",
+            "stepOver": ""
+          },
+          "仕上げ": {
+            "tool": "Φ100三菱facemil",
+            "spindleSpeed": "S300",
+            "feedRate": "F300",
+            "depthOfCut": "",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "表面段取り・押さえ",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "荒引": {
+            "tool": "Φ100ウェーブエンドミル",
+            "spindleSpeed": "S600",
+            "feedRate": "F600",
+            "depthOfCut": "1mm",
+            "stepOver": ""
+          },
+          "仕上げ": {
+            "tool": "Φ100三菱facemil",
+            "spindleSpeed": "S300",
+            "feedRate": "F300",
+            "depthOfCut": "",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

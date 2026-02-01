@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "drawingNumber": "1-773-1441A",
+    "title": "移動振止本体（150マル）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-150マル-1758238655318-7edi",
+    "createdDate": "2025-09-18",
+    "updatedDate": "2025-10-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-01T23:41:19.758Z",
+    "displayDrawingNumber": "DRW-072"
+  },
+  "overview": {
+    "description": "移動振止本体（150マル）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "1-773-1441A_1.pdf"
+    ],
+    "programs": [
+      "1-773-1441A.dxf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-18",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

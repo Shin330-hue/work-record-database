@@ -1,0 +1,576 @@
+{
+  "drawingNumber": "12750800122",
+  "contributions": [
+    {
+      "id": "1752647427790_3ck6oymrg",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-16T06:30:28.094Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "品番　ワーク",
+        "imagePath": "files/images/___1752647427790_3ck6oymrg_0.png",
+        "originalFileName": "93.png",
+        "fileSize": 21386,
+        "files": [
+          {
+            "fileName": "___1752647427790_3ck6oymrg_0.png",
+            "originalFileName": "93.png",
+            "fileType": "image",
+            "mimeType": "image/png",
+            "fileSize": 21386,
+            "filePath": "files/images/___1752647427790_3ck6oymrg_0.png"
+          },
+          {
+            "fileName": "___1752647427790_3ck6oymrg_1.jpg",
+            "originalFileName": "95.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1422371,
+            "filePath": "files/images/___1752647427790_3ck6oymrg_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752709141136_jzcwwf8o7",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-16T23:39:01.332Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "内寸910 外寸980 幅30正直",
+        "imagePath": "files/images/___1752709141136_jzcwwf8o7_0.jpg",
+        "originalFileName": "99.jpg",
+        "fileSize": 1383106,
+        "files": [
+          {
+            "fileName": "___1752709141136_jzcwwf8o7_0.jpg",
+            "originalFileName": "99.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1383106,
+            "filePath": "files/images/___1752709141136_jzcwwf8o7_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752719526119_ka9a3xjnr",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-17T02:32:06.350Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "セリ74㎜",
+        "imagePath": "files/images/___1752719526119_ka9a3xjnr_0.jpg",
+        "originalFileName": "100.jpg",
+        "fileSize": 1360511,
+        "files": [
+          {
+            "fileName": "___1752719526119_ka9a3xjnr_0.jpg",
+            "originalFileName": "100.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1360511,
+            "filePath": "files/images/___1752719526119_ka9a3xjnr_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752735344742_ecd4ojiyc",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-17T06:55:44.944Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "外、内径2㎜ 幅1㎜　つけ粗びき",
+        "imagePath": "files/images/___1752735344742_ecd4ojiyc_0.jpg",
+        "originalFileName": "102.jpg",
+        "fileSize": 1322529,
+        "files": [
+          {
+            "fileName": "___1752735344742_ecd4ojiyc_0.jpg",
+            "originalFileName": "102.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1322529,
+            "filePath": "files/images/___1752735344742_ecd4ojiyc_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752796521831_svp1fcruu",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-17T23:55:22.034Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "16㎜段差\r\n",
+        "imagePath": "files/images/___1752796521831_svp1fcruu_0.jpg",
+        "originalFileName": "103.jpg",
+        "fileSize": 1274107,
+        "files": [
+          {
+            "fileName": "___1752796521831_svp1fcruu_0.jpg",
+            "originalFileName": "103.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1274107,
+            "filePath": "files/images/___1752796521831_svp1fcruu_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752802593003_pi1yeltka",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T01:36:33.194Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "段差11㎜　セリ91㎜\r\n",
+        "imagePath": "files/images/___1752802593003_pi1yeltka_0.jpg",
+        "originalFileName": "104.jpg",
+        "fileSize": 1336284,
+        "files": [
+          {
+            "fileName": "___1752802593003_pi1yeltka_0.jpg",
+            "originalFileName": "104.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1336284,
+            "filePath": "files/images/___1752802593003_pi1yeltka_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752803811782_efmren20u",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T01:56:51.974Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "幅46.5㎜　反転",
+        "imagePath": "files/images/___1752803811782_efmren20u_0.jpg",
+        "originalFileName": "105.jpg",
+        "fileSize": 1353635,
+        "files": [
+          {
+            "fileName": "___1752803811782_efmren20u_0.jpg",
+            "originalFileName": "105.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1353635,
+            "filePath": "files/images/___1752803811782_efmren20u_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752805347615_3fsubm81n",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T02:22:27.781Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "46㎜仕上げ　16㎜段差\r\n",
+        "imagePath": "files/images/___1752805347615_3fsubm81n_0.jpg",
+        "originalFileName": "106.jpg",
+        "fileSize": 1309709,
+        "files": [
+          {
+            "fileName": "___1752805347615_3fsubm81n_0.jpg",
+            "originalFileName": "106.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1309709,
+            "filePath": "files/images/___1752805347615_3fsubm81n_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752811935953_zenrplkpp",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T04:12:16.170Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "Φ900仕上げ\r\n",
+        "imagePath": "files/images/___1752811935953_zenrplkpp_0.jpg",
+        "originalFileName": "114.jpg",
+        "fileSize": 1291358,
+        "files": [
+          {
+            "fileName": "___1752811935953_zenrplkpp_0.jpg",
+            "originalFileName": "114.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1291358,
+            "filePath": "files/images/___1752811935953_zenrplkpp_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752816259344_7olb9oiru",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T05:24:19.562Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "Φ993仕上げ　Φ942.1",
+        "imagePath": "files/images/___1752816259344_7olb9oiru_0.jpg",
+        "originalFileName": "116.jpg",
+        "fileSize": 1268816,
+        "files": [
+          {
+            "fileName": "___1752816259344_7olb9oiru_0.jpg",
+            "originalFileName": "116.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1268816,
+            "filePath": "files/images/___1752816259344_7olb9oiru_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752819006332_naufugsao",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T06:10:06.799Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "6㎜ステッキ　TIP3 Z−18.8 粗びき",
+        "imagePath": "files/images/___1752819006332_naufugsao_0.jpg",
+        "originalFileName": "127.jpg",
+        "fileSize": 1217664,
+        "files": [
+          {
+            "fileName": "___1752819006332_naufugsao_0.jpg",
+            "originalFileName": "127.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1217664,
+            "filePath": "files/images/___1752819006332_naufugsao_0.jpg"
+          },
+          {
+            "fileName": "___1752819006332_naufugsao_1.jpg",
+            "originalFileName": "126.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 762567,
+            "filePath": "files/images/___1752819006332_naufugsao_1.jpg"
+          },
+          {
+            "fileName": "___1752819006332_naufugsao_2.jpg",
+            "originalFileName": "125.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 814626,
+            "filePath": "files/images/___1752819006332_naufugsao_2.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752821016883_56a9n42p1",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T06:43:37.542Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "Φ942 Φ975 Z−19 45°　仕上げ\r\n",
+        "imagePath": "files/images/___1752821016883_56a9n42p1_0.jpg",
+        "originalFileName": "131.jpg",
+        "fileSize": 1550548,
+        "files": [
+          {
+            "fileName": "___1752821016883_56a9n42p1_0.jpg",
+            "originalFileName": "131.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1550548,
+            "filePath": "files/images/___1752821016883_56a9n42p1_0.jpg"
+          },
+          {
+            "fileName": "___1752821016883_56a9n42p1_1.jpg",
+            "originalFileName": "134.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1146516,
+            "filePath": "files/images/___1752821016883_56a9n42p1_1.jpg"
+          },
+          {
+            "fileName": "___1752821016883_56a9n42p1_2.jpg",
+            "originalFileName": "135.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 859961,
+            "filePath": "files/images/___1752821016883_56a9n42p1_2.jpg"
+          },
+          {
+            "fileName": "___1752821016883_56a9n42p1_3.jpg",
+            "originalFileName": "133.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1317115,
+            "filePath": "files/images/___1752821016883_56a9n42p1_3.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752821453709_e5dxkcauk",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T06:50:53.709Z",
+      "type": "comment",
+      "targetSection": "overview",
+      "content": {
+        "text": "反転　11㎜側"
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752822846567_6k4y1ztgn",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T07:14:06.797Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "内径C1",
+        "imagePath": "files/images/___1752822846567_6k4y1ztgn_0.jpg",
+        "originalFileName": "136.jpg",
+        "fileSize": 1321103,
+        "files": [
+          {
+            "fileName": "___1752822846567_6k4y1ztgn_0.jpg",
+            "originalFileName": "136.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1321103,
+            "filePath": "files/images/___1752822846567_6k4y1ztgn_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1752825193655_l2zbed2pz",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-18T07:53:14.002Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "Φ933.9 Z−11 30°",
+        "imagePath": "files/images/___1752825193655_l2zbed2pz_0.jpg",
+        "originalFileName": "139.jpg",
+        "fileSize": 818198,
+        "files": [
+          {
+            "fileName": "___1752825193655_l2zbed2pz_0.jpg",
+            "originalFileName": "139.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 818198,
+            "filePath": "files/images/___1752825193655_l2zbed2pz_0.jpg"
+          },
+          {
+            "fileName": "___1752825193655_l2zbed2pz_1.jpg",
+            "originalFileName": "140.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 941847,
+            "filePath": "files/images/___1752825193655_l2zbed2pz_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753141489887_idowm13tc",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-21T23:44:50.555Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "4.225㎜　溝　TIP3",
+        "imagePath": "files/images/___1753141489887_idowm13tc_0.jpg",
+        "originalFileName": "142.jpg",
+        "fileSize": 1489913,
+        "files": [
+          {
+            "fileName": "___1753141489887_idowm13tc_0.jpg",
+            "originalFileName": "142.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1489913,
+            "filePath": "files/images/___1753141489887_idowm13tc_0.jpg"
+          },
+          {
+            "fileName": "___1753141489887_idowm13tc_1.jpg",
+            "originalFileName": "143.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1185578,
+            "filePath": "files/images/___1753141489887_idowm13tc_1.jpg"
+          },
+          {
+            "fileName": "___1753141489887_idowm13tc_2.jpg",
+            "originalFileName": "144.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1294776,
+            "filePath": "files/images/___1753141489887_idowm13tc_2.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753141539887_yu4tko59h",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-21T23:45:39.887Z",
+      "type": "comment",
+      "targetSection": "overview",
+      "content": {
+        "text": "反転　正直　内寸899セット\r\n"
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753147044972_fpeuy3jr8",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-22T01:17:25.851Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "Φ910 Φ930 15㎜溝",
+        "imagePath": "files/images/___1753147044972_fpeuy3jr8_0.jpg",
+        "originalFileName": "146.jpg",
+        "fileSize": 1327553,
+        "files": [
+          {
+            "fileName": "___1753147044972_fpeuy3jr8_0.jpg",
+            "originalFileName": "146.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1327553,
+            "filePath": "files/images/___1753147044972_fpeuy3jr8_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753147076715_t3mvufwcx",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-22T01:17:56.715Z",
+      "type": "comment",
+      "targetSection": "overview",
+      "content": {
+        "text": "抑え直し　C1\r\n\r\n"
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753148062136_95vx2spv4",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-22T01:34:22.377Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "完成",
+        "imagePath": "files/images/___1753148062136_95vx2spv4_0.jpg",
+        "originalFileName": "147.jpg",
+        "fileSize": 1319727,
+        "files": [
+          {
+            "fileName": "___1753148062136_95vx2spv4_0.jpg",
+            "originalFileName": "147.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1319727,
+            "filePath": "files/images/___1753148062136_95vx2spv4_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1757052753594_jfhy6rubc",
+      "userId": "作業者L",
+      "userName": "作業者L",
+      "timestamp": "2025-09-05T06:12:34.023Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1757052753594_jfhy6rubc_0.jpeg",
+        "originalFileName": "IMG_5286.jpeg",
+        "fileSize": 4139451,
+        "files": [
+          {
+            "fileName": "___1757052753594_jfhy6rubc_0.jpeg",
+            "originalFileName": "IMG_5286.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4139451,
+            "filePath": "files/images/___1757052753594_jfhy6rubc_0.jpeg"
+          },
+          {
+            "fileName": "___1757052753594_jfhy6rubc_1.jpeg",
+            "originalFileName": "IMG_5285.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3984032,
+            "filePath": "files/images/___1757052753594_jfhy6rubc_1.jpeg"
+          }
+        ]
+      },
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 21,
+    "lastUpdated": "2025-09-05T06:12:34.023Z",
+    "version": "1.0",
+    "mergedCount": 20
+  }
+}

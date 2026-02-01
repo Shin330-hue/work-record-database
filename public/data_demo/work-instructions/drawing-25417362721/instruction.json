@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "drawingNumber": "25417362721",
+    "title": "ブラケット（シーサー(R)）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-シーサーR-1752801408600-t28j",
+    "createdDate": "2025-07-18",
+    "updatedDate": "2025-08-27",
+    "author": "管理画面",
+    "estimatedTime": "199分",
+    "machineType": [
+      "フライス"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-004"
+  },
+  "overview": {
+    "description": "ブラケット（シーサー(R)）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "169分"
+  },
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "段取り",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-18",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ],
+  "nearMiss": []
+}

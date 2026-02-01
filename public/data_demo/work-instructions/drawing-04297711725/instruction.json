@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "drawingNumber": "04297711725",
+    "title": "ボデー（ガイドJ）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-ガイドJ-1753147511117-x0iu",
+    "createdDate": "2025-07-22",
+    "updatedDate": "2025-08-19",
+    "author": "管理画面",
+    "estimatedTime": "500分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-19T00:09:03.271Z",
+    "displayDrawingNumber": "DRW-008"
+  },
+  "overview": {
+    "description": "ボデー（ガイドJ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "470分",
+    "images": [
+      "2025-07-25T01-10-55-516Z-Photo_25-07-22-18-05-21.891.jpg",
+      "2025-07-25T01-10-55-777Z-Photo_25-07-22-18-05-21.683.jpg",
+      "2025-07-25T01-10-56-020Z-Photo_25-07-22-18-05-21.492.jpg"
+    ],
+    "pdfs": [
+      "4297711725_TK版.PDF"
+    ]
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "nearMiss": [
+    {
+      "title": "加工注意点",
+      "description": "注意点は右と左でバカ穴径が違うところです。",
+      "cause": "",
+      "prevention": "",
+      "severity": "medium"
+    }
+  ],
+  "revisionHistory": [
+    {
+      "date": "2025-07-22",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    }
+  ]
+}

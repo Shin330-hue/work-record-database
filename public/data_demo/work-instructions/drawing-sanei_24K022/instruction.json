@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "drawingNumber": "sanei_24K022",
+    "title": "フランジ（アリ溝_SS400_リング）加工手順",
+    "companyId": "demo-industrial-e",
+    "productId": "product-アリ溝SS400リン-1753170068727-8rbz",
+    "createdDate": "2025-07-22",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "ターニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-067"
+  },
+  "overview": {
+    "description": "フランジ（アリ溝_SS400_リング）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "段取り",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "注意点",
+        "description": "溶接部注意",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "アリ溝",
+        "description": "あり溝\n送り0.10\n切込み0.2",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-22",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けを修正"
+    }
+  ],
+  "nearMiss": []
+}

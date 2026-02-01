@@ -1,0 +1,83 @@
+{
+  "drawingNumber": "536-79-25010",
+  "contributions": [
+    {
+      "id": "1757033225547_a3e8ced0z",
+      "userId": "作業者G",
+      "userName": "作業者G",
+      "timestamp": "2025-09-05T00:47:06.051Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1757033225547_a3e8ced0z_0.jpg",
+        "originalFileName": "1000000113.jpg",
+        "fileSize": 5162537,
+        "files": [
+          {
+            "fileName": "___1757033225547_a3e8ced0z_0.jpg",
+            "originalFileName": "1000000113.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5162537,
+            "filePath": "files/images/___1757033225547_a3e8ced0z_0.jpg"
+          },
+          {
+            "fileName": "___1757033225547_a3e8ced0z_1.jpg",
+            "originalFileName": "1000000114.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4396459,
+            "filePath": "files/images/___1757033225547_a3e8ced0z_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1757039542414_f7lowqf50",
+      "userId": "作業者G",
+      "userName": "作業者G",
+      "timestamp": "2025-09-05T02:32:23.060Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1757039542414_f7lowqf50_0.jpeg",
+        "originalFileName": "IMG_5300.jpeg",
+        "fileSize": 3969229,
+        "files": [
+          {
+            "fileName": "___1757039542414_f7lowqf50_0.jpeg",
+            "originalFileName": "IMG_5300.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3969229,
+            "filePath": "files/images/___1757039542414_f7lowqf50_0.jpeg"
+          },
+          {
+            "fileName": "___1757039542414_f7lowqf50_1.jpeg",
+            "originalFileName": "IMG_5301.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3987042,
+            "filePath": "files/images/___1757039542414_f7lowqf50_1.jpeg"
+          },
+          {
+            "fileName": "___1757039542414_f7lowqf50_2.jpeg",
+            "originalFileName": "IMG_5302.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4201576,
+            "filePath": "files/images/___1757039542414_f7lowqf50_2.jpeg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 2,
+    "lastUpdated": "2025-09-05T04:28:16.507Z",
+    "version": "1.0",
+    "mergedCount": 2
+  }
+}

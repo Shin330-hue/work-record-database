@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "drawingNumber": "25417362731",
+    "title": "ブラケット（シーサー(L)）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-シーサーL-1752801917176-z8sc",
+    "createdDate": "2025-07-18",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "200分",
+    "machineType": "フライス,ラジアル",
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-005"
+  },
+  "overview": {
+    "description": "ブラケット（シーサー(L)）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "170分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-18",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ]
+}

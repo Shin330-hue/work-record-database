@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "0F127300570",
+    "title": "ブラケット（ブラケットH）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-ブラケットH-1756854585237-z1wl",
+    "createdDate": "2025-09-02",
+    "updatedDate": "2025-09-02",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-02T23:10:44.814Z",
+    "displayDrawingNumber": "DRW-017"
+  },
+  "overview": {
+    "description": "ブラケット（ブラケットH）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "0F127300570.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-02",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

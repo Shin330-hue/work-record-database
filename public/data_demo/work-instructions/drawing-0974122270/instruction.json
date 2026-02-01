@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "drawingNumber": "0974122270",
+    "title": "フレーム（フレーム）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-フレーム-1753142694854-oeol",
+    "createdDate": "2025-07-22",
+    "updatedDate": "2025-07-31",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-007"
+  },
+  "overview": {
+    "description": "フレーム（フレーム）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "nearMiss": [
+    {
+      "title": "長い工具が必要",
+      "description": "下面の面削までの距離が長い",
+      "cause": "",
+      "prevention": "",
+      "severity": "medium"
+    }
+  ],
+  "revisionHistory": [
+    {
+      "date": "2025-07-22",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    }
+  ]
+}

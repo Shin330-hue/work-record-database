@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "drawingNumber": "GSETJIG-3101",
+    "title": "フレーム（フレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-フレーム-1752728753984-9ljr",
+    "createdDate": "2025-07-17",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": "マシニング,ラジアル,横中",
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-047"
+  },
+  "overview": {
+    "description": "フレーム（フレーム）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-17",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ]
+}

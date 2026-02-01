@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "2-773-1954A",
+    "title": "移動振止ベース（移動振止ベース）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-移動振止ベース-1759189864293-ez6s",
+    "createdDate": "2025-09-29",
+    "updatedDate": "2025-09-30",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-30T00:00:02.283Z",
+    "displayDrawingNumber": "DRW-075"
+  },
+  "overview": {
+    "description": "移動振止ベース（移動振止ベース）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "2-773-1954A.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-29",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

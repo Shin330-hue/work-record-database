@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "TG-11923",
+    "title": "グローブボックス（蓋）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-蓋-1759724011115-qq98",
+    "createdDate": "2025-10-06",
+    "updatedDate": "2025-10-06",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-06T04:15:10.995Z",
+    "displayDrawingNumber": "DRW-042"
+  },
+  "overview": {
+    "description": "グローブボックス（蓋）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "TG-11923.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-06",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

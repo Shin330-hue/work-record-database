@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "drawingNumber": "0A224000531",
+    "title": "ブラケット加工テーブルE加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-1752651493882-6rbf9v",
+    "createdDate": "2025-07-16",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": "マシニング,ラジアル",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-003"
+  },
+  "overview": {
+    "description": "ブラケット加工テーブルEの加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-16",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ]
+}

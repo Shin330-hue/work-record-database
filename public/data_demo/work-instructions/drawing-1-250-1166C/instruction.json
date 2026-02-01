@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "1-250-1166C",
+    "title": "芯押台（上下側面加工）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-上下側面加工-1761200786926-naqz",
+    "createdDate": "2025-10-23",
+    "updatedDate": "2025-10-23",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-23T06:27:05.837Z",
+    "displayDrawingNumber": "DRW-082"
+  },
+  "overview": {
+    "description": "芯押台（上下側面加工）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "1-250-1166C心押台本体.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-23",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

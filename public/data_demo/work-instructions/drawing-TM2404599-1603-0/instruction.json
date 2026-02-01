@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "drawingNumber": "TM2404599-1603-0",
+    "title": "フレーム（サイドフレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-サイドフレーム-1753854057421-6cl1",
+    "createdDate": "2025-07-30",
+    "updatedDate": "2025-08-26",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-26T01:15:44.265Z",
+    "displayDrawingNumber": "DRW-053"
+  },
+  "overview": {
+    "description": "フレーム（サイドフレーム）加工手順の加工を行います\n※プログラムファイルは横中",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "programs": [
+      "KTM1603.NC"
+    ]
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-30",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けを修正"
+    }
+  ],
+  "nearMiss": []
+}

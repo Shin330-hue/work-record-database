@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "drawingNumber": "TMT1750-P0003",
+    "title": "ブラケット（ブラケット）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-ブラケット-1752720337454-2lp1",
+    "createdDate": "2025-07-17",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": "マシニング,ラジアル",
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-048"
+  },
+  "overview": {
+    "description": "ブラケット（ブラケット）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-17",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けを修正"
+    }
+  ]
+}

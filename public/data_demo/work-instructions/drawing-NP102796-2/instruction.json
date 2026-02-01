@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "NP102796-2",
+    "title": "ケーシング（ケーシング）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-ケーシング-1762388003336-7zvk",
+    "createdDate": "2025-11-06",
+    "updatedDate": "2025-11-06",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-11-06T00:13:41.703Z",
+    "displayDrawingNumber": "DRW-045"
+  },
+  "overview": {
+    "description": "ケーシング（ケーシング）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "20251106090304194.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-11-06",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

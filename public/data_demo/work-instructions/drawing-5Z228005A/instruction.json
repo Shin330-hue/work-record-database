@@ -1,0 +1,46 @@
+{
+  "metadata": {
+    "drawingNumber": "5Z228005A",
+    "title": "フランジ（フランジ）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-フランジ-1761783293999-cvkf",
+    "createdDate": "2025-10-30",
+    "updatedDate": "2025-10-30",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "ターニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-30T00:15:54.209Z",
+    "displayDrawingNumber": "DRW-044"
+  },
+  "overview": {
+    "description": "フランジ（フランジ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "20251030091240184.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-30",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

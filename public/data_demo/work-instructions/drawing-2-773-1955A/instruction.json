@@ -1,0 +1,52 @@
+{
+  "metadata": {
+    "drawingNumber": "2-773-1955A",
+    "title": "移動振止本体（移動振止本体）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-移動振止本体-1759189898884-vg3w",
+    "createdDate": "2025-09-29",
+    "updatedDate": "2025-10-29",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-29T02:09:13.971Z",
+    "displayDrawingNumber": "DRW-076"
+  },
+  "overview": {
+    "description": "移動振止本体（移動振止本体）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "2-773-1955A.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-29",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": [
+    {
+      "title": "ボス２カ所に空く2-M12",
+      "description": "空ける場所が違っていた（余分に空いていた）",
+      "cause": "前回両側に空いていた",
+      "prevention": "片側だけに空けること",
+      "severity": "high"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "PR-4451",
+    "title": "インペラ（砲金インペラ）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-砲金インペラ-1768865759601-332c",
+    "createdDate": "2026-01-19",
+    "updatedDate": "2026-01-19",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2026-01-19T23:37:14.419Z",
+    "displayDrawingNumber": "DRW-046"
+  },
+  "overview": {
+    "description": "インペラ（砲金インペラ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "20251204113315541.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2026-01-19",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

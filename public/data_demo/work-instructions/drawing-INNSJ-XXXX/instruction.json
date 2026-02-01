@@ -1,0 +1,49 @@
+{
+  "metadata": {
+    "drawingNumber": "INNSJ-XXXX",
+    "title": "フレーム（アルミフレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-アルミフレーム-1753171089847-cx6b",
+    "createdDate": "2025-07-22",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-049"
+  },
+  "overview": {
+    "description": "7図面\nΦ5.5キリ穴、Φ5H7、Φ6H7、M5、M6など",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "nearMiss": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-22",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、デフォルト作業ステップを削除"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けとJSON構文エラーを修正"
+    }
+  ]
+}

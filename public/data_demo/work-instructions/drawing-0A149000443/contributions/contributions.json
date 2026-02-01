@@ -1,0 +1,23 @@
+{
+  "drawingNumber": "0A149000443",
+  "contributions": [
+    {
+      "id": "1761899596180_svjpih97a",
+      "userId": "作業者C",
+      "userName": "作業者B",
+      "timestamp": "2025-10-31T08:33:16.180Z",
+      "type": "comment",
+      "targetSection": "overview",
+      "content": {
+        "text": "片側の板のみ4mm取り代\r\n片側は2mm取り代"
+      },
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 1,
+    "lastUpdated": "2025-10-31T08:33:16.180Z",
+    "version": "1.0",
+    "mergedCount": 0
+  }
+}

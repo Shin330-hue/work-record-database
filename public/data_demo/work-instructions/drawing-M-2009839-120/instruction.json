@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "drawingNumber": "M-2009839-120",
+    "title": "フレーム（フレーム）加工手順",
+    "companyId": "demo-engineering-d",
+    "productId": "product-フレーム-1759964968656-ijr9",
+    "createdDate": "2025-10-08",
+    "updatedDate": "2025-10-08",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-08T23:10:05.653Z",
+    "displayDrawingNumber": "DRW-064"
+  },
+  "overview": {
+    "description": "フレーム（フレーム）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "20251008112829291.pdf"
+    ],
+    "programs": [
+      "M-2009839-120.dxf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-08",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

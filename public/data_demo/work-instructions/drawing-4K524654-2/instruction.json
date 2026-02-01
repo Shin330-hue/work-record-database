@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "drawingNumber": "4K524654-2",
+    "title": "ギヤセット（GEAR）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-GEAR-1754285224295-g9ol",
+    "createdDate": "2025-08-04",
+    "updatedDate": "2025-08-04",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": "マシニング,ターニング",
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-032"
+  },
+  "overview": {
+    "description": "ギヤセット（GEAR）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-04",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ]
+}

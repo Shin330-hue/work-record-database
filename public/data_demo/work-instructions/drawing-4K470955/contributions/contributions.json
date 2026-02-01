@@ -1,0 +1,43 @@
+{
+  "drawingNumber": "4K470955",
+  "contributions": [
+    {
+      "id": "1757052384914_d7vg6dcuz",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-09-05T06:06:25.259Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/_____1757052384914_d7vg6dcuz_0.jpg",
+        "originalFileName": "1000024939.jpg",
+        "fileSize": 3269857,
+        "files": [
+          {
+            "fileName": "_____1757052384914_d7vg6dcuz_0.jpg",
+            "originalFileName": "1000024939.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3269857,
+            "filePath": "files/images/_____1757052384914_d7vg6dcuz_0.jpg"
+          },
+          {
+            "fileName": "_____1757052384914_d7vg6dcuz_1.jpg",
+            "originalFileName": "1000024938.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2780899,
+            "filePath": "files/images/_____1757052384914_d7vg6dcuz_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 1,
+    "lastUpdated": "2025-09-05T06:35:40.324Z",
+    "version": "1.0",
+    "mergedCount": 1
+  }
+}

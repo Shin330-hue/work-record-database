@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "drawingNumber": "4K300346",
+    "title": "歯切り治具（GEAR）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-GEAR-1754285338637-cb7s",
+    "createdDate": "2025-08-04",
+    "updatedDate": "2025-09-05",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "ターニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-034"
+  },
+  "overview": {
+    "description": "歯切り治具（GEAR）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分"
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-04",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "1工程",
+        "description": "",
+        "detailedInstructions": [
+          "段取",
+          "端面加工、外径途中まで荒引"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "2工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転端面、外径残り荒引",
+          "端面仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "3工程",
+        "description": "端面取代がない為50が48で仕上げる。\n内径はサンダーで面取。",
+        "detailedInstructions": [
+          "端面仕上げ",
+          "外径仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

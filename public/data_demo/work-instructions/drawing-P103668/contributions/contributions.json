@@ -1,0 +1,216 @@
+{
+  "drawingNumber": "P103668",
+  "contributions": [
+    {
+      "id": "1754292344821_0hoze8jgv",
+      "userId": "作業者Q",
+      "userName": "作業者Q",
+      "timestamp": "2025-08-04T07:25:45.279Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "四カ所押さえる。四カ所サイドから固定する。テーパー部の押さえ、ジャッキが逃げないように後ろに支えを作る。",
+        "imagePath": "files/images/____1754292344821_0hoze8jgv_0.jpg",
+        "originalFileName": "1000005340.jpg",
+        "fileSize": 4675873,
+        "files": [
+          {
+            "fileName": "____1754292344821_0hoze8jgv_0.jpg",
+            "originalFileName": "1000005340.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4675873,
+            "filePath": "files/images/____1754292344821_0hoze8jgv_0.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1754373399082_t328ec324",
+      "userId": "作業者A",
+      "userName": "作業者A",
+      "timestamp": "2025-08-05T05:56:40.290Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "ダーニングで削ったところでクランプ",
+        "imagePath": "files/images/___1754373399082_t328ec324_0.jpg",
+        "originalFileName": "1000000042.jpg",
+        "fileSize": 4774194,
+        "files": [
+          {
+            "fileName": "___1754373399082_t328ec324_0.jpg",
+            "originalFileName": "1000000042.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4774194,
+            "filePath": "files/images/___1754373399082_t328ec324_0.jpg"
+          },
+          {
+            "fileName": "___1754373399082_t328ec324_1.jpg",
+            "originalFileName": "1000000041.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4631662,
+            "filePath": "files/images/___1754373399082_t328ec324_1.jpg"
+          },
+          {
+            "fileName": "___1754373399082_t328ec324_2.jpg",
+            "originalFileName": "1000000040.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4659191,
+            "filePath": "files/images/___1754373399082_t328ec324_2.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1754541173327_6ws7ownqb",
+      "userId": "作業者A",
+      "userName": "作業者A",
+      "timestamp": "2025-08-07T04:32:54.221Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1754541173327_6ws7ownqb_0.jpg",
+        "originalFileName": "1000000044.jpg",
+        "fileSize": 5265746,
+        "files": [
+          {
+            "fileName": "___1754541173327_6ws7ownqb_0.jpg",
+            "originalFileName": "1000000044.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 5265746,
+            "filePath": "files/images/___1754541173327_6ws7ownqb_0.jpg"
+          },
+          {
+            "fileName": "___1754541173327_6ws7ownqb_1.jpg",
+            "originalFileName": "1000000043.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4992189,
+            "filePath": "files/images/___1754541173327_6ws7ownqb_1.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1754613115110_m9dalt2ii",
+      "userId": "作業者R",
+      "userName": "作業者R",
+      "timestamp": "2025-08-08T00:31:55.324Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/_____1754613115110_m9dalt2ii_0.jpg",
+        "originalFileName": "1000000070.jpg",
+        "fileSize": 1199149,
+        "files": [
+          {
+            "fileName": "_____1754613115110_m9dalt2ii_0.jpg",
+            "originalFileName": "1000000070.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1199149,
+            "filePath": "files/images/_____1754613115110_m9dalt2ii_0.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1754899466216_qzx3wemzv",
+      "userId": "作業者Q",
+      "userName": "作業者Q",
+      "timestamp": "2025-08-11T08:04:26.695Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "逆回転？",
+        "imagePath": "files/images/____1754899466216_qzx3wemzv_0.jpg",
+        "originalFileName": "1000005371.jpg",
+        "fileSize": 4213025,
+        "files": [
+          {
+            "fileName": "____1754899466216_qzx3wemzv_0.jpg",
+            "originalFileName": "1000005371.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4213025,
+            "filePath": "files/images/____1754899466216_qzx3wemzv_0.jpg"
+          },
+          {
+            "fileName": "____1754899466216_qzx3wemzv_1.jpg",
+            "originalFileName": "1000005370.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4788101,
+            "filePath": "files/images/____1754899466216_qzx3wemzv_1.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1756094953349_qputkpkt9",
+      "userId": "作業者Q",
+      "userName": "作業者Q",
+      "timestamp": "2025-08-25T04:09:13.587Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "サンドビックCNMM120412-MR2025\r\nターニングチップ",
+        "imagePath": "files/images/____1756094953349_qputkpkt9_0.jpg",
+        "originalFileName": "1000005437.jpg",
+        "fileSize": 4344821,
+        "files": [
+          {
+            "fileName": "____1756094953349_qputkpkt9_0.jpg",
+            "originalFileName": "1000005437.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4344821,
+            "filePath": "files/images/____1756094953349_qputkpkt9_0.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1756253977049_asne0h3lr",
+      "userId": "作業者Q",
+      "userName": "作業者Q",
+      "timestamp": "2025-08-27T00:19:37.198Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "推奨チップ",
+        "imagePath": "files/images/____1756253977049_asne0h3lr_0.jpg",
+        "originalFileName": "1000005448.jpg",
+        "fileSize": 2258634,
+        "files": [
+          {
+            "fileName": "____1756253977049_asne0h3lr_0.jpg",
+            "originalFileName": "1000005448.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2258634,
+            "filePath": "files/images/____1756253977049_asne0h3lr_0.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 7,
+    "lastUpdated": "2025-08-27T00:19:37.198Z",
+    "version": "1.0",
+    "mergedCount": 0
+  }
+}

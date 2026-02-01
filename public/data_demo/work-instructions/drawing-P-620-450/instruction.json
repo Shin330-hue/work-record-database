@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "P-620-450",
+    "title": "固定振止上体（固定振止上体50-350）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-固定振止上体5035-1759189993823-qaic",
+    "createdDate": "2025-09-29",
+    "updatedDate": "2025-09-30",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-30T00:01:54.175Z",
+    "displayDrawingNumber": "DRW-078"
+  },
+  "overview": {
+    "description": "固定振止上体（固定振止上体50-350）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "P-620-450.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-29",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

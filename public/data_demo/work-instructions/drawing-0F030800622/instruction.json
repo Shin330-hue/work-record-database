@@ -1,0 +1,185 @@
+{
+  "metadata": {
+    "drawingNumber": "0F030800622",
+    "title": "ピストン加工手順",
+    "companyId": "demo-precision-b",
+    "productId": "0F030800622",
+    "version": "1.0",
+    "createdDate": "2024-12-30",
+    "updatedDate": "2025-08-07",
+    "author": "作業者AI",
+    "difficulty": "中級",
+    "estimatedTime": "500分",
+    "machineType": [
+      "ターニング"
+    ],
+    "toolsRequired": [],
+    "displayDrawingNumber": "DRW-026"
+  },
+  "overview": {
+    "description": "DRW-026　ピストンの加工",
+    "warnings": [],
+    "preparationTime": "-分",
+    "processingTime": "-分"
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "1工程",
+        "description": "端面幅40ぐらい（3ｍｍ）にする。\n内外径片肉+1ｍｍで加工する。",
+        "detailedInstructions": [
+          "正直を内寸660ｍｍでセットする。",
+          "端面、内径、外径（途中まで）を荒引する。"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "端面、内径": {
+            "tool": "住友　CNMM120408N-MP",
+            "spindleSpeed": "S500",
+            "feedRate": "F0.3~0.4",
+            "depthOfCut": "2~1.5ｍｍ",
+            "stepOver": ""
+          },
+          "外径": {
+            "tool": "京セラ　GMM8030-080MW",
+            "spindleSpeed": "S500",
+            "feedRate": "F0.10~0.15",
+            "depthOfCut": "2~1.5ｍｍ",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "２工程",
+        "description": "端面35.5で荒引する。\n外径荒引時チップがセリに当たらないよう注意する。\n端面仕上げ時はセリを調整する。",
+        "detailedInstructions": [
+          "端面、外径（残り）を荒引する。",
+          "端面を仕上げる。"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "仕上げ": {
+            "tool": "タンガロイ　DNMG150408-TM9225",
+            "spindleSpeed": "S500",
+            "feedRate": "F0.20~0.25",
+            "depthOfCut": "0.25~0.5ｍｍ",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "3工程",
+        "description": "溝仕上げ時キリ10.1と10.2で幅を確認する。",
+        "detailedInstructions": [
+          "端面を仕上げる。",
+          "外側から押さえて内径、溝を仕上げる。",
+          "内側から押さえて外径、溝を仕上げる。"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "溝　荒引": {
+            "tool": "ミルコーナ　MP-6-ALP280",
+            "spindleSpeed": "S400",
+            "feedRate": "F0.05~0.15",
+            "depthOfCut": "1ｍｍ",
+            "stepOver": ""
+          },
+          "溝　仕上げ": {
+            "tool": "京セラ　GDG3020N-020GS",
+            "spindleSpeed": "S600",
+            "feedRate": "F0.05",
+            "depthOfCut": "0.5~0.1ｍｍ",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 4,
+        "title": "４工程",
+        "description": "外径が仕上がっているので板を入れてせる。",
+        "detailedInstructions": [
+          "内径R、端面-1.2ｍｍまで仕上げる。"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 5,
+        "title": "5工程",
+        "description": "端面溝加工時内側から4か所押さえる。（内外R加工時ははずす）",
+        "detailedInstructions": [
+          "端面溝を仕上げる。",
+          "内径、外径Rを仕上げる。"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "端面溝荒引き": {
+            "tool": "ミルコーナ　MP-6-ALP280",
+            "spindleSpeed": "S400",
+            "feedRate": "F0.05~0.15",
+            "depthOfCut": "1ｍｍ",
+            "stepOver": ""
+          },
+          "端面溝仕上げ": {
+            "tool": "ミルコーナ　MP-6-ALP280",
+            "spindleSpeed": "S1200",
+            "feedRate": "F0.05",
+            "depthOfCut": "0.5~0.1",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "mediaFolders": {
+    "images": "images",
+    "videos": "videos",
+    "pdfs": "pdfs"
+  },
+  "revisionHistory": [
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、空のデフォルト作業ステップを削除"
+    }
+  ],
+  "nearMiss": []
+}

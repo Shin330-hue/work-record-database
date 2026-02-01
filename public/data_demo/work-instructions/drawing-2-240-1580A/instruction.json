@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "2-240-1580A",
+    "title": "横送り台（横送り台）加工手順",
+    "companyId": "demo-steel-i",
+    "productId": "product-横送り台-1760674367010-qzrx",
+    "createdDate": "2025-10-17",
+    "updatedDate": "2025-10-17",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-10-17T05:08:54.918Z",
+    "displayDrawingNumber": "DRW-081"
+  },
+  "overview": {
+    "description": "横送り台（横送り台）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "2-240-1580A  HL　横送り台　横MC加工指示.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-10-17",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

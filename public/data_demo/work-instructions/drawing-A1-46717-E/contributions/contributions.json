@@ -1,0 +1,125 @@
+{
+  "drawingNumber": "A1-46717-E",
+  "contributions": [
+    {
+      "id": "1753408332969_y67ub09pn",
+      "userId": "作業者O",
+      "userName": "作業者O",
+      "timestamp": "2025-07-25T01:52:14.169Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "内側から押さえる",
+        "imagePath": "files/images/_____1753408332969_y67ub09pn_0.jpg",
+        "originalFileName": "IMG_20250725_104826.jpg",
+        "fileSize": 2961976,
+        "files": [
+          {
+            "fileName": "_____1753408332969_y67ub09pn_0.jpg",
+            "originalFileName": "IMG_20250725_104826.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2961976,
+            "filePath": "files/images/_____1753408332969_y67ub09pn_0.jpg"
+          },
+          {
+            "fileName": "_____1753408332969_y67ub09pn_1.jpg",
+            "originalFileName": "IMG_20250725_104758.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2733466,
+            "filePath": "files/images/_____1753408332969_y67ub09pn_1.jpg"
+          },
+          {
+            "fileName": "_____1753408332969_y67ub09pn_2.jpg",
+            "originalFileName": "IMG_20250725_104747.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2933407,
+            "filePath": "files/images/_____1753408332969_y67ub09pn_2.jpg"
+          },
+          {
+            "fileName": "_____1753408332969_y67ub09pn_3.jpg",
+            "originalFileName": "IMG_20250725_104736.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2934826,
+            "filePath": "files/images/_____1753408332969_y67ub09pn_3.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753409959868_uno3ckyth",
+      "userId": "作業者O",
+      "userName": "作業者O",
+      "timestamp": "2025-07-25T02:19:20.151Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "専用タッカーでテープ巻いて吊り上げ",
+        "imagePath": "files/images/_____1753409959868_uno3ckyth_0.jpg",
+        "originalFileName": "IMG_20250725_111451.jpg",
+        "fileSize": 3002356,
+        "files": [
+          {
+            "fileName": "_____1753409959868_uno3ckyth_0.jpg",
+            "originalFileName": "IMG_20250725_111451.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3002356,
+            "filePath": "files/images/_____1753409959868_uno3ckyth_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1754539902181_h3dx8bddz",
+      "userId": "作業者P",
+      "userName": "作業者P",
+      "timestamp": "2025-08-07T04:11:43.402Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/____1754539902181_h3dx8bddz_0.jpeg",
+        "originalFileName": "IMG_5235.jpeg",
+        "fileSize": 3967794,
+        "files": [
+          {
+            "fileName": "____1754539902181_h3dx8bddz_0.jpeg",
+            "originalFileName": "IMG_5235.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3967794,
+            "filePath": "files/images/____1754539902181_h3dx8bddz_0.jpeg"
+          },
+          {
+            "fileName": "____1754539902181_h3dx8bddz_1.jpeg",
+            "originalFileName": "IMG_5236.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3866872,
+            "filePath": "files/images/____1754539902181_h3dx8bddz_1.jpeg"
+          },
+          {
+            "fileName": "____1754539902181_h3dx8bddz_2.jpeg",
+            "originalFileName": "IMG_5237.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4529256,
+            "filePath": "files/images/____1754539902181_h3dx8bddz_2.jpeg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 3,
+    "lastUpdated": "2025-08-25T04:32:09.174Z",
+    "version": "1.0",
+    "mergedCount": 3
+  }
+}

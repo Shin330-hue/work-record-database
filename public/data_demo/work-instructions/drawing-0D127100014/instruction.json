@@ -1,0 +1,215 @@
+{
+  "metadata": {
+    "drawingNumber": "0D127100014",
+    "title": "ブラケット（部品ユニットA）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "0D127100014",
+    "createdDate": "2024-12-30",
+    "updatedDate": "2025-10-13",
+    "author": "作業者AI",
+    "estimatedTime": "500分",
+    "machineType": [
+      "マシニング",
+      "ラジアル"
+    ],
+    "toolsRequired": [
+      "Φ100 or 80フルバック",
+      "Φ12ラフィング",
+      "Φ12エンドミル",
+      "面取り",
+      "Φ50ドリミール",
+      "Φ3.3センタードリル",
+      "Φ3.3ドリル",
+      "Φ4.2ドリル",
+      "Φ5.1ドリル",
+      "M4タップ",
+      "M5タップ",
+      "M6タップ"
+    ],
+    "difficulty": "上級",
+    "displayDrawingNumber": "DRW-001"
+  },
+  "overview": {
+    "description": "部品ユニットAの加工手順の説明",
+    "warnings": [],
+    "preparationTime": "120分",
+    "processingTime": "380分",
+    "images": []
+  },
+  "workStepsByMachine": {
+    "machining": [
+      {
+        "stepNumber": 1,
+        "title": "段取り",
+        "description": "バランスが悪いため慎重に吊る",
+        "detailedInstructions": [],
+        "images": [
+          "2025-07-18T06-43-25-897Z-Photo_25-06-26-18-39-13.458.jpg"
+        ],
+        "videos": [],
+        "timeRequired": "60分",
+        "cuttingConditions": {},
+        "qualityCheck": {
+          "items": []
+        },
+        "notes": [],
+        "warningLevel": "important"
+      },
+      {
+        "stepNumber": 2,
+        "title": "芯出し",
+        "description": "サシを使い、針で原点を取る",
+        "detailedInstructions": [
+          "X、Yは縦軸でサシ＋針、Zは横軸で針を見る"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "40分",
+        "cuttingConditions": {},
+        "qualityCheck": {
+          "items": []
+        },
+        "notes": [],
+        "warningLevel": "caution"
+      },
+      {
+        "stepNumber": 3,
+        "title": "加工",
+        "description": "プログラム通りに加工する",
+        "detailedInstructions": [
+          "横側を荒加工、仕上げた後、上面を荒加工、仕上げる"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "400分",
+        "cuttingConditions": {
+          "roughing_fullback": {
+            "tool": "フルバック",
+            "spindleSpeed": "S400",
+            "feedRate": "F400",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "roughing_ruffing": {
+            "tool": "ラフィング",
+            "spindleSpeed": "S700",
+            "feedRate": "F100",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "finishing_fullback": {
+            "tool": "フルバック",
+            "spindleSpeed": "S400",
+            "feedRate": "F400min",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "finishing_endmill": {
+            "tool": "エンドミル",
+            "spindleSpeed": "S700",
+            "feedRate": "F100",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "chamfering": {
+            "tool": "面取り",
+            "spindleSpeed": "S1000",
+            "feedRate": "手動",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "drilling_3_3": {
+            "tool": "Φ3.3ドリル",
+            "spindleSpeed": "S1700",
+            "feedRate": "F100",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "drilling_4_2": {
+            "tool": "Φ4.2ドリル",
+            "spindleSpeed": "S1300",
+            "feedRate": "F100",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "drilling_5_1": {
+            "tool": "Φ5.1ドリル",
+            "spindleSpeed": "S1100",
+            "feedRate": "F100",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "tapping_M4": {
+            "tool": "M4",
+            "spindleSpeed": "S100",
+            "feedRate": "F70",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "tapping_M5": {
+            "tool": "M5",
+            "spindleSpeed": "S100",
+            "feedRate": "F80",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          },
+          "tapping_M6": {
+            "tool": "M6",
+            "spindleSpeed": "S150",
+            "feedRate": "F150",
+            "depthOfCut": null,
+            "stepOver": null,
+            "coolant": null
+          }
+        },
+        "qualityCheck": {
+          "items": [
+            {
+              "checkPoint": "平面",
+              "tolerance": "0.05",
+              "inspectionTool": "三次元測定機"
+            },
+            {
+              "checkPoint": "段差",
+              "tolerance": "±0.1",
+              "surfaceRoughness": "",
+              "inspectionTool": "ダイヤル"
+            }
+          ]
+        },
+        "notes": [],
+        "warningLevel": "critical"
+      }
+    ],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "nearMiss": [
+    {
+      "title": "段取り",
+      "description": "作業中に押さえ金具などに頭をぶつけやすい",
+      "cause": "段取りが複雑",
+      "prevention": "注意して行うこと",
+      "severity": "medium"
+    }
+  ],
+  "mediaFolders": {
+    "images": "images",
+    "videos": "videos"
+  },
+  "revisionHistory": [],
+  "relatedIdeas": []
+}

@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "drawingNumber": "6850300924",
+    "title": "ボデー（ハウジングC）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-ハウジングC-1757996672151-ihoe",
+    "createdDate": "2025-09-16",
+    "updatedDate": "2025-09-16",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-16T04:25:38.269Z",
+    "displayDrawingNumber": "DRW-018"
+  },
+  "overview": {
+    "description": "ボデー（ハウジングC）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "06850300924.pdf"
+    ],
+    "programs": [
+      "06850300924_シート_2.dxf",
+      "06850300924_シート_1.dxf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-16",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

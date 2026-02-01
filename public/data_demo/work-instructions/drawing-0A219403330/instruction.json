@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "0A219403330",
+    "title": "フレーム（クランク）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-クランク-1762315847853-iqaw",
+    "createdDate": "2025-11-05",
+    "updatedDate": "2025-11-05",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-11-05T04:11:11.411Z",
+    "displayDrawingNumber": "DRW-021"
+  },
+  "overview": {
+    "description": "フレーム（クランク）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "0A219403330.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-11-05",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

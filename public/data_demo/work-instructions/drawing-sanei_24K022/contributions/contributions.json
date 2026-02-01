@@ -1,0 +1,141 @@
+{
+  "drawingNumber": "sanei_24K022",
+  "contributions": [
+    {
+      "id": "1753170923659_nttga9ad7",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-07-22T07:55:26.426Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/_____1753170923659_nttga9ad7_0.jpg",
+        "originalFileName": "1000024785.jpg",
+        "fileSize": 4501612,
+        "files": [
+          {
+            "fileName": "_____1753170923659_nttga9ad7_0.jpg",
+            "originalFileName": "1000024785.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4501612,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_0.jpg"
+          },
+          {
+            "fileName": "_____1753170923659_nttga9ad7_1.jpg",
+            "originalFileName": "1000024786.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3326553,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_1.jpg"
+          },
+          {
+            "fileName": "_____1753170923659_nttga9ad7_2.jpg",
+            "originalFileName": "1000024788.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2769778,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_2.jpg"
+          },
+          {
+            "fileName": "_____1753170923659_nttga9ad7_3.jpg",
+            "originalFileName": "1000024791.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2549865,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_3.jpg"
+          },
+          {
+            "fileName": "_____1753170923659_nttga9ad7_4.jpg",
+            "originalFileName": "1000024792.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3268645,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_4.jpg"
+          },
+          {
+            "fileName": "_____1753170923659_nttga9ad7_5.jpg",
+            "originalFileName": "1000024793.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3457309,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_5.jpg"
+          },
+          {
+            "fileName": "_____1753170923659_nttga9ad7_6.jpg",
+            "originalFileName": "1000024796.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 2951150,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_6.jpg"
+          },
+          {
+            "fileName": "_____1753170923659_nttga9ad7_7.jpg",
+            "originalFileName": "1000024797.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3662958,
+            "filePath": "files/images/_____1753170923659_nttga9ad7_7.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753170983754_abrzno4n9",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-07-22T07:56:24.196Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "溶接部注意",
+        "imagePath": "files/images/_____1753170983754_abrzno4n9_0.jpg",
+        "originalFileName": "1000024787.jpg",
+        "fileSize": 4574740,
+        "files": [
+          {
+            "fileName": "_____1753170983754_abrzno4n9_0.jpg",
+            "originalFileName": "1000024787.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4574740,
+            "filePath": "files/images/_____1753170983754_abrzno4n9_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753171058763_l3fodp92f",
+      "userId": "作業者F",
+      "userName": "作業者F",
+      "timestamp": "2025-07-22T07:57:39.447Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "あり溝\r\n送り0.10\r\n切込み0.2",
+        "imagePath": "files/images/_____1753171058763_l3fodp92f_0.jpg",
+        "originalFileName": "1000024800.jpg",
+        "fileSize": 4846751,
+        "files": [
+          {
+            "fileName": "_____1753171058763_l3fodp92f_0.jpg",
+            "originalFileName": "1000024800.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4846751,
+            "filePath": "files/images/_____1753171058763_l3fodp92f_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 3,
+    "lastUpdated": "2025-08-01T06:16:06.913Z",
+    "version": "1.0",
+    "mergedCount": 3
+  }
+}

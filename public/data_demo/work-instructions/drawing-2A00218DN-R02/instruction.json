@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "drawingNumber": "2A00218DN-R02",
+    "title": "ケーシング（ケーシング）加工手順",
+    "companyId": "demo-works-c",
+    "productId": "product-ケーシング-1756186735063-lqjx",
+    "createdDate": "2025-08-26",
+    "updatedDate": "2025-09-05",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-08-26T05:40:14.833Z",
+    "displayDrawingNumber": "DRW-039"
+  },
+  "overview": {
+    "description": "ケーシング（ケーシング）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "2A00218DN-R02.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-08-26",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "1工程",
+        "description": "",
+        "detailedInstructions": [
+          "段取 （マシニング後内径で芯だし）",
+          "荒引",
+          "仕上げ"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "荒引": {
+            "tool": "住友　CNMG120408N-GZ",
+            "spindleSpeed": "S400~700",
+            "feedRate": "F0.30~0.4",
+            "depthOfCut": "2ミリ",
+            "stepOver": ""
+          },
+          "仕上げ": {
+            "tool": "住友　DNMG150408N-GZ",
+            "spindleSpeed": "S400~700",
+            "feedRate": "F0.2~0.25",
+            "depthOfCut": "X　0.25　Z0.1",
+            "stepOver": ""
+          }
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "２工程",
+        "description": "",
+        "detailedInstructions": [
+          "反転段取",
+          "R5加工"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        },
+        "cuttingConditions": {
+          "R5加工": {
+            "tool": "住友　DNMG150408N-GZ",
+            "spindleSpeed": "S400~700",
+            "feedRate": "F0.2~0.25",
+            "depthOfCut": "0.5ミリづつ5回加工",
+            "stepOver": ""
+          }
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

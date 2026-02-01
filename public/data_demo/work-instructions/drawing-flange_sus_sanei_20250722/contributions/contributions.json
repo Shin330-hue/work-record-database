@@ -1,0 +1,93 @@
+{
+  "drawingNumber": "flange_sus_sanei_20250722",
+  "contributions": [
+    {
+      "id": "1753162964601_0hmtdaqqc",
+      "userId": "作業者Q",
+      "userName": "作業者Q",
+      "timestamp": "2025-07-22T05:42:45.450Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "ストレート溝入れ:S12,F0.07\r\nアリ溝:S20,F0.3\r\n使用バイトはどちらも成形したロウ付けバイト\r\nR面取りも成形ロウ付けバイト。大体で。",
+        "imagePath": "files/images/____1753162964601_0hmtdaqqc_0.jpg",
+        "originalFileName": "1000005306.jpg",
+        "fileSize": 4773612,
+        "files": [
+          {
+            "fileName": "____1753162964601_0hmtdaqqc_0.jpg",
+            "originalFileName": "1000005306.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4773612,
+            "filePath": "files/images/____1753162964601_0hmtdaqqc_0.jpg"
+          },
+          {
+            "fileName": "____1753162964601_0hmtdaqqc_1.jpg",
+            "originalFileName": "1000005307.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4021098,
+            "filePath": "files/images/____1753162964601_0hmtdaqqc_1.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    },
+    {
+      "id": "1753166762803_kkrmgzg3x",
+      "userId": "作業者K",
+      "userName": "作業者K",
+      "timestamp": "2025-07-22T06:46:03.757Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "text": "段取り",
+        "imagePath": "files/images/___1753166762803_kkrmgzg3x_0.jpg",
+        "originalFileName": "148.jpg",
+        "fileSize": 1380458,
+        "files": [
+          {
+            "fileName": "___1753166762803_kkrmgzg3x_0.jpg",
+            "originalFileName": "148.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1380458,
+            "filePath": "files/images/___1753166762803_kkrmgzg3x_0.jpg"
+          },
+          {
+            "fileName": "___1753166762803_kkrmgzg3x_1.jpg",
+            "originalFileName": "149.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1064957,
+            "filePath": "files/images/___1753166762803_kkrmgzg3x_1.jpg"
+          },
+          {
+            "fileName": "___1753166762803_kkrmgzg3x_2.jpg",
+            "originalFileName": "150.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1231176,
+            "filePath": "files/images/___1753166762803_kkrmgzg3x_2.jpg"
+          },
+          {
+            "fileName": "___1753166762803_kkrmgzg3x_3.jpg",
+            "originalFileName": "151.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 1246269,
+            "filePath": "files/images/___1753166762803_kkrmgzg3x_3.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 2,
+    "lastUpdated": "2025-08-01T06:17:53.044Z",
+    "version": "1.0",
+    "mergedCount": 2
+  }
+}

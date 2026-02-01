@@ -1,0 +1,99 @@
+{
+  "drawingNumber": "2-773-2173A",
+  "contributions": [
+    {
+      "id": "1759197791391_leo4asz85",
+      "userId": "作業者L",
+      "userName": "作業者L",
+      "timestamp": "2025-09-30T02:03:12.064Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1759197791391_leo4asz85_0.jpeg",
+        "originalFileName": "IMG_5320.jpeg",
+        "fileSize": 4132189,
+        "files": [
+          {
+            "fileName": "___1759197791391_leo4asz85_0.jpeg",
+            "originalFileName": "IMG_5320.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4132189,
+            "filePath": "files/images/___1759197791391_leo4asz85_0.jpeg"
+          },
+          {
+            "fileName": "___1759197791391_leo4asz85_1.jpeg",
+            "originalFileName": "IMG_5321.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3659691,
+            "filePath": "files/images/___1759197791391_leo4asz85_1.jpeg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1759197824851_0222w1jgn",
+      "userId": "作業者L",
+      "userName": "作業者L",
+      "timestamp": "2025-09-30T02:03:45.199Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1759197824851_0222w1jgn_0.jpg",
+        "originalFileName": "image.jpg",
+        "fileSize": 3800618,
+        "files": [
+          {
+            "fileName": "___1759197824851_0222w1jgn_0.jpg",
+            "originalFileName": "image.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3800618,
+            "filePath": "files/images/___1759197824851_0222w1jgn_0.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    },
+    {
+      "id": "1759456576965_amyghvk44",
+      "userId": "作業者L",
+      "userName": "作業者L",
+      "timestamp": "2025-10-03T01:56:17.428Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/___1759456576965_amyghvk44_0.jpeg",
+        "originalFileName": "IMG_5334.jpeg",
+        "fileSize": 4692680,
+        "files": [
+          {
+            "fileName": "___1759456576965_amyghvk44_0.jpeg",
+            "originalFileName": "IMG_5334.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4692680,
+            "filePath": "files/images/___1759456576965_amyghvk44_0.jpeg"
+          },
+          {
+            "fileName": "___1759456576965_amyghvk44_1.jpeg",
+            "originalFileName": "IMG_5335.jpeg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3723163,
+            "filePath": "files/images/___1759456576965_amyghvk44_1.jpeg"
+          }
+        ]
+      },
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 3,
+    "lastUpdated": "2025-10-03T01:56:17.428Z",
+    "version": "1.0",
+    "mergedCount": 0
+  }
+}

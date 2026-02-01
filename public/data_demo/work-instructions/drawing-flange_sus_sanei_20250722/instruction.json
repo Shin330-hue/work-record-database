@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "drawingNumber": "flange_sus_sanei_20250722",
+    "title": "フランジ（ステンレスアリ溝フランジ）加工手順",
+    "companyId": "demo-industrial-e",
+    "productId": "product-ステンレスアリ溝フラ-1753161544745-0cph",
+    "createdDate": "2025-07-22",
+    "updatedDate": "2025-08-01",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [
+      "ターニング"
+    ],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-07-22T06:24:13.286Z",
+    "displayDrawingNumber": "DRW-066"
+  },
+  "overview": {
+    "description": "フランジ（ステンレスアリ溝フランジ）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "programs": [
+      "step1_sample.nc",
+      "sample2.min"
+    ]
+  },
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [
+      {
+        "stepNumber": 1,
+        "title": "芯出し",
+        "description": "",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 2,
+        "title": "クランプ",
+        "description": "押さえ方",
+        "detailedInstructions": [
+          "下を抑える"
+        ],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      },
+      {
+        "stepNumber": 3,
+        "title": "アリ溝",
+        "description": "ストレート溝つける：S12,F0.07\nアリ溝：S20,F0.3\n使用バイト：どちらも成形したロウ付けバイト\nR面取りも成形ロウ付けバイト。大体でOK",
+        "detailedInstructions": [],
+        "images": [],
+        "videos": [],
+        "timeRequired": "30分",
+        "warningLevel": "normal",
+        "qualityCheck": {
+          "items": []
+        }
+      }
+    ],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "nearMiss": [],
+  "revisionHistory": [
+    {
+      "date": "2025-07-22",
+      "author": "管理画面",
+      "changes": "新規作成"
+    },
+    {
+      "date": "2025-07-31",
+      "author": "データ移行",
+      "changes": "workStepsByMachine構造への移行、ターニングタブに実作業データを配置"
+    },
+    {
+      "date": "2025-08-01",
+      "author": "Claude",
+      "changes": "文字化けを修正"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "drawingNumber": "05644400083",
+    "title": "フレーム（フレームユニットG）加工手順",
+    "companyId": "demo-manufacturing-a",
+    "productId": "product-フレームユニットG-1759217605290-rscj",
+    "createdDate": "2025-09-30",
+    "updatedDate": "2025-09-30",
+    "author": "管理画面",
+    "estimatedTime": "180分",
+    "machineType": [],
+    "difficulty": "中級",
+    "toolsRequired": [],
+    "lastUpdated": "2025-09-30T07:33:51.495Z",
+    "displayDrawingNumber": "DRW-019"
+  },
+  "overview": {
+    "description": "フレーム（フレームユニットG）加工手順の加工を行います",
+    "warnings": [],
+    "preparationTime": "30分",
+    "processingTime": "150分",
+    "pdfs": [
+      "5644400083.pdf"
+    ]
+  },
+  "workSteps": [],
+  "relatedDrawings": [],
+  "troubleshooting": [],
+  "revisionHistory": [
+    {
+      "date": "2025-09-30",
+      "author": "管理画面",
+      "changes": "新規作成"
+    }
+  ],
+  "workStepsByMachine": {
+    "machining": [],
+    "turning": [],
+    "yokonaka": [],
+    "radial": [],
+    "other": []
+  },
+  "nearMiss": []
+}

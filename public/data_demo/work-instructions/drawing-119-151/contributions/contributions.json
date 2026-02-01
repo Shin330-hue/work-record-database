@@ -1,0 +1,67 @@
+{
+  "drawingNumber": "119-151",
+  "contributions": [
+    {
+      "id": "1765152312437_ud3g7u75n",
+      "userId": "作業者J",
+      "userName": "作業者I",
+      "timestamp": "2025-12-08T00:05:13.992Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/mori_t_1765152312437_ud3g7u75n_0.jpg",
+        "originalFileName": "20251208_084235.jpg",
+        "fileSize": 3535044,
+        "files": [
+          {
+            "fileName": "mori_t_1765152312437_ud3g7u75n_0.jpg",
+            "originalFileName": "20251208_084235.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3535044,
+            "filePath": "files/images/mori_t_1765152312437_ud3g7u75n_0.jpg"
+          },
+          {
+            "fileName": "mori_t_1765152312437_ud3g7u75n_1.jpg",
+            "originalFileName": "20251208_084223.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3521084,
+            "filePath": "files/images/mori_t_1765152312437_ud3g7u75n_1.jpg"
+          },
+          {
+            "fileName": "mori_t_1765152312437_ud3g7u75n_2.jpg",
+            "originalFileName": "20251208_084208.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3480668,
+            "filePath": "files/images/mori_t_1765152312437_ud3g7u75n_2.jpg"
+          },
+          {
+            "fileName": "mori_t_1765152312437_ud3g7u75n_3.jpg",
+            "originalFileName": "20251208_084202.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 3628172,
+            "filePath": "files/images/mori_t_1765152312437_ud3g7u75n_3.jpg"
+          },
+          {
+            "fileName": "mori_t_1765152312437_ud3g7u75n_4.jpg",
+            "originalFileName": "20251205_105306.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4446148,
+            "filePath": "files/images/mori_t_1765152312437_ud3g7u75n_4.jpg"
+          }
+        ]
+      },
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 1,
+    "lastUpdated": "2025-12-08T00:05:13.992Z",
+    "version": "1.0",
+    "mergedCount": 0
+  }
+}

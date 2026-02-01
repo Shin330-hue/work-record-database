@@ -1,0 +1,35 @@
+{
+  "drawingNumber": "3D428555",
+  "contributions": [
+    {
+      "id": "1756692330474_dqm65r5xr",
+      "userId": "作業者M",
+      "userName": "作業者M",
+      "timestamp": "2025-09-01T02:05:30.779Z",
+      "type": "image",
+      "targetSection": "overview",
+      "content": {
+        "imagePath": "files/images/__1756692330474_dqm65r5xr_0.jpg",
+        "originalFileName": "17566922938933869755480903842093.jpg",
+        "fileSize": 4585623,
+        "files": [
+          {
+            "fileName": "__1756692330474_dqm65r5xr_0.jpg",
+            "originalFileName": "17566922938933869755480903842093.jpg",
+            "fileType": "image",
+            "mimeType": "image/jpeg",
+            "fileSize": 4585623,
+            "filePath": "files/images/__1756692330474_dqm65r5xr_0.jpg"
+          }
+        ]
+      },
+      "status": "merged"
+    }
+  ],
+  "metadata": {
+    "totalContributions": 1,
+    "lastUpdated": "2025-09-02T00:11:29.241Z",
+    "version": "1.0",
+    "mergedCount": 1
+  }
+}

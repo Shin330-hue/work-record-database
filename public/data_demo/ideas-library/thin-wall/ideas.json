@@ -1,0 +1,40 @@
+{
+  "ideas": [
+    {
+      "id": "idea-001",
+      "title": "薄物加工の基本テクニック",
+      "category": "thin-wall",
+      "tags": ["薄物", "振動対策", "工具選定"],
+      "description": "薄物加工における重要なポイントと対策",
+      "content": "薄物加工では工具の選定と切削条件が重要です。特に振動対策と工具突き出し長の管理が品質に直結します。",
+      "keyPoints": [
+        "工具突き出し長を最小限に抑える（直径の3-4倍以内）",
+        "切削速度を上げて送りを下げるバランスを取る",
+        "クランプ力を適切に調整し、変形を防ぐ",
+        "切削油を十分に供給して熱変形を抑制"
+      ],
+      "images": ["thin-wall-example.jpg", "tool-selection.jpg"],
+      "videos": ["thin-wall-process.mp4"],
+      "difficulty": "intermediate",
+      "applicableMaterials": ["アルミ", "鋼材", "樹脂"]
+    },
+    {
+      "id": "idea-002",
+      "title": "薄物加工での振動対策",
+      "category": "thin-wall",
+      "tags": ["薄物", "振動", "工具選定", "切削条件"],
+      "description": "薄物加工時の振動を最小限に抑える方法",
+      "content": "薄物加工では振動が品質に大きく影響します。工具選定と切削条件の最適化が重要です。",
+      "keyPoints": [
+        "主軸回転数を10-20%増減させて共振を避ける",
+        "工具の剛性を重視した選定を行う",
+        "段階的な切削で振動を抑制",
+        "支持点を増やして剛性を向上"
+      ],
+      "images": ["vibration-control.jpg"],
+      "videos": ["vibration-reduction.mp4"],
+      "difficulty": "advanced",
+      "applicableMaterials": ["アルミ", "鋼材", "チタン"]
+    }
+  ]
+} 
